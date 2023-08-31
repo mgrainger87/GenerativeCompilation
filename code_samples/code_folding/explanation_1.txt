@@ -1,0 +1,1 @@
+The compiler can optimize this by precomputing the constants. The resulting optimized code might simplify the multiplications and additions involving constants.

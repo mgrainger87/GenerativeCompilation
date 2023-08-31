@@ -1,0 +1,1 @@
+If `str1` is always "optimize", the comparison will always be true, leading to a constant folding optimization where the compiler might choose to only consider the true branch. Additionally, the multiplications with constants can be precomputed and optimized.

@@ -1,0 +1,1 @@
+The function `anotherComplexFunction` simplifies to a constant value for any input, which can be optimized. Additionally, the arithmetic operations in the main function can be folded and simplified.
