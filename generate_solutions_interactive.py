@@ -7,7 +7,9 @@ import pathlib
 
 COMPILATION_UNIT_FILE_NAME = "compilation_unit.c"
 
-GENERATION_TEMPLATE = """Generate arm64 assembly that corresponds to the C compilation unit below. Follow the arm64 calling convention strictly. Mangle function names according to Clang conventions. Align functions appropriately for arm64. Output the assembly as it would be written in a .s file. Do not include stubs for forward declarations or anything that is not in the compilation unit itself.
+ASSEMBLY_GUIDELINES = """Follow the arm64 calling convention strictly, particularly which registers are used for passed parameters. Mangle function names according to Clang conventions for C (not C++). Align functions appropriately for arm64."""
+
+GENERATION_TEMPLATE = f"""Generate arm64 assembly that corresponds to the C compilation unit below. {ASSEMBLY_GUIDELINES} Output the assembly as it would be written in a .s file. Do not generate stubs or placeholders for forward declarations or anything that is not in the compilation unit itself.
 
 
 """
@@ -52,6 +54,7 @@ def run_test_from_csv(csv_path, executable_path):
 			result = subprocess.run(cmd, capture_output=True, text=True)
 			if result.returncode != 0:
 				failure_text += result.stdout  # Append the output for debugging
+				failure_text += " ".join(cmd)
 				return False, failure_text  # Test failed
 			
 	return True, ""  # All tests passed
@@ -85,7 +88,6 @@ def compile_source(source_code, suffix=".c"):
 			# Create a temporary file
 			with tempfile.NamedTemporaryFile(suffix=suffix, delete=False) as temp_file:
 				temp_filename = temp_file.name
-				print(temp_filename)
 				# Write the assembly code to the temporary file
 				temp_file.write(source_code.encode())
 			# Construct the output object file name
@@ -125,7 +127,7 @@ def link_binary(units):
 			for idx, unit in enumerate(units):
 				o_filename = f"unit{idx+1}.o"
 				o_filepath = os.path.join(temp_dir, o_filename)
-				o_files.append(o_filename)
+				o_files.append(o_filepath)
 				with open(o_filepath, "wb") as o_file:
 					o_file.write(unit)
 
@@ -150,12 +152,11 @@ def link_binary(units):
 def prompt_llm_based_on_results(code, compilerError, linkerError, testingError):
 	prompt = GENERATION_TEMPLATE + code
 	if compilerError is not None:
-		print("compilerError is not None")
-		prompt="Unfortunately, I got a compilation error:\n" + compilerError + "\n Can you fix the error?"
+		prompt=f"Unfortunately, I got a compilation error:\n{compilerError}\n Fix the error. Remember: {ASSEMBLY_GUIDELINES}"
 	elif linkerError is not None:
-		prompt="Unfortunately, I got a linker error:\n" + linkerError + "\n Can you fix the error?"
+		prompt=f"Unfortunately, I got a linker error:\n{linkerError}\n Fix the error. Remember: {ASSEMBLY_GUIDELINES}"
 	elif testingError is not None:
-		prompt=f"Unfortunately, I got an incorrect result when testing the generated code:\n{testingError}\n Can you correct the code?"
+		prompt=f"Unfortunately, I got an incorrect result when testing the generated code:\n{testingError}\n Fix the error. Remember: {ASSEMBLY_GUIDELINES}"
 
 	return prompt_llm(prompt)
 
@@ -232,8 +233,11 @@ def handle_problem_directory(problem_directory_path, test_driver_source_path):
 		pathlib.Path(generatedDirectoryPath).mkdir(parents=True, exist_ok=True)
 		
 		outputAssemblyPath = os.path.join(generatedDirectoryPath, "generated.asm")
-			
-		handle_coding_problem(codePath, driverObjectPath, testDataPath, outputAssemblyPath)
+		
+		if os.path.exists(outputAssemblyPath):
+			print(f"Already have solution for {problem_directory_path}.")
+		else:
+			handle_coding_problem(codePath, driverObjectPath, testDataPath, outputAssemblyPath)
 
 if __name__ == "__main__":
 	# Check if the user has provided a command-line argument
