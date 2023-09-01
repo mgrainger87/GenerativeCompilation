@@ -99,14 +99,14 @@ class AssemblyGenerator:
 			print(compilerError)
 			if compilerError is not None:
 				print("compilerError is not None")
-				input = "Unfortunately, I got a compilation error:\n" + compilerError + "\n Can you fix the error? Output only the corrected assembly and nothing else."
+				input="Unfortunately, I got a compilation error:\n" + compilerError + "\n Can you fix the error? Output only the corrected assembly and nothing else."
 			elif linkerError is not None:
-				input = "Unfortunately, I got a linker error:\n" + linkerError + "\n Can you fix the error? Output only the corrected assembly and nothing else."
+				input="Unfortunately, I got a linker error:\n" + linkerError + "\n Can you fix the error? Output only the corrected assembly and nothing else."
 				
 			print(compilerError)
 			print(linkerError)
 
-			return self.conversation.predict(input=input)
+			return self.conversation.predict(input=self.compilationUnit)
 			# return chain.run(unit)
 
 
@@ -182,6 +182,7 @@ for root, dirs, files in os.walk(os.path.join(os.getcwd(), "problems")):
 	for file in files:
 		if file.endswith(".c") and file.startswith("to_optimize"):
 			file_path = os.path.join(root, file)
+			print(file_path)
 			try:
 				with open(file_path, 'r', encoding='ISO-8859-1') as f:
 					content = f.read()
