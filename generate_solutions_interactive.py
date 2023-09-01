@@ -2,6 +2,10 @@ import os
 import tempfile
 import subprocess
 import csv
+import sys
+import pathlib
+
+COMPILATION_UNIT_FILE_NAME = "compilation_unit.c"
 
 GENERATION_TEMPLATE = """Generate arm64 assembly that corresponds to the C compilation unit below. Follow the arm64 calling convention strictly. Mangle function names according to Clang conventions. Align functions appropriately for arm64. Output the assembly as it would be written in a .s file. Do not include stubs for forward declarations or anything that is not in the compilation unit itself.
 
@@ -52,7 +56,7 @@ def run_test_from_csv(csv_path, executable_path):
 			
 	return True, ""  # All tests passed
 
-def compile_driver(driver_path, output_binary_path):
+def compile_driver(driver_path):
 	# Read the driver source code from the given path
 	try:
 		with open(driver_path, "r") as f:
@@ -65,14 +69,15 @@ def compile_driver(driver_path, output_binary_path):
 	
 	if success:
 		# Write the compiled binary data to the output path
-		try:
-			with open(output_binary_path, "wb") as f:
-				f.write(binary_data)
-			return True, "Compilation successful!"
-		except Exception as e:
-			return False, str(e)
+		# try:
+		with tempfile.NamedTemporaryFile(mode="wb", suffix='.o', delete=False) as temp_file:
+			objectFileName = temp_file.name
+			temp_file.write(binary_data)
+		return True, "Compilation successful!", objectFileName
+		# except Exception as e:
+		# 	return False, str(e), None
 	else:
-		return False, error_message
+		return False, error_message, None
 
 
 def compile_source(source_code, suffix=".c"):
@@ -119,19 +124,21 @@ def link_binary(units):
 			# Compile each binary compilation unit and store the .o files
 			for idx, unit in enumerate(units):
 				o_filename = f"unit{idx+1}.o"
+				o_filepath = os.path.join(temp_dir, o_filename)
 				o_files.append(o_filename)
-				with open(o_filename, "wb") as o_file:
+				with open(o_filepath, "wb") as o_file:
 					o_file.write(unit)
 
+			binaryPath = os.path.join(temp_dir, "linkedBinary")
 			# Construct the clang command
-			clang_command = ["clang"] + o_files + ["-o", "mybinary"]
+			clang_command = ["clang"] + o_files + ["-o", binaryPath]
 			
 			# Execute the clang command
 			result = subprocess.run(clang_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 			
 			if result.returncode == 0:
 				# Linking succeeded, read the binary data of the compiled binary
-				with open("mybinary", "rb") as binary_file:
+				with open(binaryPath, "rb") as binary_file:
 					binary_data = binary_file.read()
 				return True, None, binary_data
 			else:
@@ -152,24 +159,6 @@ def prompt_llm_based_on_results(code, compilerError, linkerError, testingError):
 
 	return prompt_llm(prompt)
 
-def compile_tests(test_paths):
-	o_files = []
-	
-	for path in test_paths:
-		# Get the directory and filename without extension
-		directory, filename = os.path.split(path)
-		basename = os.path.splitext(filename)[0]
-	
-		# Define the .o file path
-		o_file_path = os.path.join(directory, basename + '.o')
-		o_files.append(o_file_path)
-	
-		# Compile using clang
-		compile_command = ["clang", "-c", path, "-o", o_file_path]
-		compile_process = subprocess.run(compile_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-	
-	return o_files
-
 def handle_coding_problem(code_path, driver_object_path, test_data_path, output_path):
 	with open(code_path, "r") as codeFile:
 		code = codeFile.read()
@@ -182,8 +171,6 @@ def handle_coding_problem(code_path, driver_object_path, test_data_path, output_
 		linked_binary = None
 		
 		while linked_binary is None:
-			print("Prompting based on linker error: ", linker_error)
-			
 			assembly = prompt_llm_based_on_results(code, compiler_error, linker_error, testing_error)
 			compiler_error = None
 			linker_error = None
@@ -228,25 +215,44 @@ def handle_coding_problem(code_path, driver_object_path, test_data_path, output_
 				else:
 					print("Linking failed: ", linker_error)
 
-		
-		
 
-basePath = "/Users/morgang/code/GenerativeCompilation/problems/1/"
-
-codePath = os.path.join(basePath, "to_optimize.c")
-
-# Compile the driver
-driverSourcePath = "/Users/morgang/code/GenerativeCompilation/test_driver.c"
-driverObjectPath = "/Users/morgang/code/GenerativeCompilation/test_driver.o"
-success, errorMessage = compile_driver(driverSourcePath, driverObjectPath)
-
-if not success:
-	print(errorMessage)
-else:
+def handle_problem_directory(problem_directory_path, test_driver_source_path):
+	codePath = os.path.join(problem_directory_path, COMPILATION_UNIT_FILE_NAME)
 	
-
-	testDataPath = os.path.join(basePath, "test_data.csv")
+	# Compile the driver
+	driverObjectPath = "/Users/morgang/code/GenerativeCompilation/test_driver.o"
+	success, errorMessage, driverObjectPath = compile_driver(test_driver_source_path)
 	
-	outputAssemblyPath = os.path.join(basePath, "to_optimize.asm")
+	if not success:
+		print(errorMessage)
+	else:
+		testDataPath = os.path.join(problem_directory_path, "test_data.csv")
 		
-	handle_coding_problem(codePath, driverObjectPath, testDataPath, outputAssemblyPath)
+		generatedDirectoryPath = os.path.join(problem_directory_path, "generated")
+		pathlib.Path(generatedDirectoryPath).mkdir(parents=True, exist_ok=True)
+		
+		outputAssemblyPath = os.path.join(generatedDirectoryPath, "generated.asm")
+			
+		handle_coding_problem(codePath, driverObjectPath, testDataPath, outputAssemblyPath)
+
+if __name__ == "__main__":
+	# Check if the user has provided a command-line argument
+	if len(sys.argv) < 2:
+		print("Please provide the folder path as a command-line argument.")
+		sys.exit(1)
+	
+	folder_path = sys.argv[1]
+	
+	# Check if the given folder path exists
+	if os.path.exists(folder_path):
+		# Iterate through the items in the folder
+		for item in os.listdir(folder_path):
+			item_path = os.path.join(folder_path, item)
+			# If the item is a directory (subfolder), print its path
+			if os.path.isdir(item_path):
+				handle_problem_directory(item_path, "/Users/morgang/code/GenerativeCompilation/test_driver.c")
+	else:
+		print("The provided folder path does not exist.")
+
+
+
