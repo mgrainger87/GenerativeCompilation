@@ -63,7 +63,7 @@ int main(int argc, char *argv[]) {
 	for (int i = 0; i < iterations; i++) {
 		// Call the function
 		customFunction(int1, int2, double1, double2, str1, str2, &outInt, &outDouble, &outString);
-
+	
 		// Compare outputs
 		if (outInt != expectedInt || 
 			fabs(outDouble - expectedDouble) > THRESHOLD ||  
@@ -73,9 +73,24 @@ int main(int argc, char *argv[]) {
 			
 			// Print detailed failure information
 			printf("Test failed on iteration %d:\n", i + 1);
-			printf("Inputs: %d %d %f %f %s %s\n", int1, int2, double1, double2, str1 ? str1 : "NULL", str2 ? str2 : "NULL");
-			printf("Expected outputs: %d %f %s\n", expectedInt, expectedDouble, expectedString ? expectedString : "NULL");
-			printf("Actual outputs: %d %f %s\n", outInt, outDouble, outString ? outString : "NULL");
+			
+			printf("Inputs:\n");
+			printf("\tInteger 1: %d\n", int1);
+			printf("\tInteger 2: %d\n", int2);
+			printf("\tDouble 1: %f\n", double1);
+			printf("\tDouble 2: %f\n", double2);
+			printf("\tString 1: %s\n", str1 ? str1 : "NULL");
+			printf("\tString 2: %s\n", str2 ? str2 : "NULL");
+			
+			printf("Expected outputs:\n");
+			printf("\tInteger: %d\n", expectedInt);
+			printf("\tDouble: %f\n", expectedDouble);
+			printf("\tString: %s\n", expectedString ? expectedString : "NULL");
+			
+			printf("Actual outputs:\n");
+			printf("\tInteger: %d\n", outInt);
+			printf("\tDouble: %f\n", outDouble);
+			printf("\tString: %s\n", outString ? outString : "NULL");
 			
 			// Free any allocated memory
 			if (outString) {
@@ -84,14 +99,14 @@ int main(int argc, char *argv[]) {
 			
 			return 1; // Non-zero exit code for failure
 		}
-
+	
 		// Free any allocated memory for the next iteration
 		if (outString) {
 			free(outString);
 			outString = NULL;
 		}
 	}
-
+	
 	printf("All tests passed!\n");
 	return 0; // Zero exit code for success
 }

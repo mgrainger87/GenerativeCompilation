@@ -1,6 +1,7 @@
 import os
 import tempfile
 import subprocess
+import csv
 
 GENERATION_TEMPLATE = """Generate arm64 assembly that corresponds to the C compilation unit below. Follow the arm64 calling convention strictly. Mangle function names according to Clang conventions. Align functions appropriately for arm64. Output the assembly as it would be written in a .s file. Do not include stubs for forward declarations or anything that is not in the compilation unit itself.
 
@@ -22,14 +23,66 @@ def prompt_llm(prompt):
 	return "\n".join(lines)
 	
 	
-def compile_assembly(assembly_code):
+def run_test_from_csv(csv_path, executable_path):
+	failure_text = ""
+	
+	with open(csv_path, 'r') as csvfile:
+		reader = csv.DictReader(csvfile)
+		
+		for row in reader:
+			# Construct the command using the row values
+			cmd = [
+				executable_path,
+				f"int1={row['int1']}",
+				f"int2={row['int2']}",
+				f"double1={row['double1']}",
+				f"double2={row['double2']}",
+				f"str1={row['str1']}",
+				f"str2={row['str2']}",
+				f"expectedInt={row['expectedInt']}",
+				f"expectedDouble={row['expectedDouble']}",
+				f"expectedString={row['expectedString']}",
+				f"iterations={row['iterations']}"
+			]
+			
+			result = subprocess.run(cmd, capture_output=True, text=True)
+			if result.returncode != 0:
+				failure_text += result.stdout  # Append the output for debugging
+				return False, failure_text  # Test failed
+			
+	return True, ""  # All tests passed
+
+def compile_driver(driver_path, output_binary_path):
+	# Read the driver source code from the given path
+	try:
+		with open(driver_path, "r") as f:
+			driver_source_code = f.read()
+	except Exception as e:
+		return False, str(e)
+	
+	# Compile the driver source code
+	success, error_message, binary_data = compile_source(driver_source_code, suffix=os.path.splitext(driver_path)[1])
+	
+	if success:
+		# Write the compiled binary data to the output path
+		try:
+			with open(output_binary_path, "wb") as f:
+				f.write(binary_data)
+			return True, "Compilation successful!"
+		except Exception as e:
+			return False, str(e)
+	else:
+		return False, error_message
+
+
+def compile_source(source_code, suffix=".c"):
 		try:
 			# Create a temporary file
-			with tempfile.NamedTemporaryFile(suffix=".asm", delete=False) as temp_file:
+			with tempfile.NamedTemporaryFile(suffix=suffix, delete=False) as temp_file:
 				temp_filename = temp_file.name
+				print(temp_filename)
 				# Write the assembly code to the temporary file
-				temp_file.write(assembly_code.encode())
-			
+				temp_file.write(source_code.encode())
 			# Construct the output object file name
 			output_object_file = os.path.splitext(temp_filename)[0] + ".o"
 			
@@ -51,10 +104,11 @@ def compile_assembly(assembly_code):
 		
 		finally:
 			# Clean up the temporary file
-			if os.path.exists(temp_filename):
-				os.remove(temp_filename)
-			if os.path.exists(output_object_file):
-				os.remove(output_object_file)
+			# if os.path.exists(temp_filename):
+			# 	os.remove(temp_filename)
+			# if os.path.exists(output_object_file):
+			# 	os.remove(output_object_file)
+			pass
 	
 def link_binary(units):
 	try:
@@ -86,13 +140,15 @@ def link_binary(units):
 	except Exception as e:
 		return False, str(e), None
 
-def prompt_llm_based_on_results(code, compilerError, linkerError):
+def prompt_llm_based_on_results(code, compilerError, linkerError, testingError):
 	prompt = GENERATION_TEMPLATE + code
 	if compilerError is not None:
 		print("compilerError is not None")
 		prompt="Unfortunately, I got a compilation error:\n" + compilerError + "\n Can you fix the error?"
 	elif linkerError is not None:
 		prompt="Unfortunately, I got a linker error:\n" + linkerError + "\n Can you fix the error?"
+	elif testingError is not None:
+		prompt=f"Unfortunately, I got an incorrect result when testing the generated code:\n{testingError}\n Can you correct the code?"
 
 	return prompt_llm(prompt)
 
@@ -114,12 +170,13 @@ def compile_tests(test_paths):
 	
 	return o_files
 
-def handle_coding_problem(code_path, test_object_paths, output_path):
+def handle_coding_problem(code_path, driver_object_path, test_data_path, output_path):
 	with open(code_path, "r") as codeFile:
 		code = codeFile.read()
 		
 		compiler_error = None
 		linker_error = None
+		testing_error = None
 		assembly = None
 		compilation_unit_binary = None
 		linked_binary = None
@@ -127,36 +184,47 @@ def handle_coding_problem(code_path, test_object_paths, output_path):
 		while linked_binary is None:
 			print("Prompting based on linker error: ", linker_error)
 			
-			assembly = prompt_llm_based_on_results(code, compiler_error, linker_error)
+			assembly = prompt_llm_based_on_results(code, compiler_error, linker_error, testing_error)
 			compiler_error = None
 			linker_error = None
+			testing_error = None
 			
 			print("Attempting compilation…")			
-			success, compiler_error, compilation_unit_binary = compile_assembly(assembly)
+			success, compiler_error, compilation_unit_binary = compile_source(assembly, suffix=".asm")
 			if success:
-				print("Compilation successful. Linking…")
+				print(f"Compilation successful. Linking against {driver_object_path}…")
+					
+				# Look for driver object file
+				driver_binary = None
+				with open(driver_object_path, 'rb') as f:
+					driver_binary = f.read()
 				
-				for test_path in test_object_paths:
-					print("Linking against", test_path)
-					
-					# Look for driver object file
-					driver_binary = None
-					with open(test_path, 'rb') as f:
-						driver_binary = f.read()
-					
-					if driver_binary is None:
-						break
+				if driver_binary is None:
+					break
 
-					success, linker_error, linked_binary = link_binary([compilation_unit_binary, driver_binary])
-					if not success:
-						break
+				success, linker_error, linked_binary = link_binary([compilation_unit_binary, driver_binary])
 				
 				if success:
-					print("Linking succeeded.")
-					with open(output_path, 'w') as f:
-						f.write(assembly)
-						f.write("\n")
-					print("Assembly written to ", output_path)
+					print("Linking succeeded. Testing…")
+					executable_file = tempfile.NamedTemporaryFile(delete=False)  # delete=False ensures the file is not deleted when closed
+					with executable_file as f:
+						executable_path = executable_file.name
+						f.write(linked_binary)
+					
+					# Set executable permissions
+					os.chmod(executable_path, 0o755)
+					
+					success, testing_error = run_test_from_csv(test_data_path, executable_path)
+					
+					if success:
+						print("Testing succeeded.")					
+						with open(output_path, 'w') as f:
+							f.write(assembly)
+							f.write("\n")
+						print("Assembly written to ", output_path)
+					else:
+						print("Testing failed:", testing_error)
+						linked_binary = None
 				else:
 					print("Linking failed: ", linker_error)
 
@@ -166,15 +234,19 @@ def handle_coding_problem(code_path, test_object_paths, output_path):
 basePath = "/Users/morgang/code/GenerativeCompilation/problems/1/"
 
 codePath = os.path.join(basePath, "to_optimize.c")
-testPaths = [
-	os.path.join(basePath, "test1.c"),
-	os.path.join(basePath, "test2.c"),
-	os.path.join(basePath, "test3.c"),
-	os.path.join(basePath, "test4.c"),
-	os.path.join(basePath, "test5.c")
-]
-objectPaths = compile_tests(testPaths)
 
-outputAssemblyPath = os.path.join(basePath, "to_optimize.asm")
+# Compile the driver
+driverSourcePath = "/Users/morgang/code/GenerativeCompilation/test_driver.c"
+driverObjectPath = "/Users/morgang/code/GenerativeCompilation/test_driver.o"
+success, errorMessage = compile_driver(driverSourcePath, driverObjectPath)
+
+if not success:
+	print(errorMessage)
+else:
 	
-handle_coding_problem(codePath, objectPaths, outputAssemblyPath)
+
+	testDataPath = os.path.join(basePath, "test_data.csv")
+	
+	outputAssemblyPath = os.path.join(basePath, "to_optimize.asm")
+		
+	handle_coding_problem(codePath, driverObjectPath, testDataPath, outputAssemblyPath)
