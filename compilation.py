@@ -2,27 +2,42 @@ import os
 import tempfile
 import subprocess
 
-def compile_source(source_file_path, output_path=None):
-		try:
-			# If output_path is not provided, use a temporary file for the output object
-			if output_path is None:
-				with tempfile.NamedTemporaryFile(suffix=".o", delete=False) as temp_output_file:
-					output_object_file = temp_output_file.name
-			else:
-				output_object_file = os.path.join(output_path, os.path.basename(os.path.splitext(source_file_path)[0] + ".o"))
-			
-			# Compile using clang
-			compile_command = ["clang", "-c", source_file_path, "-o", output_object_file]
-			compile_process = subprocess.run(compile_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-			
-			if compile_process.returncode == 0:
-				return True, None, output_object_file
-			else:
-				error_message = compile_process.stderr.decode()
-				return False, error_message, None
+import subprocess
+import tempfile
+
+def compile_source(source_file_path, output_path=None, generate_assembly=False, optimization_level=None):
+	try:
+		# Decide the file extension based on generate_assembly flag
+		suffix = ".s" if generate_assembly else ".o"
 		
-		except Exception as e:
-			return False, str(e), None
+		# If output_path is not provided, use a temporary file for the output
+		if output_path is None:
+			with tempfile.NamedTemporaryFile(suffix=suffix, delete=False) as temp_output_file:
+				output_file = temp_output_file.name
+		else:
+			output_file = output_path
+		
+		# Compile using clang
+		compile_command = ["clang", "-c", source_file_path, "-o", output_file]
+		
+		# If generating assembly, add the '-S' flag
+		if generate_assembly:
+			compile_command.insert(2, "-S")
+		
+		# If optimization level is provided, add it to the compile command
+		if optimization_level:
+			compile_command.insert(2, f"-{optimization_level}")
+		
+		compile_process = subprocess.run(compile_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+		
+		if compile_process.returncode == 0:
+			return True, None, output_file
+		else:
+			error_message = compile_process.stderr.decode()
+			return False, error_message, None
+
+	except Exception as e:
+		return False, str(e), None
 
 def compile_source_from_string(source_code, suffix=".c"):
 	try:

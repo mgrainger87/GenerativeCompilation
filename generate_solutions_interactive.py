@@ -8,9 +8,17 @@ import compilation
 
 COMPILATION_UNIT_FILE_NAME = "compilation_unit.c"
 
-ASSEMBLY_GUIDELINES = """Follow the arm64 calling convention strictly, particularly which registers are used for passed parameters. Mangle function names according to Clang conventions for C (not C++). Align functions appropriately for arm64."""
+ASSEMBLY_GUIDELINES = """
+- Follow the arm64 calling convention strictly, particularly which registers are used for passed parameters.
+- Mangle function names according to Clang conventions for C (not C++).
+- Align functions appropriately for arm64.
+- When using the bl (Branch with Link) instruction to make a function call, preserve lr beforehand."""
 
-GENERATION_TEMPLATE = f"""Generate arm64 assembly that corresponds to the C compilation unit below. {ASSEMBLY_GUIDELINES} Output the assembly as it would be written in a .s file. Do not generate stubs or placeholders for forward declarations or anything that is not in the compilation unit itself.
+GENERATION_TEMPLATE = f"""Generate arm64 assembly that corresponds to the C compilation unit below. Follow these guidelines:
+
+{ASSEMBLY_GUIDELINES}
+
+Output the assembly as it would be written in a .s file. Do not generate stubs or placeholders for forward declarations or anything that is not in the compilation unit itself.
 
 
 """
@@ -70,7 +78,7 @@ def run_test_from_csv(csv_path, executable_path):
 	return True, ""  # All tests passed
 
 
-def handle_coding_problem(code_path, driver_object_path, test_data_path, output_path):
+def generate_assembly_from_compilation_unit_source(code_path, driver_object_path, test_data_path, output_path):
 	with open(code_path, "r") as codeFile:
 		code = codeFile.read()
 		
@@ -143,12 +151,22 @@ def handle_problem_directory(problem_directory_path, test_driver_source_path):
 	generatedDirectoryPath = os.path.join(problem_directory_path, "generated")
 	pathlib.Path(generatedDirectoryPath).mkdir(parents=True, exist_ok=True)
 	
-	outputAssemblyPath = os.path.join(generatedDirectoryPath, "generated.asm")
-	
-	if os.path.exists(outputAssemblyPath):
+	generatedAssemblyPath = os.path.join(generatedDirectoryPath, "generated.asm")
+	if os.path.exists(generatedAssemblyPath):
 		print(f"Already have solution for {problem_directory_path}.")
 	else:
-		handle_coding_problem(codePath, driverObjectPath, testDataPath, outputAssemblyPath)
+		generate_assembly_from_compilation_unit_source(codePath, driverObjectPath, testDataPath, generatedAssemblyPath)
+	
+	unoptimizedClangAssemblyPath = os.path.join(generatedDirectoryPath, "clang_unoptimized.asm")
+	success, error, _ = compilation.compile_source(codePath, unoptimizedClangAssemblyPath, True)
+	if not success:
+		print(f"Failed to compile source from {codePath}: {error}")
+		
+	o3OptimizedClangAssemblyPath = os.path.join(generatedDirectoryPath, "clang_O3optimized.asm")
+	success, error, _ = compilation.compile_source(codePath, o3OptimizedClangAssemblyPath, True, "O3")
+	if not success:
+		print(f"Failed to compile source from {codePath}: {error}")
+
 
 if __name__ == "__main__":
 	# Check if the user has provided a command-line argument
