@@ -1,12 +1,18 @@
-Given the following function prototype, write 3 very simple C functions (compilation units) that can be optimized at compile-time using the optimization technique specified.
+Given the following function prototype, write 5 C functions (compilation units) that can be optimized at compile-time using the optimization technique specified.
 
 The function prototype is designed to allow for inputs and outputs of multiple types. The function outputs are returned using the final three parameters. You do not need to use all of the input parameters nor all of the output parameters.
 
-For each function, explain the optimization that could be performed. The optimizations should not depend on the functions being called with constant input values.When using functions from the standard library, rather than including header files, forward declare the standard library function.
+For each function, explain the optimization that could be performed.
 
 The ability for the compiler to optimize the generated code should not depend on the function being called with any particular inputs, but the outputs must depend in some way on the function inputs. In particular, all optimizations should be possible within the context of the code that you generate.
 
-The examples should vary in structure, particularly how and where the optimization technique can be applied. Do not include any comments in the code.
+- The examples should be as simple as possible.
+- The examples should vary in structure, particularly how and where the optimization technique can be applied.
+- Do not include any comments in the code.
+- The optimizations should not depend on the input variables having constant values.
+- When using functions from the standard library, rather than including header files, forward declare the standard library function.
+- Any helper functions should be marked static.
+- Do not actually make the optimizations. Your job is to generate unoptimized code that could later be optimized.
 
 Function prototype:
 ```void customFunction(int int1, int int2, 
@@ -14,32 +20,36 @@ Function prototype:
 					const char *str1, const char *str2, 
 					int *outInt, double *outDouble, char **outString);```
 
-Optimization technique: code folding
+Optimization technique: strength reduction
 
----
+After generating, write the functions to a zip file with the following structure.  "technique.txt" should contain only the exact optimization technique listed above.
 
-Output three more examples where the optimization opportunity is less obvious. Remember, the optimizations should not depend on the functions being called with constant input values.
-
----
-
-Output four more examples where the optimization opportunity is less obvious. The opportunity should be spread across multiple statements in the function. Remember, the optimizations should not depend on the functions being called with constant input values.
-
----
-
-Output all of the functions in a zip file with the following structure. "technique.txt" should contain only the exact optimization technique listed above. The folders should be named 11 through 20.
-
-1/compilation_unit.c
-1/technique.txt
-2/compilation_unit.c
-2/technique.txt
+71/compilation_unit.c
+71/technique.txt
+72/compilation_unit.c
+72/technique.txt
 …
 
+---
 
+Output five more examples where the optimization opportunity is less obvious. Remember, the optimizations should not depend on the functions being called with constant input values.
 
+After generating, write the functions to a zip file with the following structure:
 
+76/compilation_unit.c
+76/technique.txt
+77/compilation_unit.c
+77/technique.txt
+…
 
---
+---
 
-Write each of the generated code snippets to a separate file. Alongside each code snippet, write a text file with the optimization explanation. Provide them all to me in a zip file.
+Output five more examples where the optimization opportunity is even less obvious. The opportunity should be spread across multiple statements in the function. Remember, the optimizations should not depend on the functions being called with constant input values.
 
-—
+After generating, write the functions to a zip file with the following structure:
+
+81/compilation_unit.c
+81/technique.txt
+82/compilation_unit.c
+82/technique.txt
+…
