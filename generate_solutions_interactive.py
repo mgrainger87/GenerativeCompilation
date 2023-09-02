@@ -13,16 +13,17 @@ ASSEMBLY_GUIDELINES = """
 - Preserve the values of caller-saved and/or callee-saved registers where necessary.
 - Mangle function names according to Clang conventions for C (not C++).
 - Align functions appropriately for arm64.
-- When using the bl (Branch with Link) instruction to make a function call, preserve lr beforehand. Do not preserve lr if not necessary."""
+- When using the bl (Branch with Link) instruction to make a function call, preserve lr beforehand. Do not preserve lr if not necessary.
+- Follow arm64 convention for local labels starting with a numeric value, which makes them assembler-local.
+"""
 
 def test_data_prompt(compilation_unit):
 	return f"""For the C function “customFunction” below, generate 10 test cases that exercise its functionality.
 	
-Write a Python version of customFunction and use it to determine the expected outputs for your test cases.
+Write a Python version of customFunction and use it to determine the expected outputs for your test cases. Your test function should perform division in the same way as C, using integer division if necessary.
 
-Output those test cases in comma-separated value format according to the given format. The number of iterations should always be 100. Do not write the CSV to a file; output it directly.
+Output those test cases in comma-separated value format according to the given format. The number of iterations should always be 100. Do not write the CSV to a file; output it directly. Include a header row in the CSV.
 
-Numerical values should not be outside the range of the int type on an LP64 platform. All of the integer values should be output in a format that can be read by the C atoi() function. All of the double values should be written in a format that preserves precision as much as possible and can be read by the C atof() function.
 
 If an input or output parameter is not relevant, use 0 for its provided or expected value as appropriate.
 
@@ -32,6 +33,12 @@ int1,int2,double1,double2,expectedInt,expectedDouble,iterations
 
 Function:
 {compilation_unit}
+
+- Integer values should not be outside the range of the int type on an LP64 platform.
+- All of the integer values should be output in a format that can be read by the C atoi() function.
+- All of the double values should be written in a format that preserves precision as much as possible and can be read by the C atof() function.
+- Do not use very large values. Do not generate random values. Input values should not be fractional.
+
 """
 
 def generation_prompt(compilation_unit):
@@ -224,7 +231,6 @@ def handle_problem_directory(problem_directory_path, test_driver_source_path):
 		return
 
 	# Generate test data if necessary
-
 	testDataPath = os.path.join(problem_directory_path, "test_data.csv")
 	if os.path.exists(testDataPath):
 		print(f"Already have test data at {testDataPath}.")
@@ -251,7 +257,9 @@ def handle_problem_directory(problem_directory_path, test_driver_source_path):
 	success, compiler_error, linker_error, testing_error = compile_and_test_assembly(assembly, driverObjectPath, testDataPath, None)
 	if not success:
 		print(f"Testing on Clang-generated assembly failed: {compiler_error} {linker_error} {testing_error}")
-
+		if testing_error is not None:
+			os.remove(testDataPath)
+		return
 	
 	# Have LLM generate assembly from C compilation unit
 	generatedAssemblyPath = os.path.join(generatedDirectoryPath, "llm_generated.asm")

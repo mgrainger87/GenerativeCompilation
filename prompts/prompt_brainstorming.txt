@@ -13,6 +13,7 @@ The ability for the compiler to optimize the generated code should not depend on
 - Do not depend on functions outside of the compilation unit, including those from the standard library. Do not import any header files.
 - Any helper functions should be marked static.
 - Do not actually make the optimizations. Your job is to generate unoptimized code that could later be optimized.
+- Avoid integer division.
 
 Function prototype:
 ```void customFunction(int int1, int int2, 
