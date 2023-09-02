@@ -77,6 +77,46 @@ def run_test_from_csv(csv_path, executable_path):
 			
 	return True, ""  # All tests passed
 
+def compile_and_test_assembly(assembly, driver_object_path, test_data_path, output_path):
+	# Returns: Success, Compiler error, linker error, testing error
+	
+	compiler_error = None
+	linker_error = None
+	testing_error = None
+
+	### Compilation stage
+	print("Attempting compilation…")	
+			
+	success, compiler_error, compilation_unit_path = compilation.compile_source_from_string(assembly, suffix=".asm")
+	if not success:
+		print(f"Compilation failed: {compiler_error}")
+		return False, compiler_error, linker_error, testing_error
+	
+	print("Compilation successful.")
+		
+	### Link stage
+	print(f"Linking against {driver_object_path}…")
+	
+	success, linker_error, executable_path = compilation.link_binary([compilation_unit_path, driver_object_path])
+	if not success:
+		print(f"Linking failed: {linker_error}")
+		return False, compiler_error, linker_error, testing_error
+	
+	print("Linking succeeded.")
+	
+	### Testing stage
+	print("Testing…")
+	
+	# Set executable permissions
+	os.chmod(executable_path, 0o755)
+	
+	success, testing_error = run_test_from_csv(test_data_path, executable_path)
+	if not success:
+		print("Testing failed:", testing_error)
+		return False, compiler_error, linker_error, testing_error
+	
+	print("Testing succeeded.")
+	return True, compiler_error, linker_error, testing_error
 
 def generate_assembly_from_compilation_unit_source(code_path, driver_object_path, test_data_path, output_path):
 	with open(code_path, "r") as codeFile:
@@ -87,48 +127,14 @@ def generate_assembly_from_compilation_unit_source(code_path, driver_object_path
 		testing_error = None
 		assembly = None
 		compilation_unit_binary = None
-		linked_binary = None
 		
 		while True:
 			assembly = prompt_llm_based_on_results(code, compiler_error, linker_error, testing_error)
-			compiler_error = None
-			linker_error = None
-			testing_error = None
 			
-			### Compilation stage
-			print("Attempting compilation…")	
-					
-			success, compiler_error, compilation_unit_path = compilation.compile_source_from_string(assembly, suffix=".asm")
+			success, compiler_error, linker_error, testing_error = compile_and_test_assembly(assembly, driver_object_path, test_data_path, output_path)
 			if not success:
-				print(f"Compilation failed: {compiler_error}")
 				continue
 			
-			print("Compilation successful.")
-				
-				
-			### Link stage
-			print(f"Linking against {driver_object_path}…")
-			
-			success, linker_error, executable_path = compilation.link_binary([compilation_unit_path, driver_object_path])
-			if not success:
-				print(f"Linking failed: {linker_error}")
-				continue
-			
-			print("Linking succeeded.")
-			
-			### Testing stage
-			print("Testing…")
-			
-			# Set executable permissions
-			os.chmod(executable_path, 0o755)
-			
-			success, testing_error = run_test_from_csv(test_data_path, executable_path)
-			if not success:
-				print("Testing failed:", testing_error)
-				linked_binary = None
-				continue
-			
-			print("Testing succeeded.")
 			with open(output_path, 'w') as f:
 				f.write(assembly)
 				f.write("\n")
@@ -151,18 +157,18 @@ def handle_problem_directory(problem_directory_path, test_driver_source_path):
 	generatedDirectoryPath = os.path.join(problem_directory_path, "generated")
 	pathlib.Path(generatedDirectoryPath).mkdir(parents=True, exist_ok=True)
 	
-	generatedAssemblyPath = os.path.join(generatedDirectoryPath, "generated.asm")
+	generatedAssemblyPath = os.path.join(generatedDirectoryPath, "llm_generated.asm")
 	if os.path.exists(generatedAssemblyPath):
 		print(f"Already have solution for {problem_directory_path}.")
 	else:
 		generate_assembly_from_compilation_unit_source(codePath, driverObjectPath, testDataPath, generatedAssemblyPath)
 	
-	unoptimizedClangAssemblyPath = os.path.join(generatedDirectoryPath, "clang_unoptimized.asm")
+	unoptimizedClangAssemblyPath = os.path.join(generatedDirectoryPath, "clang_generated_unoptimized.asm")
 	success, error, _ = compilation.compile_source(codePath, unoptimizedClangAssemblyPath, True)
 	if not success:
 		print(f"Failed to compile source from {codePath}: {error}")
 		
-	o3OptimizedClangAssemblyPath = os.path.join(generatedDirectoryPath, "clang_O3optimized.asm")
+	o3OptimizedClangAssemblyPath = os.path.join(generatedDirectoryPath, "clang_generated_O3_optimized.asm")
 	success, error, _ = compilation.compile_source(codePath, o3OptimizedClangAssemblyPath, True, "O3")
 	if not success:
 		print(f"Failed to compile source from {codePath}: {error}")
