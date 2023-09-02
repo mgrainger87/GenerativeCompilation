@@ -16,13 +16,13 @@ ASSEMBLY_GUIDELINES = """
 - When using the bl (Branch with Link) instruction to make a function call, preserve lr beforehand. Do not preserve lr if not necessary."""
 
 def generation_prompt(compilation_unit):
-	return f"""Generate arm64 assembly that corresponds to the C compilation unit below. Follow these guidelines:
+	return f"""Generate arm64 assembly for macOS that corresponds to the C compilation unit below. Follow these guidelines:
 	
-	{ASSEMBLY_GUIDELINES}
-	
-	Output the assembly as it would be written in a .s file. Do not generate stubs or placeholders for forward declarations or anything that is not in the compilation unit itself.
-	
-	Compilation unit:
+{ASSEMBLY_GUIDELINES}
+
+Output the assembly as it would be written in a .s file. Do not generate stubs or placeholders for forward declarations or anything that is not in the compilation unit itself.
+
+Compilation unit:
 	
 {compilation_unit}
 """
@@ -201,6 +201,25 @@ def handle_problem_directory(problem_directory_path, test_driver_source_path):
 	generatedDirectoryPath = os.path.join(problem_directory_path, "generated")
 	pathlib.Path(generatedDirectoryPath).mkdir(parents=True, exist_ok=True)
 	
+	# Have Clang generate unoptimized and optimized assembly for comparison purposes.
+	unoptimizedClangAssemblyPath = os.path.join(generatedDirectoryPath, "clang_generated_unoptimized.asm")
+	success, error, _ = compilation.compile_source(codePath, unoptimizedClangAssemblyPath, True)
+	if not success:
+		print(f"Failed to compile source from {codePath}: {error}")
+
+	o3OptimizedClangAssemblyPath = os.path.join(generatedDirectoryPath, "clang_generated_O3_optimized.asm")
+	success, error, _ = compilation.compile_source(codePath, o3OptimizedClangAssemblyPath, True, "O3")
+	if not success:
+		print(f"Failed to compile source from {codePath}: {error}")
+
+	# Test the Clang assembly to make sure it passes our test cases
+	with open(unoptimizedClangAssemblyPath, "r") as assemblyFile:
+		assembly = assemblyFile.read()
+	success, compiler_error, linker_error, testing_error = compile_and_test_assembly(assembly, driverObjectPath, testDataPath, None)
+	if not success:
+		print(f"Testing on Clang-generated assembly failed: {compiler_error} {linker_error} {testing_error}")
+
+	
 	# Have LLM generate assembly from C compilation unit
 	generatedAssemblyPath = os.path.join(generatedDirectoryPath, "llm_generated.asm")
 	if os.path.exists(generatedAssemblyPath):
@@ -208,30 +227,13 @@ def handle_problem_directory(problem_directory_path, test_driver_source_path):
 	else:
 		generate_assembly_from_compilation_unit_source(codePath, driverObjectPath, testDataPath, generatedAssemblyPath)
 	
-	# Have LLM optimize Clang-generated assembly
-	unoptimizedClangAssemblyPath = os.path.join(generatedDirectoryPath, "clang_generated_unoptimized.asm")
-	success, error, _ = compilation.compile_source(codePath, unoptimizedClangAssemblyPath, True)
-	if not success:
-		print(f"Failed to compile source from {codePath}: {error}")
-		
-	# Test the Clang assembly to make sure it passes our test cases
-	with open(unoptimizedClangAssemblyPath, "r") as assemblyFile:
-		assembly = assemblyFile.read()
-	success, compiler_error, linker_error, testing_error = compile_and_test_assembly(assembly, driverObjectPath, testDataPath, None)
-	if not success:
-		print(f"Testing on Clang-generated assembly failed: {compiler_error} {linker_error} {testing_error}")
-	
+	# Have LLM optimize Clang-generated assembly	
 	optimizedClangAssemblyPath = os.path.join(generatedDirectoryPath, "clang_generated_llm_optimized.asm")
 	if os.path.exists(optimizedClangAssemblyPath):
 		print(f"Already have output for {optimizedClangAssemblyPath}.")
 	else:
 		optimize_assembly(codePath, unoptimizedClangAssemblyPath, driverObjectPath, testDataPath, optimizedClangAssemblyPath)
 	
-	# Generated O3-optimized Clang assembly for comparison purposes
-	o3OptimizedClangAssemblyPath = os.path.join(generatedDirectoryPath, "clang_generated_O3_optimized.asm")
-	success, error, _ = compilation.compile_source(codePath, o3OptimizedClangAssemblyPath, True, "O3")
-	if not success:
-		print(f"Failed to compile source from {codePath}: {error}")
 
 
 if __name__ == "__main__":

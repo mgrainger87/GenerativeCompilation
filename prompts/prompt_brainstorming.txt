@@ -1,17 +1,30 @@
-Given the following function prototype, write 5 C functions that can be optimized at compile-time using constant folding. They should vary in length and complexity from very simple and short to longer and complex, but should never be more than 100 lines. Some examples should include other functions that are called by this function.
+Given the following function prototype, write 10 C functions (compilation units) that can be optimized at compile-time using the optimization technique specified. They should vary in length and complexity from very simple and short to longer and complex, but should never be more than 100 lines. Some examples should include other functions that are called by this function.
 
 The function prototype is designed to allow for inputs and outputs of multiple types. The function outputs are returned using the final three parameters. You do not need to use all of the input parameters nor all of the output parameters.
 
-For each function, explain the optimization that could be performed. When using functions from the standard library, rather than including header files, forward declare the standard library function.
+For each function, explain the optimization that could be performed. When using functions from the standard library, rather than including header files, forward declare the standard library function. Do not include any comments in the code.
 
-The ability for the compiler to optimize the generated code should not depend on the function being called with any particular inputs, but the outputs must depend in some way on the function inputs. In particular, the optimizations should not depend on the functions being called with constant input values. All optimizations should be possible within the context of the code that you generate.
 
+Function prototype:
 ```void customFunction(int int1, int int2, 
 					double double1, double double2, 
 					const char *str1, const char *str2, 
 					int *outInt, double *outDouble, char **outString);```
 
-— 
+Optimization technique: code folding
+
+Output the prototypes in a zip file with the following structure. "technique.txt" should contain only the exact optimization technique listed above.
+
+1/compilation_unit.c
+1/technique.txt
+2/compilation_unit.c
+2/technique.txt
+…
+
+The ability for the compiler to optimize the generated code should not depend on the function being called with any particular inputs, but the outputs must depend in some way on the function inputs. In particular, the optimizations should not depend on the functions being called with constant input values. All optimizations should be possible within the context of the code that you generate.
+
+
+--
 
 Write each of the generated code snippets to a separate file. Alongside each code snippet, write a text file with the optimization explanation. Provide them all to me in a zip file.
 
