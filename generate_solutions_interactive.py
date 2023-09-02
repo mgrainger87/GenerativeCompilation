@@ -28,16 +28,16 @@ def prompt_llm(prompt):
 		
 	return "\n".join(lines)
 
-	def prompt_llm_based_on_results(code, compilerError, linkerError, testingError):
-		prompt = GENERATION_TEMPLATE + code
-		if compilerError is not None:
-			prompt=f"Unfortunately, I got a compilation error:\n{compilerError}\n Fix the error. Remember: {ASSEMBLY_GUIDELINES}"
-		elif linkerError is not None:
-			prompt=f"Unfortunately, I got a linker error:\n{linkerError}\n Fix the error. Remember: {ASSEMBLY_GUIDELINES}"
-		elif testingError is not None:
-			prompt=f"Unfortunately, I got an incorrect result when testing the generated code:\n{testingError}\n Fix the error. Remember: {ASSEMBLY_GUIDELINES}"
-	
-		return prompt_llm(prompt)
+def prompt_llm_based_on_results(code, compilerError, linkerError, testingError):
+	prompt = GENERATION_TEMPLATE + code
+	if compilerError is not None:
+		prompt=f"Unfortunately, I got a compilation error:\n{compilerError}\n Fix the error. Remember: {ASSEMBLY_GUIDELINES}"
+	elif linkerError is not None:
+		prompt=f"Unfortunately, I got a linker error:\n{linkerError}\n Fix the error. Remember: {ASSEMBLY_GUIDELINES}"
+	elif testingError is not None:
+		prompt=f"Unfortunately, I got an incorrect result when testing the generated code:\n{testingError}\n Fix the error. Remember: {ASSEMBLY_GUIDELINES}"
+
+	return prompt_llm(prompt)
 
 def run_test_from_csv(csv_path, executable_path):
 	failure_text = ""
@@ -87,44 +87,58 @@ def handle_coding_problem(code_path, driver_object_path, test_data_path, output_
 			linker_error = None
 			testing_error = None
 			
-			print("Attempting compilation…")			
+			### Compilation stage
+			print("Attempting compilation…")	
+					
 			success, compiler_error, compilation_unit_binary = compilation.compile_source(assembly, suffix=".asm")
-			if success:
-				print(f"Compilation successful. Linking against {driver_object_path}…")
-					
-				# Look for driver object file
-				driver_binary = None
-				with open(driver_object_path, 'rb') as f:
-					driver_binary = f.read()
+			if not success:
+				print(f"Compilation failed: {compiler_error}")
+				continue
+			
+			print("Compilation successful.")
 				
-				if driver_binary is None:
-					break
+				
+			### Link stage
+			print(f"Linking against {driver_object_path}…")
+			
+			# Look for driver object file
+			driver_binary = None
+			with open(driver_object_path, 'rb') as f:
+				driver_binary = f.read()
+			
+			if driver_binary is None:
+				print(f"Could not find driver object file at {driver_object_path}.")
+				exit(1)
 
-				success, linker_error, linked_binary = compilation.link_binary([compilation_unit_binary, driver_binary])
-				
-				if success:
-					print("Linking succeeded. Testing…")
-					executable_file = tempfile.NamedTemporaryFile(delete=False)  # delete=False ensures the file is not deleted when closed
-					with executable_file as f:
-						executable_path = executable_file.name
-						f.write(linked_binary)
-					
-					# Set executable permissions
-					os.chmod(executable_path, 0o755)
-					
-					success, testing_error = run_test_from_csv(test_data_path, executable_path)
-					
-					if success:
-						print("Testing succeeded.")					
-						with open(output_path, 'w') as f:
-							f.write(assembly)
-							f.write("\n")
-						print("Assembly written to ", output_path)
-					else:
-						print("Testing failed:", testing_error)
-						linked_binary = None
-				else:
-					print("Linking failed: ", linker_error)
+			success, linker_error, linked_binary = compilation.link_binary([compilation_unit_binary, driver_binary])
+			if not success:
+				print(f"Linking failed: {linker_error}")
+				continue
+			
+			print("Linking succeeded.")
+			
+			### Testing stage
+			print("Testing…")
+			
+			executable_file = tempfile.NamedTemporaryFile(delete=False)  # delete=False ensures the file is not deleted when closed
+			with executable_file as f:
+				executable_path = executable_file.name
+				f.write(linked_binary)
+			
+			# Set executable permissions
+			os.chmod(executable_path, 0o755)
+			
+			success, testing_error = run_test_from_csv(test_data_path, executable_path)
+			if not success:
+				print("Testing failed:", testing_error)
+				linked_binary = None
+				continue
+			
+			print("Testing succeeded.")
+			with open(output_path, 'w') as f:
+				f.write(assembly)
+				f.write("\n")
+			print("Assembly written to ", output_path)
 
 
 def handle_problem_directory(problem_directory_path, test_driver_source_path):
@@ -168,6 +182,3 @@ if __name__ == "__main__":
 				handle_problem_directory(item_path, "/Users/morgang/code/GenerativeCompilation/test_driver.c")
 	else:
 		print("The provided folder path does not exist.")
-
-
-
