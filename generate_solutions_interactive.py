@@ -17,7 +17,7 @@ GENERATION_TEMPLATE = f"""Generate arm64 assembly that corresponds to the C comp
 
 def prompt_llm(prompt):
 	print(prompt)
-	lines = []	
+	lines = []
 	try:
 		while True:
 			line = input()
@@ -81,7 +81,7 @@ def handle_coding_problem(code_path, driver_object_path, test_data_path, output_
 		compilation_unit_binary = None
 		linked_binary = None
 		
-		while linked_binary is None:
+		while True:
 			assembly = prompt_llm_based_on_results(code, compiler_error, linker_error, testing_error)
 			compiler_error = None
 			linker_error = None
@@ -90,7 +90,7 @@ def handle_coding_problem(code_path, driver_object_path, test_data_path, output_
 			### Compilation stage
 			print("Attempting compilation…")	
 					
-			success, compiler_error, compilation_unit_binary = compilation.compile_source(assembly, suffix=".asm")
+			success, compiler_error, compilation_unit_path = compilation.compile_source_from_string(assembly, suffix=".asm")
 			if not success:
 				print(f"Compilation failed: {compiler_error}")
 				continue
@@ -101,16 +101,7 @@ def handle_coding_problem(code_path, driver_object_path, test_data_path, output_
 			### Link stage
 			print(f"Linking against {driver_object_path}…")
 			
-			# Look for driver object file
-			driver_binary = None
-			with open(driver_object_path, 'rb') as f:
-				driver_binary = f.read()
-			
-			if driver_binary is None:
-				print(f"Could not find driver object file at {driver_object_path}.")
-				exit(1)
-
-			success, linker_error, linked_binary = compilation.link_binary([compilation_unit_binary, driver_binary])
+			success, linker_error, executable_path = compilation.link_binary([compilation_unit_path, driver_object_path])
 			if not success:
 				print(f"Linking failed: {linker_error}")
 				continue
@@ -119,11 +110,6 @@ def handle_coding_problem(code_path, driver_object_path, test_data_path, output_
 			
 			### Testing stage
 			print("Testing…")
-			
-			executable_file = tempfile.NamedTemporaryFile(delete=False)  # delete=False ensures the file is not deleted when closed
-			with executable_file as f:
-				executable_path = executable_file.name
-				f.write(linked_binary)
 			
 			# Set executable permissions
 			os.chmod(executable_path, 0o755)
@@ -139,6 +125,7 @@ def handle_coding_problem(code_path, driver_object_path, test_data_path, output_
 				f.write(assembly)
 				f.write("\n")
 			print("Assembly written to ", output_path)
+			break
 
 
 def handle_problem_directory(problem_directory_path, test_driver_source_path):
@@ -146,8 +133,7 @@ def handle_problem_directory(problem_directory_path, test_driver_source_path):
 	
 	# Compile the driver
 	driverObjectPath = "/Users/morgang/code/GenerativeCompilation/test_driver.o"
-	success, errorMessage, driverObjectPath = compilation.compile_driver(test_driver_source_path)
-	print(driverObjectPath)
+	success, errorMessage, driverObjectPath = compilation.compile_source(test_driver_source_path)
 	if not success:
 		print(errorMessage)
 		return
