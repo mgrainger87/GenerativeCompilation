@@ -1,0 +1,23 @@
+For the C function “customFunction” below, generate 10 test cases that exercise its functionality.
+
+Write a Python version of customFunction and use it to test your test cases.
+
+Output those test cases in a .csv file named test_data.csv according to the given format. The number of iterations should always be 100.
+
+Numerical values should not be outside the range of the int type on an LP64 platform. All of the integer values should be output in a format that can be read by the C atoi() function. All of the double values should be written in a format that preserves precision as much as possible and can be read by the C atof() function.
+
+
+CSV format:
+
+int1,int2,double1,double2,expectedInt,expectedDouble,iterations
+
+Function:
+
+
+void customFunction(int int1, int int2, 
+					double double1, double double2, 
+					int *outInt, double *outDouble) {
+	*outInt = int1 * 1 + 0;
+	*outDouble = double1 * 1.0 + 0.0;
+}
+	

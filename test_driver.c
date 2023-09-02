@@ -6,8 +6,7 @@
 // Forward declaration of customFunction
 void customFunction(int int1, int int2, 
 					double double1, double double2, 
-					const char *str1, const char *str2, 
-					int *outInt, double *outDouble, char **outString);
+					int *outInt, double *outDouble);
 
 // Helper function to parse keyword-based parameters
 const char* getKeywordValue(const char *keyword, int argc, char *argv[]) {
@@ -26,15 +25,12 @@ int main(int argc, char *argv[]) {
 	const char *int2Str = getKeywordValue("int2", argc, argv);
 	const char *double1Str = getKeywordValue("double1", argc, argv);
 	const char *double2Str = getKeywordValue("double2", argc, argv);
-	const char *str1Str = getKeywordValue("str1", argc, argv);
-	const char *str2Str = getKeywordValue("str2", argc, argv);
 	const char *expectedIntStr = getKeywordValue("expectedInt", argc, argv);
 	const char *expectedDoubleStr = getKeywordValue("expectedDouble", argc, argv);
-	const char *expectedStringStr = getKeywordValue("expectedString", argc, argv);
 	const char *iterationsStr = getKeywordValue("iterations", argc, argv);
 
-	if (!int1Str || !int2Str || !double1Str || !double2Str || !str1Str || !str2Str ||
-		!expectedIntStr || !expectedDoubleStr || !expectedStringStr || !iterationsStr) {
+	if (!int1Str || !int2Str || !double1Str || !double2Str ||
+		!expectedIntStr || !expectedDoubleStr || !iterationsStr) {
 		printf("Missing one or more required keyword-based parameters.\n");
 		return 1;
 	}
@@ -43,33 +39,26 @@ int main(int argc, char *argv[]) {
 	int int2 = atoi(int2Str);
 	double double1 = atof(double1Str);
 	double double2 = atof(double2Str);
-	const char *str1 = strcmp(str1Str, "NULL") == 0 ? NULL : str1Str;
-	const char *str2 = strcmp(str2Str, "NULL") == 0 ? NULL : str2Str;
 	int expectedInt = atoi(expectedIntStr);
 	double expectedDouble = atof(expectedDoubleStr);
-	const char *expectedString = strcmp(expectedStringStr, "NULL") == 0 ? NULL : expectedStringStr;
 	int iterations = atoi(iterationsStr);
 
 	printf("Running tests for %d iterations...\n", iterations);
 
 	// Variables to hold the outputs
-	int outInt;
-	double outDouble;
-	char *outString = NULL; // Assuming customFunction allocates memory for the string
+	int outInt = 0;
+	double outDouble = 0;
 
 	// Define a threshold for floating point comparison
 	const double THRESHOLD = 1e-9;
 
 	for (int i = 0; i < iterations; i++) {
 		// Call the function
-		customFunction(int1, int2, double1, double2, str1, str2, &outInt, &outDouble, &outString);
+		customFunction(int1, int2, double1, double2, &outInt, &outDouble);
 	
 		// Compare outputs
 		if (outInt != expectedInt || 
-			fabs(outDouble - expectedDouble) > THRESHOLD ||  
-			(outString && expectedString && strcmp(outString, expectedString) != 0) || 
-			(!outString && expectedString) || 
-			(outString && !expectedString)) {
+			fabs(outDouble - expectedDouble) > THRESHOLD) {
 			
 			// Print detailed failure information
 			printf("Test failed on iteration %d:\n", i + 1);
@@ -79,31 +68,16 @@ int main(int argc, char *argv[]) {
 			printf("\tInteger 2: %d\n", int2);
 			printf("\tDouble 1: %f\n", double1);
 			printf("\tDouble 2: %f\n", double2);
-			printf("\tString 1: %s\n", str1 ? str1 : "NULL");
-			printf("\tString 2: %s\n", str2 ? str2 : "NULL");
 			
 			printf("Expected outputs:\n");
 			printf("\tInteger: %d\n", expectedInt);
 			printf("\tDouble: %f\n", expectedDouble);
-			printf("\tString: %s\n", expectedString ? expectedString : "NULL");
 			
 			printf("Actual outputs:\n");
 			printf("\tInteger: %d\n", outInt);
 			printf("\tDouble: %f\n", outDouble);
-			printf("\tString: %s\n", outString ? outString : "NULL");
-			
-			// Free any allocated memory
-			if (outString) {
-				free(outString);
-			}
-			
+
 			return 1; // Non-zero exit code for failure
-		}
-	
-		// Free any allocated memory for the next iteration
-		if (outString) {
-			free(outString);
-			outString = NULL;
 		}
 	}
 	

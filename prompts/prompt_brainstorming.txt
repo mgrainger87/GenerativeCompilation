@@ -6,50 +6,49 @@ For each function, explain the optimization that could be performed.
 
 The ability for the compiler to optimize the generated code should not depend on the function being called with any particular inputs, but the outputs must depend in some way on the function inputs. In particular, all optimizations should be possible within the context of the code that you generate.
 
-- The examples should be as simple as possible.
-- The examples should vary in structure, particularly how and where the optimization technique can be applied.
+- The functions should be as simple as possible.
+- The functions should vary in structure, particularly how and where the optimization technique can be applied.
 - Do not include any comments in the code.
 - The optimizations should not depend on the input variables having constant values.
-- When using functions from the standard library, rather than including header files, forward declare the standard library function.
+- Do not depend on functions outside of the compilation unit, including those from the standard library. Do not import any header files.
 - Any helper functions should be marked static.
 - Do not actually make the optimizations. Your job is to generate unoptimized code that could later be optimized.
 
 Function prototype:
 ```void customFunction(int int1, int int2, 
 					double double1, double double2, 
-					const char *str1, const char *str2, 
-					int *outInt, double *outDouble, char **outString);```
+					int *outInt, double *outDouble);```
 
-Optimization technique: strength reduction
+Optimization technique: constant folding
 
 After generating, write the functions to a zip file with the following structure.  "technique.txt" should contain only the exact optimization technique listed above.
 
-71/compilation_unit.c
-71/technique.txt
-72/compilation_unit.c
-72/technique.txt
+1/compilation_unit.c
+1/technique.txt
+2/compilation_unit.c
+2/technique.txt
 …
 
 ---
 
-Output five more examples where the optimization opportunity is less obvious. Remember, the optimizations should not depend on the functions being called with constant input values.
+Output five more compilation units where the optimization opportunity is less obvious. Remember, the optimizations should not depend on the functions being called with constant input values.
 
 After generating, write the functions to a zip file with the following structure:
 
-76/compilation_unit.c
-76/technique.txt
-77/compilation_unit.c
-77/technique.txt
+6/compilation_unit.c
+6/technique.txt
+7/compilation_unit.c
+7/technique.txt
 …
 
 ---
 
-Output five more examples where the optimization opportunity is even less obvious. The opportunity should be spread across multiple statements in the function. Remember, the optimizations should not depend on the functions being called with constant input values.
+Output five more compilation units where the optimization opportunity is even less obvious. The opportunity should be spread across multiple statements in the function. Remember, the optimizations should not depend on the functions being called with constant input values.
 
 After generating, write the functions to a zip file with the following structure:
 
-81/compilation_unit.c
-81/technique.txt
-82/compilation_unit.c
-82/technique.txt
+11/compilation_unit.c
+11/technique.txt
+12/compilation_unit.c
+12/technique.txt
 …

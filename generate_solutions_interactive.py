@@ -10,10 +10,29 @@ COMPILATION_UNIT_FILE_NAME = "compilation_unit.c"
 
 ASSEMBLY_GUIDELINES = """
 - Follow the arm64 calling convention strictly. Write out which registers are used for which parameters before generating the assembly.
-- Preserve the values of callee-saved registers where necessary.
+- Preserve the values of caller-saved and/or callee-saved registers where necessary.
 - Mangle function names according to Clang conventions for C (not C++).
 - Align functions appropriately for arm64.
 - When using the bl (Branch with Link) instruction to make a function call, preserve lr beforehand. Do not preserve lr if not necessary."""
+
+def test_data_prompt(compilation_unit):
+	return f"""For the C function “customFunction” below, generate 10 test cases that exercise its functionality.
+	
+Write a Python version of customFunction and use it to determine the expected outputs for your test cases.
+
+Output those test cases in comma-separated value format according to the given format. The number of iterations should always be 100. Do not write the CSV to a file; output it directly.
+
+Numerical values should not be outside the range of the int type on an LP64 platform. All of the integer values should be output in a format that can be read by the C atoi() function. All of the double values should be written in a format that preserves precision as much as possible and can be read by the C atof() function.
+
+If an input or output parameter is not relevant, use 0 for its provided or expected value as appropriate.
+
+CSV format:
+
+int1,int2,double1,double2,expectedInt,expectedDouble,iterations
+
+Function:
+{compilation_unit}
+"""
 
 def generation_prompt(compilation_unit):
 	return f"""Generate arm64 assembly for macOS that corresponds to the C compilation unit below. Follow these guidelines:
@@ -80,11 +99,8 @@ def run_test_from_csv(csv_path, executable_path):
 				f"int2={row['int2']}",
 				f"double1={row['double1']}",
 				f"double2={row['double2']}",
-				f"str1={row['str1']}",
-				f"str2={row['str2']}",
 				f"expectedInt={row['expectedInt']}",
 				f"expectedDouble={row['expectedDouble']}",
-				f"expectedString={row['expectedString']}",
 				f"iterations={row['iterations']}"
 			]
 			
@@ -136,6 +152,17 @@ def compile_and_test_assembly(assembly, driver_object_path, test_data_path, outp
 	
 	print("Testing succeeded.")
 	return True, compiler_error, linker_error, testing_error
+
+def generate_test_data_from_compilation_unit_source(code_path, test_data_path):
+	with open(code_path, "r") as codeFile:
+		code = codeFile.read()
+
+	test_data = prompt_llm(test_data_prompt(code)).strip().rstrip()
+	
+	with open(test_data_path, 'w') as f:
+		f.write(test_data)
+		f.write("\n")
+	
 
 def generate_assembly_from_compilation_unit_source(code_path, driver_object_path, test_data_path, output_path):
 	with open(code_path, "r") as codeFile:
@@ -196,7 +223,13 @@ def handle_problem_directory(problem_directory_path, test_driver_source_path):
 		print(errorMessage)
 		return
 
+	# Generate test data if necessary
+
 	testDataPath = os.path.join(problem_directory_path, "test_data.csv")
+	if os.path.exists(testDataPath):
+		print(f"Already have test data at {testDataPath}.")
+	else:
+		generate_test_data_from_compilation_unit_source(codePath, testDataPath)
 	
 	generatedDirectoryPath = os.path.join(problem_directory_path, "generated")
 	pathlib.Path(generatedDirectoryPath).mkdir(parents=True, exist_ok=True)
@@ -223,7 +256,7 @@ def handle_problem_directory(problem_directory_path, test_driver_source_path):
 	# Have LLM generate assembly from C compilation unit
 	generatedAssemblyPath = os.path.join(generatedDirectoryPath, "llm_generated.asm")
 	if os.path.exists(generatedAssemblyPath):
-		print(f"Already have output for {generatedAssemblyPath}.")
+		print(f"Already have generated assembly at {generatedAssemblyPath}.")
 	else:
 		generate_assembly_from_compilation_unit_source(codePath, driverObjectPath, testDataPath, generatedAssemblyPath)
 	
