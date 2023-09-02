@@ -38,6 +38,12 @@ def test_individual_assembly(driver_object_path, assembly_path, test_data_path):
 
 
 def handle_problem_directory(problem_directory_path, test_driver_source_path):
+	results_csv_path = os.path.join(problem_directory_path, 'performance_results.csv')
+	
+	if os.path.exists(results_csv_path):
+		print(f"Already have profiling results for {problem_directory_path}.")
+		return
+
 	print(f"Working on problem in directory {problem_directory_path}…")
 	
 	codePath = os.path.join(problem_directory_path, "compilation_unit.c")
@@ -57,7 +63,6 @@ def handle_problem_directory(problem_directory_path, test_driver_source_path):
 	asm_files = [f for f in os.listdir(generatedDirectoryPath) if f.endswith('.asm')]
 
 	# Create or open a CSV file for writing the results
-	results_csv_path = os.path.join(problem_directory_path, 'performance_results.csv')
 	with open(results_csv_path, 'w', newline='') as csvfile:
 		csvwriter = csv.writer(csvfile)
 		csvwriter.writerow(['Filename', 'CPU Time'])  # Writing the headers
