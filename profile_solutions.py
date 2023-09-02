@@ -2,6 +2,7 @@ import sys
 import os
 import compilation
 import testing
+import csv
 
 def test_individual_assembly(driver_object_path, assembly_path, test_data_path):
 	success, compiler_error, compilation_unit_path = compilation.compile_source(assembly_path)
@@ -30,9 +31,10 @@ def test_individual_assembly(driver_object_path, assembly_path, test_data_path):
 	success, testing_error, total_cpu_time = testing.run_test_from_csv(test_data_path, executable_path, 10000000)
 	if not success:
 		print("Testing failed:", testing_error)
-		return False, compiler_error, linker_error, testing_error
+		return False, 0
 	else:
 		print(f"Testing of {assembly_path} succeeded with CPU time {total_cpu_time}")
+		return True, total_cpu_time
 
 
 def handle_problem_directory(problem_directory_path, test_driver_source_path):
@@ -47,17 +49,28 @@ def handle_problem_directory(problem_directory_path, test_driver_source_path):
 		print(errorMessage)
 		return
 		
-	
-		
 	testDataPath = os.path.join(problem_directory_path, "test_data.csv")
 		
-	# if os.path.exists(testDataPath):
 	generatedDirectoryPath = os.path.join(problem_directory_path, "generated")
-	for filename in ["clang_generated_unoptimized.asm", "clang_generated_O3_optimized.asm", "llm_generated.asm", "clang_generated_llm_optimized.asm"]:
-		fullAssemblyPath = os.path.join(generatedDirectoryPath, filename)
 
-		test_individual_assembly(driverObjectPath, fullAssemblyPath, testDataPath)
+	# List all files in the generated directory and filter for .asm files
+	asm_files = [f for f in os.listdir(generatedDirectoryPath) if f.endswith('.asm')]
 
+	# Create or open a CSV file for writing the results
+	results_csv_path = os.path.join(problem_directory_path, 'performance_results.csv')
+	with open(results_csv_path, 'w', newline='') as csvfile:
+		csvwriter = csv.writer(csvfile)
+		csvwriter.writerow(['Filename', 'CPU Time'])  # Writing the headers
+		
+		for filename in asm_files:
+			fullAssemblyPath = os.path.join(generatedDirectoryPath, filename)
+			
+			# test_individual_assembly returns a tuple (success, cpu_time)
+			success, cpu_time = test_individual_assembly(driverObjectPath, fullAssemblyPath, testDataPath)
+			
+			if success:
+				# Write the results to the CSV file
+				csvwriter.writerow([filename, cpu_time])
 
 if __name__ == "__main__":
 	# Check if the user has provided a command-line argument
