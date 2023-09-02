@@ -9,19 +9,38 @@ import compilation
 COMPILATION_UNIT_FILE_NAME = "compilation_unit.c"
 
 ASSEMBLY_GUIDELINES = """
-- Follow the arm64 calling convention strictly, particularly which registers are used for passed parameters.
+- Follow the arm64 calling convention strictly. Write out which registers are used for which parameters before generating the assembly.
+- Preserve the values of callee-saved registers where necessary.
 - Mangle function names according to Clang conventions for C (not C++).
 - Align functions appropriately for arm64.
-- When using the bl (Branch with Link) instruction to make a function call, preserve lr beforehand."""
+- When using the bl (Branch with Link) instruction to make a function call, preserve lr beforehand. Do not preserve lr if not necessary."""
 
-GENERATION_TEMPLATE = f"""Generate arm64 assembly that corresponds to the C compilation unit below. Follow these guidelines:
+def generation_prompt(compilation_unit):
+	return f"""Generate arm64 assembly that corresponds to the C compilation unit below. Follow these guidelines:
+	
+	{ASSEMBLY_GUIDELINES}
+	
+	Output the assembly as it would be written in a .s file. Do not generate stubs or placeholders for forward declarations or anything that is not in the compilation unit itself.
+	
+	Compilation unit:
+	
+{compilation_unit}
+"""
+
+def optimization_prompt(compilation_unit, unoptimized_assembly):
+	return f"""Optimize the provided arm64 assembly that corresponds to the provided C compilation unit.
 
 {ASSEMBLY_GUIDELINES}
 
-Output the assembly as it would be written in a .s file. Do not generate stubs or placeholders for forward declarations or anything that is not in the compilation unit itself.
+Compilation unit:
 
-
+```
+{compilation_unit}
+```
+Assembly:
+{unoptimized_assembly}
 """
+
 
 def prompt_llm(prompt):
 	print(prompt)
@@ -36,8 +55,8 @@ def prompt_llm(prompt):
 		
 	return "\n".join(lines)
 
-def prompt_llm_based_on_results(code, compilerError, linkerError, testingError):
-	prompt = GENERATION_TEMPLATE + code
+def prompt_llm_based_on_results(initial_prompt, compilerError, linkerError, testingError):
+	prompt = initial_prompt
 	if compilerError is not None:
 		prompt=f"Unfortunately, I got a compilation error:\n{compilerError}\n Fix the error. Remember: {ASSEMBLY_GUIDELINES}"
 	elif linkerError is not None:
@@ -85,14 +104,14 @@ def compile_and_test_assembly(assembly, driver_object_path, test_data_path, outp
 	testing_error = None
 
 	### Compilation stage
-	print("Attempting compilation…")	
+	print(f"Attempting compilation…")	
 			
 	success, compiler_error, compilation_unit_path = compilation.compile_source_from_string(assembly, suffix=".asm")
 	if not success:
 		print(f"Compilation failed: {compiler_error}")
 		return False, compiler_error, linker_error, testing_error
 	
-	print("Compilation successful.")
+	print(f"Compilation successful. Output saved to {compilation_unit_path}.")
 		
 	### Link stage
 	print(f"Linking against {driver_object_path}…")
@@ -126,10 +145,9 @@ def generate_assembly_from_compilation_unit_source(code_path, driver_object_path
 		linker_error = None
 		testing_error = None
 		assembly = None
-		compilation_unit_binary = None
 		
 		while True:
-			assembly = prompt_llm_based_on_results(code, compiler_error, linker_error, testing_error)
+			assembly = prompt_llm_based_on_results(generation_prompt(code), compiler_error, linker_error, testing_error)
 			
 			success, compiler_error, linker_error, testing_error = compile_and_test_assembly(assembly, driver_object_path, test_data_path, output_path)
 			if not success:
@@ -141,8 +159,34 @@ def generate_assembly_from_compilation_unit_source(code_path, driver_object_path
 			print("Assembly written to ", output_path)
 			break
 
+def optimize_assembly(compilation_unit_path, assembly_path, driver_object_path, test_data_path, output_path, hint=None):
+	with open(compilation_unit_path, "r") as compilationUnitFile, open(assembly_path, "r") as assemblyFile:
+		compilation_unit = compilationUnitFile.read()
+		unoptimized_assembly = assemblyFile.read()
+		prompt = optimization_prompt(compilation_unit, unoptimized_assembly)
+	
+	compiler_error = None
+	linker_error = None
+	testing_error = None
+	assembly = None
+	
+	while True:
+		assembly = prompt_llm_based_on_results(prompt, compiler_error, linker_error, testing_error)
+		
+		success, compiler_error, linker_error, testing_error = compile_and_test_assembly(assembly, driver_object_path, test_data_path, output_path)
+		if not success:
+			continue
+		
+		with open(output_path, 'w') as f:
+			f.write(assembly)
+			f.write("\n")
+		print("Optimized assembly written to ", output_path)
+		break
+	
 
 def handle_problem_directory(problem_directory_path, test_driver_source_path):
+	print(f"Working on problem in directory {problem_directory_path}…")
+	
 	codePath = os.path.join(problem_directory_path, COMPILATION_UNIT_FILE_NAME)
 	
 	# Compile the driver
@@ -157,17 +201,33 @@ def handle_problem_directory(problem_directory_path, test_driver_source_path):
 	generatedDirectoryPath = os.path.join(problem_directory_path, "generated")
 	pathlib.Path(generatedDirectoryPath).mkdir(parents=True, exist_ok=True)
 	
+	# Have LLM generate assembly from C compilation unit
 	generatedAssemblyPath = os.path.join(generatedDirectoryPath, "llm_generated.asm")
 	if os.path.exists(generatedAssemblyPath):
-		print(f"Already have solution for {problem_directory_path}.")
+		print(f"Already have output for {generatedAssemblyPath}.")
 	else:
 		generate_assembly_from_compilation_unit_source(codePath, driverObjectPath, testDataPath, generatedAssemblyPath)
 	
+	# Have LLM optimize Clang-generated assembly
 	unoptimizedClangAssemblyPath = os.path.join(generatedDirectoryPath, "clang_generated_unoptimized.asm")
 	success, error, _ = compilation.compile_source(codePath, unoptimizedClangAssemblyPath, True)
 	if not success:
 		print(f"Failed to compile source from {codePath}: {error}")
 		
+	# Test the Clang assembly to make sure it passes our test cases
+	with open(unoptimizedClangAssemblyPath, "r") as assemblyFile:
+		assembly = assemblyFile.read()
+	success, compiler_error, linker_error, testing_error = compile_and_test_assembly(assembly, driverObjectPath, testDataPath, None)
+	if not success:
+		print(f"Testing on Clang-generated assembly failed: {compiler_error} {linker_error} {testing_error}")
+	
+	optimizedClangAssemblyPath = os.path.join(generatedDirectoryPath, "clang_generated_llm_optimized.asm")
+	if os.path.exists(optimizedClangAssemblyPath):
+		print(f"Already have output for {optimizedClangAssemblyPath}.")
+	else:
+		optimize_assembly(codePath, unoptimizedClangAssemblyPath, driverObjectPath, testDataPath, optimizedClangAssemblyPath)
+	
+	# Generated O3-optimized Clang assembly for comparison purposes
 	o3OptimizedClangAssemblyPath = os.path.join(generatedDirectoryPath, "clang_generated_O3_optimized.asm")
 	success, error, _ = compilation.compile_source(codePath, o3OptimizedClangAssemblyPath, True, "O3")
 	if not success:

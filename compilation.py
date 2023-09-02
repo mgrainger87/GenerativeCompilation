@@ -46,7 +46,7 @@ def compile_source_from_string(source_code, suffix=".c"):
 			temp_filename = temp_file.name
 			# Write the source code to the temporary file
 			temp_file.write(source_code.encode())
-		
+		print(f"Saved assembly to {temp_filename}")
 		# Compile the source code using the modified compile_source function
 		success, error_message, output_file = compile_source(temp_filename)
 		
