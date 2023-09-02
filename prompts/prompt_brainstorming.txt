@@ -1,9 +1,12 @@
-Given the following function prototype, write 10 C functions (compilation units) that can be optimized at compile-time using the optimization technique specified. They should vary in length and complexity from very simple and short to longer and complex, but should never be more than 100 lines. Some examples should include other functions that are called by this function.
+Given the following function prototype, write 3 very simple C functions (compilation units) that can be optimized at compile-time using the optimization technique specified.
 
 The function prototype is designed to allow for inputs and outputs of multiple types. The function outputs are returned using the final three parameters. You do not need to use all of the input parameters nor all of the output parameters.
 
-For each function, explain the optimization that could be performed. When using functions from the standard library, rather than including header files, forward declare the standard library function. Do not include any comments in the code.
+For each function, explain the optimization that could be performed. The optimizations should not depend on the functions being called with constant input values.When using functions from the standard library, rather than including header files, forward declare the standard library function.
 
+The ability for the compiler to optimize the generated code should not depend on the function being called with any particular inputs, but the outputs must depend in some way on the function inputs. In particular, all optimizations should be possible within the context of the code that you generate.
+
+The examples should vary in structure, particularly how and where the optimization technique can be applied. Do not include any comments in the code.
 
 Function prototype:
 ```void customFunction(int int1, int int2, 
@@ -13,7 +16,17 @@ Function prototype:
 
 Optimization technique: code folding
 
-Output the prototypes in a zip file with the following structure. "technique.txt" should contain only the exact optimization technique listed above.
+---
+
+Output three more examples where the optimization opportunity is less obvious. Remember, the optimizations should not depend on the functions being called with constant input values.
+
+---
+
+Output four more examples where the optimization opportunity is less obvious. The opportunity should be spread across multiple statements in the function. Remember, the optimizations should not depend on the functions being called with constant input values.
+
+---
+
+Output all of the functions in a zip file with the following structure. "technique.txt" should contain only the exact optimization technique listed above. The folders should be named 11 through 20.
 
 1/compilation_unit.c
 1/technique.txt
@@ -21,7 +34,8 @@ Output the prototypes in a zip file with the following structure. "technique.txt
 2/technique.txt
 …
 
-The ability for the compiler to optimize the generated code should not depend on the function being called with any particular inputs, but the outputs must depend in some way on the function inputs. In particular, the optimizations should not depend on the functions being called with constant input values. All optimizations should be possible within the context of the code that you generate.
+
+
 
 
 --

@@ -3,6 +3,7 @@
                         double double1, double double2, 
                         const char *str1, const char *str2, 
                         int *outInt, double *outDouble, char **outString) {
-        *outDouble = double1 + 0.0;
+        int intermediate = int1 + 5;
+        *outInt = intermediate - 5;
     }
     
