@@ -13,40 +13,43 @@ ASSEMBLY_GUIDELINES = """
 - Preserve the values of caller-saved and/or callee-saved registers where necessary.
 - Mangle function names according to Clang conventions for C (not C++).
 - Align functions appropriately for arm64.
-- When using the bl (Branch with Link) instruction to make a function call, preserve lr beforehand. Do not preserve lr if not necessary.
 - Follow arm64 convention for local labels starting with a numeric value, which makes them assembler-local.
+- Before branching for a function call, be sure to save all required registers.
+- Use only valid arm64 instructions. ARM64 assembly does not allow direct floating-point literals with the fadd instruction.
 """
 
 def test_data_prompt(compilation_unit):
 	return f"""For the C function “customFunction” below, generate 10 test cases that exercise its functionality.
 	
-Write a Python version of customFunction and use it to determine the expected outputs for your test cases. Your test function should perform division in the same way as C, using integer division if necessary.
+Write a Python version of customFunction and use it to determine the expected outputs for your test cases. Your test function should perform division in the same way as C, using integer division if necessary. Your Python function should mirror the C code as much as possible; do not optimize.
 
 Output those test cases in comma-separated value format according to the given format. The number of iterations should always be 100. Do not write the CSV to a file; output it directly. Include a header row in the CSV.
 
 
 If an input or output parameter is not relevant, use 0 for its provided or expected value as appropriate.
 
-CSV format:
+CSV format (do not add extra spaces):
 
 int1,int2,double1,double2,expectedInt,expectedDouble,iterations
 
 Function:
 {compilation_unit}
 
-- Integer values should not be outside the range of the int type on an LP64 platform.
 - All of the integer values should be output in a format that can be read by the C atoi() function.
 - All of the double values should be written in a format that preserves precision as much as possible and can be read by the C atof() function.
-- Do not use very large values. Do not generate random values. Input values should not be fractional.
+- Do not use input values less than -1000 or greater than 1000. Do not generate random values. Input values should not be fractional.
+- If possible, the test cases should be chosen such that, if the function is not optimized during compilation, some values will cause poor performance.
 
 """
 
 def generation_prompt(compilation_unit):
 	return f"""Generate arm64 assembly for macOS that corresponds to the C compilation unit below. Follow these guidelines:
-	
+
 {ASSEMBLY_GUIDELINES}
 
-Output the assembly as it would be written in a .s file. Do not generate stubs or placeholders for forward declarations or anything that is not in the compilation unit itself.
+Output the assembly as it would be written in a .s file. Do not generate stubs or placeholders for forward declarations or anything that is not in the compilation unit itself. If there is more than one function in the compilation unit, generate assembly for each function separately
+
+After generating the assembly, check it again against the guidelines and correct it if needed. Finally, combine the assembly together.
 
 Compilation unit:
 	
@@ -56,8 +59,6 @@ Compilation unit:
 def optimization_prompt(compilation_unit, unoptimized_assembly):
 	return f"""Optimize the provided arm64 assembly that corresponds to the provided C compilation unit.
 
-{ASSEMBLY_GUIDELINES}
-
 Compilation unit:
 
 ```
@@ -65,6 +66,11 @@ Compilation unit:
 ```
 Assembly:
 {unoptimized_assembly}
+
+Guidelines:
+
+{ASSEMBLY_GUIDELINES}
+
 """
 
 
@@ -110,7 +116,7 @@ def run_test_from_csv(csv_path, executable_path):
 				f"expectedDouble={row['expectedDouble']}",
 				f"iterations={row['iterations']}"
 			]
-			
+			print(" ".join(cmd))
 			result = subprocess.run(cmd, capture_output=True, text=True)
 			if result.returncode != 0:
 				failure_text += result.stdout  # Append the output for debugging
@@ -223,12 +229,13 @@ def handle_problem_directory(problem_directory_path, test_driver_source_path):
 	
 	codePath = os.path.join(problem_directory_path, COMPILATION_UNIT_FILE_NAME)
 	
-	# Compile the driver
+	# Compile the driver if needed
 	driverObjectPath = "/Users/morgang/code/GenerativeCompilation/test_driver.o"
-	success, errorMessage, driverObjectPath = compilation.compile_source(test_driver_source_path)
-	if not success:
-		print(errorMessage)
-		return
+	if not os.path.exists(driverObjectPath):
+		success, errorMessage, driverObjectPath = compilation.compile_source(test_driver_source_path)
+		if not success:
+			print(errorMessage)
+			return
 
 	# Generate test data if necessary
 	testDataPath = os.path.join(problem_directory_path, "test_data.csv")
@@ -240,16 +247,18 @@ def handle_problem_directory(problem_directory_path, test_driver_source_path):
 	generatedDirectoryPath = os.path.join(problem_directory_path, "generated")
 	pathlib.Path(generatedDirectoryPath).mkdir(parents=True, exist_ok=True)
 	
-	# Have Clang generate unoptimized and optimized assembly for comparison purposes.
+	# Have Clang generate unoptimized and optimized assembly for comparison purposes if necessary.
 	unoptimizedClangAssemblyPath = os.path.join(generatedDirectoryPath, "clang_generated_unoptimized.asm")
-	success, error, _ = compilation.compile_source(codePath, unoptimizedClangAssemblyPath, True)
-	if not success:
-		print(f"Failed to compile source from {codePath}: {error}")
+	if not os.path.exists(unoptimizedClangAssemblyPath):
+		success, error, _ = compilation.compile_source(codePath, unoptimizedClangAssemblyPath, True)
+		if not success:
+			print(f"Failed to compile source from {codePath}: {error}")
 
 	o3OptimizedClangAssemblyPath = os.path.join(generatedDirectoryPath, "clang_generated_O3_optimized.asm")
-	success, error, _ = compilation.compile_source(codePath, o3OptimizedClangAssemblyPath, True, "O3")
-	if not success:
-		print(f"Failed to compile source from {codePath}: {error}")
+	if not os.path.exists(o3OptimizedClangAssemblyPath):
+		success, error, _ = compilation.compile_source(codePath, o3OptimizedClangAssemblyPath, True, "O3")
+		if not success:
+			print(f"Failed to compile source from {codePath}: {error}")
 
 	# Test the Clang assembly to make sure it passes our test cases
 	with open(unoptimizedClangAssemblyPath, "r") as assemblyFile:
@@ -262,11 +271,11 @@ def handle_problem_directory(problem_directory_path, test_driver_source_path):
 		return
 	
 	# Have LLM generate assembly from C compilation unit
-	generatedAssemblyPath = os.path.join(generatedDirectoryPath, "llm_generated.asm")
-	if os.path.exists(generatedAssemblyPath):
-		print(f"Already have generated assembly at {generatedAssemblyPath}.")
-	else:
-		generate_assembly_from_compilation_unit_source(codePath, driverObjectPath, testDataPath, generatedAssemblyPath)
+	# generatedAssemblyPath = os.path.join(generatedDirectoryPath, "llm_generated.asm")
+	# if os.path.exists(generatedAssemblyPath):
+	# 	print(f"Already have generated assembly at {generatedAssemblyPath}.")
+	# else:
+	# 	generate_assembly_from_compilation_unit_source(codePath, driverObjectPath, testDataPath, generatedAssemblyPath)
 	
 	# Have LLM optimize Clang-generated assembly	
 	optimizedClangAssemblyPath = os.path.join(generatedDirectoryPath, "clang_generated_llm_optimized.asm")
