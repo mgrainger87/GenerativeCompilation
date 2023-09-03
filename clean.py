@@ -6,7 +6,7 @@ import shutil
 def clean_tests(base_path):
     problem_dirs = [os.path.join(base_path, d) for d in os.listdir(base_path) if os.path.isdir(os.path.join(base_path, d))]
     for problem_dir in problem_dirs:
-        test_data_path = os.path.join(problem_dir, "test_data.txt")
+        test_data_path = os.path.join(problem_dir, "test_data.csv")
         if os.path.exists(test_data_path):
             os.remove(test_data_path)
 
