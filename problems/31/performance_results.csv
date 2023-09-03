@@ -1,5 +1,5 @@
-Filename,CPU Time
-clang_generated_llm_optimized.asm,0.22278199999999515
-clang_generated_O3_optimized.asm,0.22130599999999845
-llm_generated.asm,0.0022519999999985885
-clang_generated_unoptimized.asm,0.3439419999999984
+Filename,CPU Time,Normalized CPU Time
+clang_generated_unoptimized.asm,0.3537430000000015,1.0
+clang_generated_llm_optimized.asm,0.21987000000000023,0.6215529353230999
+clang_generated_O3_optimized.asm,0.24513499999999766,0.6929748433184448
+llm_generated.asm,0.0021650000000050795,0.006120262450437381

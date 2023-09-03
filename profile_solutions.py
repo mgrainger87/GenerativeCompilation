@@ -42,7 +42,7 @@ def handle_problem_directory(problem_directory_path, test_driver_source_path):
 	
 	if os.path.exists(results_csv_path):
 		print(f"Already have profiling results for {problem_directory_path}.")
-		return
+		# return
 
 	print(f"Working on problem in directory {problem_directory_path}…")
 	
@@ -71,28 +71,53 @@ def handle_problem_directory(problem_directory_path, test_driver_source_path):
 		return
 		
 	iterations = 1
-	cpu_time = 0
+	unoptimized_cpu_time = 0
 	
 	print("Determining iterations…")
-	while cpu_time < 0.2:
+	while unoptimized_cpu_time < 0.2:
 		iterations *= 10
-		success, cpu_time = test_individual_assembly(driverObjectPath, unoptimizedAssemblyPath, testDataPath, iterations)
+		success, unoptimized_cpu_time = test_individual_assembly(driverObjectPath, unoptimizedAssemblyPath, testDataPath, iterations)
 	print(f"Using {iterations} iterations.")
 
+	# Dictionary to store CPU times
+	cpu_times_dict = {"clang_generated_unoptimized.asm": unoptimized_cpu_time}
+	
+	# Iterate through asm_files
+	for filename in asm_files:
+		if filename in cpu_times_dict:
+			continue
+		fullAssemblyPath = os.path.join(generatedDirectoryPath, filename)
+		
+		# test_individual_assembly returns a tuple (success, cpu_time)
+		success, cpu_time = test_individual_assembly(driverObjectPath, fullAssemblyPath, testDataPath, iterations)
+		
+		if success:
+			cpu_times_dict[filename] = cpu_time
+	
 	# Create or open a CSV file for writing the results
 	with open(results_csv_path, 'w', newline='') as csvfile:
 		csvwriter = csv.writer(csvfile)
-		csvwriter.writerow(['Filename', 'CPU Time'])  # Writing the headers
+		csvwriter.writerow(['Filename', 'CPU Time', 'Normalized CPU Time'])  # Writing the headers
 		
-		for filename in asm_files:
-			fullAssemblyPath = os.path.join(generatedDirectoryPath, filename)
+		for filename, cpu_time in cpu_times_dict.items():
+			normalized_cpu_time = cpu_time / unoptimized_cpu_time
 			
-			# test_individual_assembly returns a tuple (success, cpu_time)
-			success, cpu_time = test_individual_assembly(driverObjectPath, fullAssemblyPath, testDataPath, iterations)
-			
-			if success:
-				# Write the results to the CSV file
-				csvwriter.writerow([filename, cpu_time])
+			csvwriter.writerow([filename, cpu_time, normalized_cpu_time])
+
+	# # Create or open a CSV file for writing the results
+	# with open(results_csv_path, 'w', newline='') as csvfile:
+	# 	csvwriter = csv.writer(csvfile)
+	# 	csvwriter.writerow(['Filename', 'CPU Time'])  # Writing the headers
+	# 	
+	# 	for filename in asm_files:
+	# 		fullAssemblyPath = os.path.join(generatedDirectoryPath, filename)
+	# 		
+	# 		# test_individual_assembly returns a tuple (success, cpu_time)
+	# 		success, cpu_time = test_individual_assembly(driverObjectPath, fullAssemblyPath, testDataPath, iterations)
+	# 		
+	# 		if success:
+	# 			# Write the results to the CSV file
+	# 			csvwriter.writerow([filename, cpu_time])
 
 if __name__ == "__main__":
 	# Check if the user has provided a command-line argument
