@@ -6,19 +6,19 @@ This project evaluates the code compilation and optimization capabilities of lar
 
 With the rapid advancement of large language machine learning models, the boundaries of what these models can accomplish are continuously expanding. Traditionally, tasks like code compilation and optimization were exclusively the domain of dedicated software like compilers. This project aims to explore what large language models can achieve in the realm of code compilation and optimization. By pitting these models against traditional compilers, we can gauge the potential of AI in this domain, understand its limitations, and envision future collaboration between traditional software and AI models.
 
-<why is this novel?>
+While LLMs have been used in other software engineering domains like code completion and solving coding challenges, and in particular have been used to improve compiler error generation and correct errors in higher-level language code, this is the first time an LLM has been employed to generate and optimize assembly directly.
 
 ## Approach
 
 The project's methodology can be broken down into the following steps:
 
-1. **Technique Identification:** Recognize simple optimization techniques typically employed by C compilers.
-2. **Problem Generation:** Leverage an LLM like GPT-4 to create coding challenges. Each challenge consists of a C compilation unit that is prime for optimization using the identified techniques.
+1. **Technique Identification:** Recognize simple optimization techniques typically employed by C compilers. [See prompt and response.](prompts/optimization_techniques.txt)
+2. **Problem Generation:** Leverage an LLM like GPT-4 to create coding challenges. Each challenge consists of a C compilation unit that is prime for optimization using the identified techniques. [See prompts.](prompts/problem_generation.txt)
 3. **Compilation with Clang:** Generate assembly code for the provided problems using Clang at various optimization settings, notably `-O0`, where optimizations are turned off.
-4. **Test Generation** Task an LLM with creating tests for each coding problem. These tests will validate the answers against both LLM-generated Python functions and the Clang-produced assembly.
-5. **Optimization by LLM:** Ask the LLM to refine the unoptimized assembly churned out by Clang. The improved assembly will then be confirmed using the generated tests.
-6. **Direct Assembly Generation by LLM:** Without any guidance from Clang, the LLM will be asked to produce its assembly for the problem. This assembly will be validated using the generated tests.
-7. **Performance Measurement:** Quantify the CPU time for both the Clang-generated and LLM-produced assembly implementations. This will be achieved using a test driver that runs the assembly a configurable number of times.
+4. **Test Generation** Task an LLM with creating tests for each coding problem. The correctness of the test cases are validated using both LLM-generated Python functions and the Clang-produced assembly. [See prompts.](prompts/test_case_generation.txt)
+5. **Optimization by LLM:** Ask the LLM to refine the unoptimized assembly churned out by Clang. The improved assembly is compiled, linked, and run against the generated tests. If errors occur, the LLM is given the error and asked to correct the assembly.
+6. **Direct Assembly Generation by LLM:** Without any guidance from Clang, the LLM is asked to produce its assembly for the problem. This assembly is compiled, linked, and run against the generated tests. If errors occur, the LLM is given the error and asked to correct the assembly.
+7. **Performance Measurement:** The Clang-generated and LLM-produced assembly implementations are run using a test driver, and their CPU performance is measured. The test driver that runs the assembly a configurable number of times; for simple functions, a large number of iterations are used to reduce variance.
 8. **Performance Comparison:** Contrast the efficiency of each implementation to derive insights about the LLM's optimization capabilities.
 
 ## Language Models Used
@@ -29,7 +29,7 @@ Throughout this project, different iterations of OpenAI's GPT series of technolo
 - **GPT-3.5:** While it was tested, GPT-3.5 exhibited challenges in consistently reasoning about assembly language. We chose to focus on GPT-4.
 - **OpenAI API:** The API was not utilized because direct access to GPT-4's Advanced Data Analysis mode proved more beneficial for the project's objectives.
 
-## Techniques
+## Optimization Techniques
 
 The project examined five optimization techniques commonly used by compilers:
 
@@ -42,6 +42,16 @@ The project examined five optimization techniques commonly used by compilers:
 These techniques were chosen because they can be applied to relatively simple code that an LLM is likely to be able to understand. Other techniques such as function inlining and tail recursion optimization were considered, but it proved difficult to get the LLM to reason correctly about source code that can be optimized using these techniques.
 
 ## Results
+
+#### Assembly Optimization
+
+Overall, we were successful in having GPT-4 optimize Clang-generated assembly for a given compilation unit, and the assembly performed better than the original, but largely not as well as fully-optimized Clang assembly.
+
+#### Direct Assembly Generation
+
+GPT-4 was able to generate assembly directly from the C compilation unit in basic cases, but struggled to generate code that compiled, linked, ran, and passed tests for more complicated problems. Further prompt engineering may help GPT solve more complex problems. See the [Future Directions](#future-directions) section below.
+
+See results for each optimization type below. Graphs for each problem are in the [analysis](analysis/) folder.
 
 ### Constant Folding
 
@@ -78,17 +88,17 @@ These techniques were chosen because they can be applied to relatively simple co
 
 There are many possible future directions that this work could take, which could be explored in a future project or for a research paper.
 
-- Different LLMs: While GPT-3.5 did not appear suited to this task, it would be interesting to test the performance of Bard and Claude as well.
-- Result verification: In cases where the LLM performed better than Clang, it is wise to investigate why. While the assembly was tested for correctness, it is possible that the LLM's code is unsafe or incorrect in ways not detected by the test.
-- Prompt engineering: With the prompts used here, GPT-4 struggled to reason correctly about more complex code, particularly code with nested loops and with properly saving and restoring register state when making function calls. It also sometimes struggled to identify and correct more subtle mistakes in the assembly it generated.
+- **Different LLMs:** While GPT-3.5 did not appear suited to this task, it would be interesting to test the performance of Bard and Claude as well.
+- **Result verification:** In cases where the LLM performed better than Clang, it is wise to investigate why. While the assembly was tested for correctness, it is possible that the LLM's code is unsafe or incorrect in ways not detected by the test.
+- **Variance Determination**: Only one solution was generated for each problem. It would be interesting to generate multiple solutions for the same problem and evaluate the level of variance in the assembly produced and its resulting performance.
+- **Prompt engineering:** With the prompts used here, GPT-4 struggled to reason correctly about more complex code, particularly code with nested loops and with properly saving and restoring register state when making function calls. It also sometimes struggled to identify and correct more subtle mistakes in the assembly it generated.
 	- Encouraging the LLM to use chain-of-thought prompting, possibly across multiple interactions, may lead to better reasoning and fewer errors. In particular, it would be interesting to ask the LLM to split more complex code into smaller chunks.
 	- One technique commonly used in debugging is tracing through the code with test inputs. It would be interesting to create prompts that encourage the LLM to test its generated code. For example, we could use the Persona pattern to ask the LLM to act as a virtual machine that executes assembly instructions.
 	- Generating multiple different implementations for the same source code, then asking the LLM to evaluate them, combining them into an ultimate "best" answer.
-- This project measured CPU performance only. Other performance characteristics, like code size and memory usage, could also be measured. More complex problems could also be evaluated against disk I/O activity.
-
+- **Performance dimensions**: This project measured CPU performance only. Other performance characteristics, like code size and memory usage, could also be measured. More complex problems could also be evaluated against disk I/O activity.
 
 From an implementation perspective:
-- The project could be integrated with the OpenAI API to fully automate the generation of solutions. This requires adding the ability to identify runtime crashes and hangs and provide feedback to the LLM, which was done manually for this project. It would be straightforward to test the LLM-generated code with a debugger attached and to provide the debugger output to the LLM.
+- **API integration:** The project could be integrated with the OpenAI API to fully automate the generation of solutions. This requires adding the ability to identify runtime crashes and hangs and provide feedback to the LLM, which was done manually for this project. It would be straightforward to test the LLM-generated code with a debugger attached and to provide the debugger output to the LLM.
 
 ## Running the Generation
 

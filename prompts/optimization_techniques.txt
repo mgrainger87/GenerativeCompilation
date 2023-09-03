@@ -1,16 +1,4 @@
-Constant Folding: This is when the compiler evaluates constant expressions at compile time rather than runtime.
-Dead Code Elimination: This removes code that does not affect the program's output.
-Function Inlining: Instead of calling a function, the compiler places the function's code directly into the calling function.
-Loop Unrolling: This optimizes loops by increasing the number of iterations per loop overhead.
-Common Subexpression Elimination: Avoids recalculating the same value multiple times.
-Copy Propagation: Replaces the use of a variable with the value that it is assigned.
-Strength Reduction: Replaces expensive operations with cheaper ones.
-Tail Recursion Optimization: Converts tail-recursive calls to iterative loops.
-Loop Invariant Code Motion: Moves code that doesn't change inside a loop to outside the loop.
-Peephole Optimization: This is a series of local optimizations like simplifying adjacent machine instructions.
-
 Describe 20 different types of optimization that compilers perform when compiling C into assembly. Focus on optimizations that do not involve loops or calling functions.
-
 
 1. **Constant Folding**: If the compiler encounters expressions with constant values, it precomputes the result. For example, `int x = 5 * 10;` can be optimized to `int x = 50;`.
 
