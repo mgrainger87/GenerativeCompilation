@@ -26,22 +26,22 @@ Optimization technique: loop unrolling
 
 After generating, write the functions to a zip file with the following structure.  "technique.txt" should contain only the exact optimization technique listed above.
 
-21/compilation_unit.c
-21/technique.txt
-22/compilation_unit.c
-22/technique.txt
+01/compilation_unit.c
+01/technique.txt
+02/compilation_unit.c
+02/technique.txt
 …
 
 ---
 
-Output 10 more compilation units where the optimization opportunity is less obvious. Remember, the optimizations should not depend on the functions being called with constant input values.
+Output 10 more compilation units where the optimization opportunity somewhat less obvious. Remember, the optimizations should not depend on the functions being called with constant input values.
 
 After generating, add the functions to the zip file with the following structure:
 
-31/compilation_unit.c
-31/technique.txt
-32/compilation_unit.c
-32/technique.txt
+11/compilation_unit.c
+11/technique.txt
+12/compilation_unit.c
+12/technique.txt
 …
 
 ---
@@ -50,8 +50,8 @@ Output five more compilation units where the optimization opportunity is even le
 
 After generating, add the functions to the zip file with the following structure:
 
-71/compilation_unit.c
-71/technique.txt
-72/compilation_unit.c
-72/technique.txt
+21/compilation_unit.c
+21/technique.txt
+22/compilation_unit.c
+22/technique.txt
 …
