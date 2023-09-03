@@ -1,0 +1,15 @@
+Unfortunately, I got an incorrect result when testing the generated code:
+
+Inputs:
+	Integer 1: 0
+	Integer 2: 0
+	Double 1: 10.000000
+	Double 2: 5.000000
+Expected outputs:
+	Integer: 0
+	Double: 5.000000
+Actual outputs:
+	Integer: 0
+	Double: -10.000000
+
+Trace through the optimized assembly with these inputs to find the problem. If, at any time, you find an error, correct the assembly, print out the new assembly, and then trace again starting at the beginning.

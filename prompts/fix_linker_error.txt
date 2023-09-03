@@ -1,0 +1,15 @@
+Unfortunately, I got a linker error:
+Undefined symbols for architecture arm64:
+  "_customFunction", referenced from:
+	  _main in tmp50flhap9.o
+ld: symbol(s) not found for architecture arm64
+clang: error: linker command failed with exit code 1 (use -v to see invocation)
+
+ Fix the error. Remember: 
+- Follow the arm64 calling convention strictly. Write out which registers are used for which parameters before generating the assembly.
+- Preserve the values of caller-saved and/or callee-saved registers where necessary.
+- Mangle function names according to Clang conventions for C (not C++).
+- Align functions appropriately for arm64.
+- Follow arm64 convention for local labels starting with a numeric value, which makes them assembler-local.
+- Before branching for a function call, be sure to save all required registers.
+- Use only valid arm64 instructions. ARM64 assembly does not allow direct floating-point literals with the fadd instruction.
