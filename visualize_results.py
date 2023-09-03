@@ -63,7 +63,7 @@ colors = {method: 'blue' if "LLM" in method else 'lightgray' for method in uniqu
 # Generate horizontal bar charts for each problem
 problems_list = combined_df['problem'].unique()
 for problem in problems_list:
-    subset = combined_df[combined_df['problem'] == problem]
+    subset = combined_df[combined_df['problem'] == problem].sort_values(by='Normalized CPU Time', ascending=False)
     
     # Check if there are any missing generation method names and skip them
     valid_generation_methods = subset['Generation Method'].dropna().unique()
@@ -77,6 +77,7 @@ for problem in problems_list:
     plt.title(f"Problem {problem}")
     plt.xlabel("Normalized CPU Time")
     plt.xlim(0, 1.2)  # Adjusting the x-axis limit for more space between 0 and 1
+    plt.figtext(0.5, 0.01, 'Shorter bars are better', wrap=True, horizontalalignment='center', fontsize=8, style='italic')
     plt.tight_layout()
     plt.savefig(os.path.join(analysis_dir, f'problem_{problem}_chart.png'))
     plt.close()
@@ -90,15 +91,19 @@ for technique in techniques_list:
     subset = combined_df[combined_df['technique'] == technique]
     
     # Group by generation method and calculate the mean for 'Normalized CPU Time'
-    grouped_means = subset.groupby('Generation Method')['Normalized CPU Time'].mean().reset_index().sort_values(by='Normalized CPU Time', ascending=True)
+    grouped_means = subset.groupby('Generation Method')['Normalized CPU Time'].mean().reset_index().sort_values(by='Normalized CPU Time', ascending=False)
+
+    # Determine bar colors based on the presence of "LLM" in the generation method
+    bar_colors = ['blue' if 'LLM' in method else 'lightgray' for method in grouped_means['Generation Method']]
     
     # Plotting
     plt.figure(figsize=(10, 5))
-    plt.barh(grouped_means['Generation Method'], grouped_means['Normalized CPU Time'], color=[colors[val] for val in unique_generation_methods])
+    plt.barh(grouped_means['Generation Method'], grouped_means['Normalized CPU Time'], color=bar_colors)
     plt.xlabel('Average Normalized CPU Time')
     plt.ylabel('Generation Method')
     plt.title(f'Average Performance by Generation Method for {technique}')
     plt.grid(axis='x', linestyle='--', linewidth=0.5, alpha=0.7)
+    plt.figtext(0.5, 0.01, 'Shorter bars are better', wrap=True, horizontalalignment='center', fontsize=8, style='italic')
     plt.tight_layout()
     plt.savefig(os.path.join(analysis_dir, f'average_performance_for_{technique}.png'))
     plt.close()
