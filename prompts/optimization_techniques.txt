@@ -8,3 +8,48 @@ Strength Reduction: Replaces expensive operations with cheaper ones.
 Tail Recursion Optimization: Converts tail-recursive calls to iterative loops.
 Loop Invariant Code Motion: Moves code that doesn't change inside a loop to outside the loop.
 Peephole Optimization: This is a series of local optimizations like simplifying adjacent machine instructions.
+
+Describe 20 different types of optimization that compilers perform when compiling C into assembly. Focus on optimizations that do not involve loops or calling functions.
+
+
+1. **Constant Folding**: If the compiler encounters expressions with constant values, it precomputes the result. For example, `int x = 5 * 10;` can be optimized to `int x = 50;`.
+
+2. **Constant Propagation**: If a variable is assigned a constant value and used in subsequent expressions, the compiler replaces its occurrences with that constant. For example, `int a = 5; int b = a + 10;` becomes `int b = 15;`.
+
+3. **Dead Code Elimination**: The compiler removes code that does not affect the program's observable behavior. For instance, if a variable is computed but never used, that computation can be removed.
+
+4. **Copy Propagation**: This replaces the occurrences of assignments with their values. For example, if `y = x;` and `z = y;`, then `z` can be directly assigned the value of `x`.
+
+5. **Common Subexpression Elimination**: If an expression is repeatedly calculated with the same values, it's computed once and reused. For example, in `a = b * c + d; e = b * c - f;`, the common subexpression `b * c` can be computed once.
+
+6. **Strength Reduction**: This replaces more costly operations with cheaper ones. For instance, multiplication by a power of 2 might be replaced by a left shift.
+
+7. **Peephole Optimization**: The compiler examines a small sequence of instructions (a "peephole") and replaces it with a shorter or faster sequence if possible.
+
+8. **Algebraic Simplifications**: This involves applying algebraic rules to simplify expressions. For example, `x * 1` can be replaced with `x`.
+
+9. **Bitwise Optimization**: The compiler simplifies operations involving bitwise operations. For instance, `x & 0` can be simplified to `0`.
+
+10. **Branch Elimination**: If the compiler determines that a branch (like an `if` statement) always or never executes, it might remove the branch or the dead code associated with it.
+
+11. **Variable Renaming**: This is used to avoid register spilling or to make other optimizations more effective.
+
+12. **Inline Expansion**: While this does involve functions, it's worth mentioning. Instead of calling a small function, the compiler might insert its body at the call site to avoid the overhead of the function call.
+
+13. **Value Range Propagation**: The compiler determines the range of values a variable can take and uses this information to optimize subsequent operations.
+
+14. **Memory Access Coalescing**: Instead of multiple consecutive memory accesses, they might be merged into one larger access if possible.
+
+15. **Tail Recursion Optimization**: This involves transforming tail-recursive functions into iterative ones. Though it involves functions, it's a notable form of optimization.
+
+16. **Register Allocation**: This is about deciding which variables should be stored in the faster, but limited, CPU registers.
+
+17. **Instruction Scheduling**: The compiler might reorder instructions to avoid pipeline stalls and make better use of the CPU's instruction-level parallelism.
+
+18. **Instruction Selection**: The compiler chooses the best assembly instruction or sequence of instructions to implement a higher-level operation.
+
+19. **Unreachable Code Elimination**: The compiler identifies and removes code that can never be reached during execution.
+
+20. **Redundant Load/Store Elimination**: If a value is loaded from memory and then stored back to the same location without changes, one of these operations might be eliminated.
+
+These are just a few of the many optimizations a compiler can perform. The exact set and effectiveness of these optimizations can vary depending on the compiler and its configuration.

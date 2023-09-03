@@ -1,4 +1,4 @@
-Given the following function prototype, write 5 C functions (compilation units) that can be optimized at compile-time using the optimization technique specified.
+Given the following function prototype, write 10 C functions (compilation units) that can be optimized at compile-time using the optimization technique specified.
 
 The function prototype is designed to allow for inputs and outputs of multiple types. The function outputs are returned using the final three parameters. You do not need to use all of the input parameters nor all of the output parameters.
 
@@ -22,19 +22,19 @@ Function prototype:
 					double double1, double double2, 
 					int *outInt, double *outDouble);```
 
-Optimization technique: loop unrolling
+Optimization technique: strength reduction
 
 After generating, write the functions to a zip file with the following structure.  "technique.txt" should contain only the exact optimization technique listed above.
 
-61/compilation_unit.c
-61/technique.txt
-62/compilation_unit.c
-62/technique.txt
+91/compilation_unit.c
+91/technique.txt
+92/compilation_unit.c
+92/technique.txt
 …
 
 ---
 
-Output five more compilation units where the optimization opportunity is less obvious. Remember, the optimizations should not depend on the functions being called with constant input values.
+Output 10 more compilation units where the optimization opportunity is less obvious. Remember, the optimizations should not depend on the functions being called with constant input values.
 
 After generating, add the functions to the zip file with the following structure:
 
