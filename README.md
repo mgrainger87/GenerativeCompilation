@@ -41,12 +41,45 @@ The project examined five optimization techniques commonly used by compilers:
 
 These techniques were chosen because they can be applied to relatively simple code that an LLM is likely to be able to understand. Other techniques such as function inlining and tail recursion optimization were considered, but it proved difficult to get the LLM to reason correctly about source code that can be optimized using these techniques.
 
+## Results
+
+### Constant Folding
+
+- The LLM-optimized assembly achieved performance close to that of the optimized Clang assembly.
+- The LLM-generated assembly performed very poorly, far worse than the unoptimized Clang assembly.
+
+![Constant Folding](analysis/average_performance_for_constant_folding.png)
+
+### Copy Propagation
+
+- The LLM-optimized assembly matched the performance of the optimized Clang assembly.
+
+![Copy Propagation](analysis/average_performance_for_copy_propagation.png)
+
+### Dead Code Elimination
+
+- The LLM-optimized assembly achieved performance close to that of the optimized Clang assembly.
+
+![Dead Code Elimination](analysis/average_performance_for_dead_code_elimination.png)
+
+### Loop Unrolling
+
+- The LLM-optimized assembly achieved performance better than the -O1 optimized Clang assembly, but worse than the -O2 and -O3 optimized Clang assembly.
+
+![Loop Unrolling](analysis/average_performance_for_loop_unrolling.png)
+
+### Strength Reduction
+
+- The LLM-optimized assembly achieved performance better than any of the Clang-optimized assembly.
+
+![Strength Reduction](analysis/average_performance_for_strength_reduction.png)
+
 ## Future Directions
 
 There are many possible future directions that this work could take, which could be explored in a future project or for a research paper.
 
-
 - Different LLMs: While GPT-3.5 did not appear suited to this task, it would be interesting to test the performance of Bard and Claude as well.
+- Result verification: In cases where the LLM performed better than Clang, it is wise to investigate why. While the assembly was tested for correctness, it is possible that the LLM's code is unsafe or incorrect in ways not detected by the test.
 - Prompt engineering: With the prompts used here, GPT-4 struggled to reason correctly about more complex code, particularly code with nested loops and with properly saving and restoring register state when making function calls. It also sometimes struggled to identify and correct more subtle mistakes in the assembly it generated.
 	- Encouraging the LLM to use chain-of-thought prompting, possibly across multiple interactions, may lead to better reasoning and fewer errors. In particular, it would be interesting to ask the LLM to split more complex code into smaller chunks.
 	- One technique commonly used in debugging is tracing through the code with test inputs. It would be interesting to create prompts that encourage the LLM to test its generated code. For example, we could use the Persona pattern to ask the LLM to act as a virtual machine that executes assembly instructions.
@@ -54,12 +87,8 @@ There are many possible future directions that this work could take, which could
 - This project measured CPU performance only. Other performance characteristics, like code size and memory usage, could also be measured. More complex problems could also be evaluated against disk I/O activity.
 
 
-- From an implementation perspective, the project could be integrated with the OpenAI API to fully automate the generation of solutions. This requires adding the ability to identify runtime crashes and hangs and provide feedback to the LLM, which was done manually for this project. It would be straightforward to test the LLM-generated code with a debugger attached and to provide the debugger output to the LLM.
-
-## Results
-
-![Constant Folding](analysis/average_performance_for_constant folding.png)
-
+From an implementation perspective:
+- The project could be integrated with the OpenAI API to fully automate the generation of solutions. This requires adding the ability to identify runtime crashes and hangs and provide feedback to the LLM, which was done manually for this project. It would be straightforward to test the LLM-generated code with a debugger attached and to provide the debugger output to the LLM.
 
 ## Running the Generation
 

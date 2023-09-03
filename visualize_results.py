@@ -101,9 +101,12 @@ for technique in techniques_list:
     plt.barh(grouped_means['Generation Method'], grouped_means['Normalized CPU Time'], color=bar_colors)
     plt.xlabel('Average Normalized CPU Time')
     plt.ylabel('Generation Method')
-    plt.title(f'Average Performance by Generation Method for {technique}')
+    plt.title(f'Average Performance by Generation Method for {technique.title()}')
     plt.grid(axis='x', linestyle='--', linewidth=0.5, alpha=0.7)
     plt.figtext(0.5, 0.01, 'Shorter bars are better', wrap=True, horizontalalignment='center', fontsize=8, style='italic')
     plt.tight_layout()
-    plt.savefig(os.path.join(analysis_dir, f'average_performance_for_{technique}.png'))
+    
+    filename = f'average_performance_for_{technique}.png'.replace(' ', '_')
+    plt.savefig(os.path.join(analysis_dir, filename))
+    
     plt.close()
