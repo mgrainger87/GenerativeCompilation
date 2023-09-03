@@ -254,6 +254,18 @@ def handle_problem_directory(problem_directory_path, test_driver_source_path):
 		if not success:
 			print(f"Failed to compile source from {codePath}: {error}")
 
+	o1OptimizedClangAssemblyPath = os.path.join(generatedDirectoryPath, "clang_generated_O1_optimized.asm")
+	if not os.path.exists(o1OptimizedClangAssemblyPath):
+		success, error, _ = compilation.compile_source(codePath, o1OptimizedClangAssemblyPath, True, "O1")
+		if not success:
+			print(f"Failed to compile source from {codePath}: {error}")
+
+	o2OptimizedClangAssemblyPath = os.path.join(generatedDirectoryPath, "clang_generated_O2_optimized.asm")
+	if not os.path.exists(o2OptimizedClangAssemblyPath):
+		success, error, _ = compilation.compile_source(codePath, o2OptimizedClangAssemblyPath, True, "O2")
+		if not success:
+			print(f"Failed to compile source from {codePath}: {error}")
+
 	o3OptimizedClangAssemblyPath = os.path.join(generatedDirectoryPath, "clang_generated_O3_optimized.asm")
 	if not os.path.exists(o3OptimizedClangAssemblyPath):
 		success, error, _ = compilation.compile_source(codePath, o3OptimizedClangAssemblyPath, True, "O3")
