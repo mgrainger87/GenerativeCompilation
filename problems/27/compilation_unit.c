@@ -7,5 +7,5 @@ void customFunction(int int1, int int2,
         return;
     }
     *outInt = int1 + int2;
-    *outDouble = double1 - double2; // This is unreachable if int1 > 5
+    *outDouble = double1 - double2;
 }

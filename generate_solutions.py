@@ -16,6 +16,7 @@ ASSEMBLY_GUIDELINES = """
 - Follow arm64 convention for local labels starting with a numeric value, which makes them assembler-local.
 - Before branching for a function call, be sure to save all required registers.
 - Use only valid arm64 instructions. ARM64 assembly does not allow direct floating-point literals with the fadd instruction.
+- Use appropriate register widths for an LP64 architecture, where integers are 32 bits.
 """
 
 def test_data_prompt(compilation_unit):
@@ -43,13 +44,13 @@ Function:
 """
 
 def generation_prompt(compilation_unit):
-	return f"""Generate arm64 assembly for macOS that corresponds to the C compilation unit below. Follow these guidelines:
+	return f"""Generate arm64 LP64 assembly for macOS that corresponds to the C compilation unit below. Follow these guidelines:
 
 {ASSEMBLY_GUIDELINES}
 
-Output the assembly as it would be written in a .s file. Do not generate stubs or placeholders for forward declarations or anything that is not in the compilation unit itself. If there is more than one function in the compilation unit, generate assembly for each function separately
+Output the assembly as it would be written in a .s file. Do not generate stubs or placeholders for forward declarations or anything that is not in the compilation unit itself. If there is more than one function in the compilation unit, generate assembly for each function separately.
 
-After generating the assembly, check it again against the guidelines and correct it if needed. Finally, combine the assembly together.
+After generating the assembly, check it again against the guidelines and correct it if needed. Trace the assembly with different test values that collectively exercise all of the control paths.
 
 Compilation unit:
 	
@@ -92,7 +93,7 @@ def prompt_llm_based_on_results(initial_prompt, compilerError, linkerError, test
 	if compilerError is not None:
 		prompt=f"Unfortunately, I got a compilation error:\n{compilerError}\n Fix the error. Remember: {ASSEMBLY_GUIDELINES}"
 	elif linkerError is not None:
-		prompt=f"Unfortunately, I got a linker error:\n{linkerError}\n Fix the error. Remember: {ASSEMBLY_GUIDELINES}"
+		prompt=f"Unfortunately, I got a linker error:\n{linkerError}\n Fix the error. After fixing the error, print out the corrected assembly. Go it through it line by line, asking this question for each line: is this valid arm64 assembly for macOS? Also examine the program as a whole to identify errors or incompatibilities."
 	elif testingError is not None:
 		prompt=f"Unfortunately, I got an incorrect result when testing the generated code:\n{testingError}\nTrace through the optimized assembly with these inputs to find the problem. If, at any time, you find an error, correct the assembly, print out the new assembly, and then trace again starting at the beginning."
 
