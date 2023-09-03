@@ -1,1 +1,0 @@
-The function `complexFunction` with zero values can be optimized. For instance, `complexFunction(int1, 0)` results in `int1 + 5` and `complexFunction(0, int2)` results in `-int2 + 5`. The multiplications with constants can also be optimized for better performance.

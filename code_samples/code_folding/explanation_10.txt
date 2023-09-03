@@ -1,1 +1,0 @@
-If `str1` always contains the character 'a', then the true branch will always be taken. This can lead to an optimization where the false branch is never considered during compilation. The addition of the two double values remains as is.

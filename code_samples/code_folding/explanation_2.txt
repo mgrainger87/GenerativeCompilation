@@ -1,1 +1,0 @@
-The constant folding optimization would recognize that strlen("constant") will always be 8, and `double1 * 0` and `double2 * 0` will always be 0. Therefore, these expressions can be replaced with their constant values.

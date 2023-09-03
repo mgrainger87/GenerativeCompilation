@@ -1,1 +1,0 @@
-The compiler can recognize that `helperFunction(int1)` always returns 0. Additionally, multiplying by 1 has no effect, and adding 0.0 is redundant. Thus, the compiler can simplify the function.

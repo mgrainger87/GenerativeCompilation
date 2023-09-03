@@ -1,1 +1,0 @@
-The temporary variable operation and the subsequent addition with 7 and subtraction of 2 can be optimized into a single operation. The multiplication of `double1` with 0 is redundant and can be optimized away, leaving only `double2`.

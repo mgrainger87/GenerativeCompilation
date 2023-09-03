@@ -1,1 +1,0 @@
-The operations involving the string constants can be folded into a single string operation. The addition of 0 is redundant and can be optimized away.
