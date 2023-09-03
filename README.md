@@ -15,7 +15,7 @@ The project's methodology can be broken down into the following steps:
 1. **Technique Identification:** Recognize simple optimization techniques typically employed by C compilers. [See prompt and response.](prompts/optimization_techniques.txt)
 2. **Problem Generation:** Leverage an LLM like GPT-4 to create coding challenges. Each challenge consists of a C compilation unit that is prime for optimization using the identified techniques. [See prompts.](prompts/problem_generation.txt)
 3. **Compilation with Clang:** Generate assembly code for the provided problems using Clang at various optimization settings, notably `-O0`, where optimizations are turned off.
-4. **Test Generation** Task an LLM with creating tests for each coding problem. The correctness of the test cases are validated using both LLM-generated Python functions and the Clang-produced assembly. [See prompts.](prompts/test_case_generation.txt)
+4. **Test Generation:** Task an LLM with creating tests for each coding problem. The correctness of the test cases are validated using both LLM-generated Python functions and the Clang-produced assembly. [See prompts.](prompts/test_case_generation.txt)
 5. **Optimization by LLM:** Ask the LLM to refine the unoptimized assembly churned out by Clang. The improved assembly is compiled, linked, and run against the generated tests. If errors occur, the LLM is given the error and asked to correct the assembly. [See sample prompts.](prompts/optimize_assembly.txt)
 6. **Direct Assembly Generation by LLM:** Without any guidance from Clang, the LLM is asked to produce its assembly for the problem. This assembly is compiled, linked, and run against the generated tests. If errors occur, the LLM is given the error and asked to correct the assembly. [See sample prompts.](prompts/generate_assembly.txt)
 7. **Performance Measurement:** The Clang-generated and LLM-produced assembly implementations are run using a test driver, and their CPU performance is measured. The test driver that runs the assembly a configurable number of times; for simple functions, a large number of iterations are used to reduce variance.
@@ -110,11 +110,29 @@ From an implementation perspective:
 	The repository already contains generated problems. To generate new problems in the same format, use the prompt style in [LINK](prompts/problem_generation.txt).
 	
 2. **Clean Repository** (Optional):
-	Most the tools in the repository do not replace already-generated data. To start the process from scratch, run:
+	Most the tools in the repository do not replace already-generated data. You can remove the data in the repository using the `clean.py` script.
 
-	```bash
-	python3 clean_repository.py problems
-	```
+	- To remove everything except the problem definitions:
+	  ```bash
+	  python3 clean.py all
+	  ```
+	- To remove the test data:
+	  ```bash
+	  python3 clean.py tests
+	  ```
+	- To remove the generated assembly:
+	  ```bash
+	  python3 clean.py generated
+	  ```
+	- To remove the performance results:
+	  ```bash
+	  python3 clean.py performance
+	  ```
+	- To remove the visualizations:
+	  ```bash
+	  python3 clean.py analysis
+	  ```
+
 
 3. **Generate Solutions**:
 	Run the following command, which generates solutions for each problem. When input is needed from the LLM, it outputs the prompt to `stdout` and reads the response from `stdin`.
