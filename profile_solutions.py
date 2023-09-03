@@ -42,7 +42,7 @@ def handle_problem_directory(problem_directory_path, test_driver_source_path):
 	
 	if os.path.exists(results_csv_path):
 		print(f"Already have profiling results for {problem_directory_path}.")
-		# return
+		return
 
 	print(f"Working on problem in directory {problem_directory_path}…")
 	
@@ -103,21 +103,6 @@ def handle_problem_directory(problem_directory_path, test_driver_source_path):
 			normalized_cpu_time = cpu_time / unoptimized_cpu_time
 			
 			csvwriter.writerow([filename, cpu_time, normalized_cpu_time])
-
-	# # Create or open a CSV file for writing the results
-	# with open(results_csv_path, 'w', newline='') as csvfile:
-	# 	csvwriter = csv.writer(csvfile)
-	# 	csvwriter.writerow(['Filename', 'CPU Time'])  # Writing the headers
-	# 	
-	# 	for filename in asm_files:
-	# 		fullAssemblyPath = os.path.join(generatedDirectoryPath, filename)
-	# 		
-	# 		# test_individual_assembly returns a tuple (success, cpu_time)
-	# 		success, cpu_time = test_individual_assembly(driverObjectPath, fullAssemblyPath, testDataPath, iterations)
-	# 		
-	# 		if success:
-	# 			# Write the results to the CSV file
-	# 			csvwriter.writerow([filename, cpu_time])
 
 if __name__ == "__main__":
 	# Check if the user has provided a command-line argument
