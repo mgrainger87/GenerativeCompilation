@@ -283,11 +283,11 @@ def handle_problem_directory(problem_directory_path, test_driver_source_path):
 		return
 	
 	# Have LLM generate assembly from C compilation unit
-	# generatedAssemblyPath = os.path.join(generatedDirectoryPath, "llm_generated.asm")
-	# if os.path.exists(generatedAssemblyPath):
-	# 	print(f"Already have generated assembly at {generatedAssemblyPath}.")
-	# else:
-	# 	generate_assembly_from_compilation_unit_source(codePath, driverObjectPath, testDataPath, generatedAssemblyPath)
+	generatedAssemblyPath = os.path.join(generatedDirectoryPath, "llm_generated.asm")
+	if os.path.exists(generatedAssemblyPath):
+		print(f"Already have generated assembly at {generatedAssemblyPath}.")
+	else:
+		generate_assembly_from_compilation_unit_source(codePath, driverObjectPath, testDataPath, generatedAssemblyPath)
 	
 	# Have LLM optimize Clang-generated assembly	
 	optimizedClangAssemblyPath = os.path.join(generatedDirectoryPath, "clang_generated_llm_optimized.asm")

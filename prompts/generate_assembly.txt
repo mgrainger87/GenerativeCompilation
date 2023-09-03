@@ -1,0 +1,29 @@
+Generate arm64 assembly for macOS that corresponds to the C compilation unit below. Follow these guidelines:
+
+
+- Follow the arm64 calling convention strictly. Write out which registers are used for which parameters before generating the assembly.
+- Preserve the values of caller-saved and/or callee-saved registers where necessary.
+- Mangle function names according to Clang conventions for C (not C++).
+- Align functions appropriately for arm64.
+- Follow arm64 convention for local labels starting with a numeric value, which makes them assembler-local.
+- Before branching for a function call, be sure to save all required registers.
+- Use only valid arm64 instructions. ARM64 assembly does not allow direct floating-point literals with the fadd instruction.
+
+
+Output the assembly as it would be written in a .s file. Do not generate stubs or placeholders for forward declarations or anything that is not in the compilation unit itself. If there is more than one function in the compilation unit, generate assembly for each function separately
+
+After generating the assembly, check it again against the guidelines and correct it if needed. Finally, combine the assembly together.
+
+Compilation unit:
+	
+
+void customFunction(int int1, int int2, 
+					double double1, double double2, 
+					int *outInt, double *outDouble) {
+	int sum = 0;
+	for (int i = 0; i < 4; i++) {
+		sum += int1;
+	}
+	*outInt = sum;
+	*outDouble = double1 + double2;
+}
