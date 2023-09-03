@@ -48,6 +48,8 @@ combined_df.to_csv(os.path.join(analysis_dir, 'combined_data.csv'), index=False)
 
 # Renaming 'Filename' values and column name
 filename_renaming = {
+    "clang_generated_O1_optimized.asm": "Clang O1",
+    "clang_generated_O2_optimized.asm": "Clang O2",
     "clang_generated_O3_optimized.asm": "Clang O3",
     "clang_generated_llm_optimized.asm": "LLM optimized",
     "clang_generated_unoptimized.asm": "Clang Unoptimized"

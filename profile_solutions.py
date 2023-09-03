@@ -42,7 +42,7 @@ def handle_problem_directory(problem_directory_path, test_driver_source_path):
 	
 	if os.path.exists(results_csv_path):
 		print(f"Already have profiling results for {problem_directory_path}.")
-		return
+		# return
 
 	print(f"Working on problem in directory {problem_directory_path}…")
 	
