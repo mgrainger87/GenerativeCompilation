@@ -22,14 +22,14 @@ Function prototype:
 					double double1, double double2, 
 					int *outInt, double *outDouble);```
 
-Optimization technique: strength reduction
+Optimization technique: loop unrolling
 
 After generating, write the functions to a zip file with the following structure.  "technique.txt" should contain only the exact optimization technique listed above.
 
-91/compilation_unit.c
-91/technique.txt
-92/compilation_unit.c
-92/technique.txt
+21/compilation_unit.c
+21/technique.txt
+22/compilation_unit.c
+22/technique.txt
 …
 
 ---
@@ -38,10 +38,10 @@ Output 10 more compilation units where the optimization opportunity is less obvi
 
 After generating, add the functions to the zip file with the following structure:
 
-66/compilation_unit.c
-66/technique.txt
-67/compilation_unit.c
-67/technique.txt
+31/compilation_unit.c
+31/technique.txt
+32/compilation_unit.c
+32/technique.txt
 …
 
 ---
