@@ -93,7 +93,7 @@ There are many possible future directions that this work could take, which could
 	- In particular, tools like static analyzers and fuzzers could be used for verification.
 - **Variance Determination**: Only one solution was generated for each problem. It would be interesting to generate multiple solutions for the same problem and evaluate the level of variance in the assembly produced and its resulting performance.
 - **Prompt engineering:** With the prompts used here, GPT-4 struggled to reason correctly about more complex code, particularly code with nested loops and with properly saving and restoring register state when making function calls. It also sometimes struggled to identify and correct more subtle mistakes in the assembly it generated.
-	- Encouraging the LLM to use chain-of-thought prompting, possibly across multiple interactions, may lead to better reasoning and fewer errors. In particular, it would be interesting to ask the LLM to split more complex code into smaller chunks.
+	- Encouraging the LLM to use chain-of-thought prompting[^1], possibly across multiple interactions, may lead to better reasoning and fewer errors. In particular, it would be interesting to ask the LLM to split more complex code into smaller chunks.
 	- One technique commonly used in debugging is tracing through the code with test inputs. It would be interesting to create prompts that encourage the LLM to test its generated code. For example, we could use the Persona pattern to ask the LLM to act as a virtual machine that executes assembly instructions.
 	- Generating multiple different implementations for the same source code, then asking the LLM to evaluate them, combining them into an ultimate "best" answer.
 - **Additional optimization techniques:** Improved prompt engineering may make it feasible to attempt more complex optimizations like function inlining.
@@ -103,8 +103,16 @@ From an implementation perspective:
 - **API integration:** The project could be integrated with the OpenAI API to fully automate the generation of solutions. This requires adding the ability to identify runtime crashes and hangs and provide feedback to the LLM, which was done manually for this project. It would be straightforward to test the LLM-generated code with a debugger attached and to provide the debugger output to the LLM.
 - **Larger, more diverse problem pool**: A greater number of problems could be used for each optimization technique, and they could be gathered from sources like compiler test suites to see how the LLM fares with tricky optimizations that compilers know how to handle.
 
+## Project Structure
 
-## Running the Generation
+### Key Files
+
+- **[generate_solutions.py](generate_solutions.py):** Entry point for steps 3-6 in the [Approach](#approach) section. Compiles problems, generates test and verifies test cases, prompts LLM to generate and optimize assembly, tests assembly against test cases. Creates a `generated` subdirectory and `test_data.csv` file in each problem directory.
+- **[compilation.py](compilation.py):** Helper functions that compile and link code using Clang.
+- **[profile_solutions.py](profile_solutions.py):** Performs performance testing on the generated assembly for each problem, creating a `performance_results.txt` file in each problem directory.
+- **[visualize_results.py](visualize_results.py):** Creates graphs showing the performance results for each problem as well as average results for each technique.
+
+### Running the Generation
 
 1. **Generate Problems** (Optional):
 	The repository already contains generated problems. To generate new problems in the same format, use the prompt style in [LINK](prompts/problem_generation.txt).
@@ -156,3 +164,8 @@ From an implementation perspective:
 	```
 	
 	This will generate performance graphs for each problem in the `analysis` subdirectory.
+
+## References
+
+[^1] J. Wei et al., “Chain-of-Thought Prompting Elicits Reasoning in Large Language Models.” arXiv, Jan. 10, 2023. doi: 10.48550/arXiv.2201.11903.
+
