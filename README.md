@@ -90,15 +90,19 @@ There are many possible future directions that this work could take, which could
 
 - **Different LLMs:** While GPT-3.5 did not appear suited to this task, it would be interesting to test the performance of Bard and Claude as well.
 - **Result verification:** In cases where the LLM performed better than Clang, it is wise to investigate why. While the assembly was tested for correctness, it is possible that the LLM's code is unsafe or incorrect in ways not detected by the test.
+	- In particular, tools like static analyzers and fuzzers could be used for verification.
 - **Variance Determination**: Only one solution was generated for each problem. It would be interesting to generate multiple solutions for the same problem and evaluate the level of variance in the assembly produced and its resulting performance.
 - **Prompt engineering:** With the prompts used here, GPT-4 struggled to reason correctly about more complex code, particularly code with nested loops and with properly saving and restoring register state when making function calls. It also sometimes struggled to identify and correct more subtle mistakes in the assembly it generated.
 	- Encouraging the LLM to use chain-of-thought prompting, possibly across multiple interactions, may lead to better reasoning and fewer errors. In particular, it would be interesting to ask the LLM to split more complex code into smaller chunks.
 	- One technique commonly used in debugging is tracing through the code with test inputs. It would be interesting to create prompts that encourage the LLM to test its generated code. For example, we could use the Persona pattern to ask the LLM to act as a virtual machine that executes assembly instructions.
 	- Generating multiple different implementations for the same source code, then asking the LLM to evaluate them, combining them into an ultimate "best" answer.
+- **Additional optimization techniques:** Improved prompt engineering may make it feasible to attempt more complex optimizations like function inlining.
 - **Performance dimensions**: This project measured CPU performance only. Other performance characteristics, like code size and memory usage, could also be measured. More complex problems could also be evaluated against disk I/O activity.
 
 From an implementation perspective:
 - **API integration:** The project could be integrated with the OpenAI API to fully automate the generation of solutions. This requires adding the ability to identify runtime crashes and hangs and provide feedback to the LLM, which was done manually for this project. It would be straightforward to test the LLM-generated code with a debugger attached and to provide the debugger output to the LLM.
+- **Larger, more diverse problem pool**: A greater number of problems could be used for each optimization technique, and they could be gathered from sources like compiler test suites to see how the LLM fares with tricky optimizations that compilers know how to handle.
+
 
 ## Running the Generation
 
