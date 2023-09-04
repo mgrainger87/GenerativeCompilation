@@ -1,4 +1,4 @@
-Generate arm64 assembly for macOS that corresponds to the C compilation unit below. Follow these guidelines:
+Generate arm64 LP64 assembly for macOS that corresponds to the C compilation unit below. Follow these guidelines:
 
 
 - Follow the arm64 calling convention strictly. Write out which registers are used for which parameters before generating the assembly.
@@ -8,11 +8,12 @@ Generate arm64 assembly for macOS that corresponds to the C compilation unit bel
 - Follow arm64 convention for local labels starting with a numeric value, which makes them assembler-local.
 - Before branching for a function call, be sure to save all required registers.
 - Use only valid arm64 instructions. ARM64 assembly does not allow direct floating-point literals with the fadd instruction.
+- Use appropriate register widths for an LP64 architecture, where integers are 32 bits.
 
 
-Output the assembly as it would be written in a .s file. Do not generate stubs or placeholders for forward declarations or anything that is not in the compilation unit itself. If there is more than one function in the compilation unit, generate assembly for each function separately
+Output the assembly as it would be written in a .s file. Do not generate stubs or placeholders for forward declarations or anything that is not in the compilation unit itself. If there is more than one function in the compilation unit, generate assembly for each function separately.
 
-After generating the assembly, check it again against the guidelines and correct it if needed. Finally, combine the assembly together.
+After generating the assembly, check it again against the guidelines and correct it if needed. Trace the assembly with different test values that collectively exercise all of the control paths.
 
 Compilation unit:
 	
