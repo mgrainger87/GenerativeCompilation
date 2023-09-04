@@ -23,6 +23,15 @@ techniques = []
 
 markdown_content = ""
 
+filename_renaming = {
+    "clang_generated_unoptimized.asm": "Clang Unoptimized",
+    "clang_generated_O1_optimized.asm": "Clang O1",
+    "clang_generated_O2_optimized.asm": "Clang O2",
+    "clang_generated_O3_optimized.asm": "Clang O3",
+    "clang_generated_llm_optimized.asm": "Clang LLM optimized",
+    "llm_generated.asm": "LLM generated"
+}
+
 # Iterate through each problem directory and extract the data
 for problem_dir in sorted(os.listdir(problems_dir)):
     problem_path = os.path.join(problems_dir, problem_dir)
@@ -49,7 +58,20 @@ for problem_dir in sorted(os.listdir(problems_dir)):
             c_contents = c_file.read()
             markdown_content += f"### Compilation Unit\n"
             markdown_content += "```c\n" + c_contents + "\n```\n"
+            
+        generated_assembly_links = []
+        generated_directory_path = os.path.join(problem_path, "generated")
+        relative_generated_directory_path = os.path.relpath(generated_directory_path, start=analysis_dir)
+        for generated_assembly_filename in sorted(os.listdir(generated_directory_path)):
+            if generated_assembly_filename in filename_renaming.keys():
+                relative_generated_assembly_file_path = os.path.join(relative_generated_directory_path, generated_assembly_filename)
+                highlight = "**" if "llm" in generated_assembly_filename else ""
+                generated_assembly_links.append(f"{highlight}[{filename_renaming[generated_assembly_filename]}]({relative_generated_assembly_file_path}){highlight}")
         
+        # Add links to generated assembly
+        if generated_assembly_links:
+            markdown_content += f"- Generated Assembly: {', '.join(generated_assembly_links)}\n"
+
         markdown_content += f"### Results\n"
         markdown_content += f"![Chart for Problem {problem_dir}]({png_file_path})\n\n"
 
@@ -65,14 +87,6 @@ combined_df['technique'] = techniques
 combined_df.to_csv(os.path.join(analysis_dir, 'combined_data.csv'), index=False)
 
 # Renaming 'Filename' values and column name
-filename_renaming = {
-    "clang_generated_unoptimized.asm": "Clang Unoptimized",
-    "clang_generated_O1_optimized.asm": "Clang O1",
-    "clang_generated_O2_optimized.asm": "Clang O2",
-    "clang_generated_O3_optimized.asm": "Clang O3",
-    "clang_generated_llm_optimized.asm": "Clang LLM optimized",
-    "llm_generated.asm": "LLM generated"
-}
 combined_df['Generation Method'] = combined_df['Filename'].replace(filename_renaming)
 
 # Set colors based on the presence of "LLM" in the Generation Method
@@ -142,7 +156,7 @@ plt.figure(figsize=(10, 5))
 plt.barh(grouped_means['Generation Method'], grouped_means['Normalized CPU Time'], color=bar_colors)
 plt.xlabel('Average Normalized CPU Time')
 plt.ylabel('Generation Method')
-plt.title(f'Average Performance by Generation Method for {technique.title()}')
+plt.title(f'Average Performance by Generation Method (all techniques)')
 plt.grid(axis='x', linestyle='--', linewidth=0.5, alpha=0.7)
 plt.figtext(0.5, 0.01, 'Shorter bars are better', wrap=True, horizontalalignment='center', fontsize=8, style='italic')
 plt.tight_layout()
