@@ -129,3 +129,22 @@ for technique in techniques_list:
     plt.savefig(os.path.join(analysis_dir, filename))
     
     plt.close()
+
+# Now, generate one final chart with all the data.
+    # Group by generation method and calculate the mean for 'Normalized CPU Time'
+grouped_means = combined_df.groupby('Generation Method')['Normalized CPU Time'].mean().reset_index().sort_values(by='Normalized CPU Time', ascending=False)
+
+# Determine bar colors based on the presence of "LLM" in the generation method
+bar_colors = ['blue' if 'LLM' in method else 'lightgray' for method in grouped_means['Generation Method']]
+
+# Plotting
+plt.figure(figsize=(10, 5))
+plt.barh(grouped_means['Generation Method'], grouped_means['Normalized CPU Time'], color=bar_colors)
+plt.xlabel('Average Normalized CPU Time')
+plt.ylabel('Generation Method')
+plt.title(f'Average Performance by Generation Method for {technique.title()}')
+plt.grid(axis='x', linestyle='--', linewidth=0.5, alpha=0.7)
+plt.figtext(0.5, 0.01, 'Shorter bars are better', wrap=True, horizontalalignment='center', fontsize=8, style='italic')
+plt.tight_layout()
+plt.savefig(os.path.join(analysis_dir, 'average_performance_overall.png'))
+plt.close()
