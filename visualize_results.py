@@ -21,8 +21,10 @@ if not os.path.exists(analysis_dir):
 dataframes = []
 techniques = []
 
+markdown_content = ""
+
 # Iterate through each problem directory and extract the data
-for problem_dir in os.listdir(problems_dir):
+for problem_dir in sorted(os.listdir(problems_dir)):
     problem_path = os.path.join(problems_dir, problem_dir)
     if os.path.isdir(problem_path):
         # Read performance_results.csv file
@@ -38,6 +40,22 @@ for problem_dir in os.listdir(problems_dir):
                 with open(technique_file, 'r') as f:
                     technique = f.read().strip()
                     techniques.extend([technique] * df.shape[0])
+                    
+        # Add to Markdown file
+        markdown_content += f"## Problem {problem_dir}\n"
+        c_file_path = os.path.join(problem_path, "compilation_unit.c")
+        png_file_path = f"problem_{problem_dir}_chart.png"
+        with open(c_file_path, "r") as c_file:
+            c_contents = c_file.read()
+            markdown_content += f"### Compilation Unit\n"
+            markdown_content += "```c\n" + c_contents + "\n```\n"
+        
+        markdown_content += f"### Results\n"
+        markdown_content += f"![Chart for Problem {problem_dir}]({png_file_path})\n\n"
+
+with open(os.path.join(analysis_dir, "charts.md"), "w") as output_file:
+    output_file.write(markdown_content)
+
 
 # Combining all dataframes into one
 combined_df = pd.concat(dataframes, ignore_index=True)
@@ -75,7 +93,7 @@ for problem in problems_list:
     subset[subset['Generation Method'].isin(valid_generation_methods)].plot(
         x='Generation Method', y='Normalized CPU Time', kind='barh', color=valid_colors, legend=False
     )
-    plt.title(f"Problem {problem}")
+    plt.title(f"Problem {problem} - {subset['technique'].unique()[0]}")
     plt.xlabel("Normalized CPU Time")
     plt.xlim(0, 1.2)  # Adjusting the x-axis limit for more space between 0 and 1
     plt.figtext(0.5, 0.01, 'Shorter bars are better', wrap=True, horizontalalignment='center', fontsize=8, style='italic')

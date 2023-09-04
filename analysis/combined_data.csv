@@ -1,523 +1,576 @@
 Filename,CPU Time,Normalized CPU Time,problem,technique
-clang_generated_unoptimized.asm,0.7216680000000001,1.0,61,loop unrolling
-clang_generated_O2_optimized.asm,0.2251999999999998,0.312054850706973,61,loop unrolling
-clang_generated_llm_optimized.asm,0.2253449999999999,0.3122557741232808,61,loop unrolling
-clang_generated_O1_optimized.asm,0.2249429999999999,0.3116987312725517,61,loop unrolling
-clang_generated_O3_optimized.asm,0.2257320000000002,0.3127920317930132,61,loop unrolling
-clang_generated_unoptimized.asm,0.3385439999999997,1.0,95,copy propagation
-clang_generated_O2_optimized.asm,0.2232780000000001,0.6595243158939467,95,copy propagation
-clang_generated_llm_optimized.asm,0.2254830000000001,0.6660375017722963,95,copy propagation
-clang_generated_O1_optimized.asm,0.2221129999999997,0.6560831088425728,95,copy propagation
-clang_generated_O3_optimized.asm,0.2252230000000001,0.6652695070655523,95,copy propagation
-clang_generated_unoptimized.asm,0.2551319999999997,1.0,59,strength reduction
-clang_generated_O2_optimized.asm,0.2243320000000004,0.8792781775708288,59,strength reduction
-clang_generated_llm_optimized.asm,0.2225210000000004,0.8721798911935809,59,strength reduction
-clang_generated_O1_optimized.asm,0.2295259999999999,0.8996362667168375,59,strength reduction
-clang_generated_O3_optimized.asm,0.2281329999999997,0.894176347929699,59,strength reduction
-clang_generated_unoptimized.asm,0.3463789999999997,1.0,92,copy propagation
-clang_generated_O2_optimized.asm,0.2218479999999996,0.6404776271078783,92,copy propagation
-clang_generated_llm_optimized.asm,0.2291599999999993,0.661587451895177,92,copy propagation
-clang_generated_O1_optimized.asm,0.2264150000000002,0.6536626065667965,92,copy propagation
-clang_generated_O3_optimized.asm,0.2264049999999997,0.6536337364563091,92,copy propagation
-clang_generated_unoptimized.asm,0.7281600000000008,1.0,66,loop unrolling
-clang_generated_O2_optimized.asm,0.2329999999999987,0.3199846187651045,66,loop unrolling
-clang_generated_llm_optimized.asm,0.2273530000000008,0.3122294550648217,66,loop unrolling
-clang_generated_O1_optimized.asm,0.2265949999999996,0.3111884750604254,66,loop unrolling
-clang_generated_O3_optimized.asm,0.2301359999999999,0.3160514172709289,66,loop unrolling
-clang_generated_unoptimized.asm,0.2564280000000014,1.0,50,strength reduction
-clang_generated_O2_optimized.asm,0.2286470000000005,0.8916615970174833,50,strength reduction
-clang_generated_llm_optimized.asm,0.2275050000000007,0.8872081051991181,50,strength reduction
-clang_generated_O1_optimized.asm,0.222100000000001,0.8661300637995845,50,strength reduction
-clang_generated_O3_optimized.asm,0.228593,0.8914510115899932,50,strength reduction
-clang_generated_unoptimized.asm,0.7245480000000004,1.0,68,loop unrolling
-clang_generated_O2_optimized.asm,0.2267840000000003,0.3130006569613058,68,loop unrolling
-clang_generated_llm_optimized.asm,0.4444929999999996,0.6134762638224097,68,loop unrolling
-clang_generated_O1_optimized.asm,0.227055,0.3133746832507989,68,loop unrolling
-clang_generated_O3_optimized.asm,0.2295879999999996,0.3168706559123751,68,loop unrolling
-clang_generated_unoptimized.asm,0.2544299999999992,1.0,57,strength reduction
-clang_generated_O2_optimized.asm,0.2276410000000002,0.894709743347879,57,strength reduction
-clang_generated_llm_optimized.asm,0.2238180000000014,0.8796839995283655,57,strength reduction
-clang_generated_O1_optimized.asm,0.2260600000000003,0.8884958534764023,57,strength reduction
-clang_generated_O3_optimized.asm,0.2265700000000006,0.8905003340801055,57,strength reduction
-clang_generated_unoptimized.asm,0.2534000000000009,1.0,03,constant folding
-clang_generated_O2_optimized.asm,0.2279210000000002,0.8994514601420656,03,constant folding
-clang_generated_llm_optimized.asm,0.2295700000000007,0.9059589581689024,03,constant folding
-clang_generated_O1_optimized.asm,0.2278460000000013,0.8991554853985811,03,constant folding
-clang_generated_O3_optimized.asm,0.2332170000000033,0.9203512233622828,03,constant folding
-llm_generated.asm,0.221471000000001,0.8739976322020531,03,constant folding
-clang_generated_unoptimized.asm,0.255353999999997,1.0,04,constant folding
-clang_generated_O2_optimized.asm,0.2278279999999988,0.8922045474126175,04,constant folding
-clang_generated_llm_optimized.asm,0.2237810000000024,0.8763559607447117,04,constant folding
-clang_generated_O1_optimized.asm,0.2275540000000013,0.891131527213218,04,constant folding
-clang_generated_O3_optimized.asm,0.2289649999999987,0.896657189626955,04,constant folding
-llm_generated.asm,0.0030900000000002,0.0121008482342171,04,constant folding
-clang_generated_unoptimized.asm,0.6666540000000012,1.0,32,dead code elimination
-clang_generated_O2_optimized.asm,0.0056609999999999,0.0084916613415653,32,dead code elimination
-clang_generated_llm_optimized.asm,0.2363169999999996,0.3544822351624669,32,dead code elimination
-clang_generated_O1_optimized.asm,0.005671000000003,0.0085066616265755,32,dead code elimination
-clang_generated_O3_optimized.asm,0.0049340000000022,0.0074011406216751,32,dead code elimination
-llm_generated.asm,5.354080000000003,8.03127259417928,32,dead code elimination
-clang_generated_unoptimized.asm,0.6385989999999993,1.0,35,dead code elimination
-clang_generated_O2_optimized.asm,0.005123000000001,0.0080222487038048,35,dead code elimination
-clang_generated_llm_optimized.asm,0.1243090000000002,0.1946589330706756,35,dead code elimination
-clang_generated_O1_optimized.asm,0.2400629999999992,0.3759213528364428,35,dead code elimination
-clang_generated_O3_optimized.asm,0.0053370000000008,0.0083573572774163,35,dead code elimination
-llm_generated.asm,12.055596,18.87819429720375,35,dead code elimination
-clang_generated_unoptimized.asm,0.7236499999999992,1.0,69,loop unrolling
-clang_generated_O2_optimized.asm,0.2265220000000027,0.3130270158225703,69,loop unrolling
-clang_generated_llm_optimized.asm,0.2310590000000019,0.3192966212948278,69,loop unrolling
-clang_generated_O1_optimized.asm,0.2289160000000052,0.3163352449388592,69,loop unrolling
-clang_generated_O3_optimized.asm,0.2254159999999956,0.3114986526635747,69,loop unrolling
-clang_generated_unoptimized.asm,0.258500000000005,1.0,56,strength reduction
-clang_generated_O2_optimized.asm,0.2297799999999981,0.8888974854932055,56,strength reduction
-clang_generated_llm_optimized.asm,0.2273589999999998,0.8795319148935993,56,strength reduction
-clang_generated_O1_optimized.asm,0.2270830000000003,0.8784642166344137,56,strength reduction
-clang_generated_O3_optimized.asm,0.2215789999999984,0.8571721470019114,56,strength reduction
-clang_generated_unoptimized.asm,0.2550269999999983,1.0,51,strength reduction
-clang_generated_O2_optimized.asm,0.2253919999999993,0.8837966176130403,51,strength reduction
-clang_generated_llm_optimized.asm,0.0026700000000019,0.0104694797021568,51,strength reduction
-clang_generated_O1_optimized.asm,0.2232649999999978,0.8754563242323333,51,strength reduction
-clang_generated_O3_optimized.asm,0.2248949999999965,0.8818478043501197,51,strength reduction
-clang_generated_unoptimized.asm,0.2565890000000053,1.0,58,strength reduction
-clang_generated_O2_optimized.asm,0.2257749999999987,0.8799091153556625,58,strength reduction
-clang_generated_llm_optimized.asm,0.2253450000000043,0.8782332835780167,58,strength reduction
-clang_generated_O1_optimized.asm,0.2206410000000005,0.8599004633869572,58,strength reduction
-clang_generated_O3_optimized.asm,0.227451000000002,0.8864409620053758,58,strength reduction
-clang_generated_unoptimized.asm,0.4343879999999984,1.0,67,loop unrolling
-clang_generated_O2_optimized.asm,0.2260790000000057,0.5204540641086,67,loop unrolling
-clang_generated_llm_optimized.asm,0.2257789999999957,0.5197634372956816,67,loop unrolling
-clang_generated_O1_optimized.asm,0.2202100000000015,0.5069431015589804,67,loop unrolling
-clang_generated_O3_optimized.asm,0.2253049999999987,0.5186722469313139,67,loop unrolling
-clang_generated_unoptimized.asm,0.4003469999999964,1.0,93,copy propagation
-clang_generated_O2_optimized.asm,0.2259700000000037,0.5644353523318666,93,copy propagation
-clang_generated_llm_optimized.asm,0.224266,0.5601790446787464,93,copy propagation
-clang_generated_O1_optimized.asm,0.2273840000000007,0.5679672883773395,93,copy propagation
-clang_generated_O3_optimized.asm,0.2262150000000033,0.5650473214486568,93,copy propagation
-clang_generated_unoptimized.asm,0.4185960000000008,1.0,94,copy propagation
-clang_generated_O2_optimized.asm,0.2274740000000008,0.5434213418188429,94,copy propagation
-clang_generated_llm_optimized.asm,0.2253579999999999,0.5383663484600891,94,copy propagation
-clang_generated_O1_optimized.asm,0.2201230000000009,0.5258602566675279,94,copy propagation
-clang_generated_O3_optimized.asm,0.2246060000000014,0.5365698668883624,94,copy propagation
-clang_generated_unoptimized.asm,0.2544719999999998,1.0,60,strength reduction
-clang_generated_O2_optimized.asm,0.223241999999999,0.8772752994435506,60,strength reduction
-clang_generated_llm_optimized.asm,0.224620999999999,0.8826943632305293,60,strength reduction
-clang_generated_O1_optimized.asm,0.227101999999995,0.8924439624005596,60,strength reduction
-clang_generated_O3_optimized.asm,0.2257140000000035,0.8869895312647509,60,strength reduction
-clang_generated_unoptimized.asm,0.2542119999999954,1.0,34,dead code elimination
-clang_generated_O2_optimized.asm,0.2271939999999972,0.8937186285462578,34,dead code elimination
-clang_generated_llm_optimized.asm,0.2255090000000024,0.8870903025821222,34,dead code elimination
-clang_generated_O1_optimized.asm,0.2249839999999991,0.8850250971630105,34,dead code elimination
-clang_generated_O3_optimized.asm,0.2200970000000026,0.8658009850046677,34,dead code elimination
-clang_generated_unoptimized.asm,0.2559559999999976,1.0,33,dead code elimination
-clang_generated_O2_optimized.asm,0.2253089999999957,0.8802645767241161,33,dead code elimination
-clang_generated_llm_optimized.asm,0.2202219999999997,0.8603900670427798,33,dead code elimination
-clang_generated_O1_optimized.asm,0.2251210000000014,0.8795300754817372,33,dead code elimination
-clang_generated_O3_optimized.asm,0.2263169999999945,0.8842027535982616,33,dead code elimination
-clang_generated_unoptimized.asm,0.6267320000000041,1.0,05,constant folding
-clang_generated_O2_optimized.asm,0.2247179999999957,0.3585551719076005,05,constant folding
-clang_generated_llm_optimized.asm,0.5047309999999996,0.8053378477562919,05,constant folding
-clang_generated_O1_optimized.asm,0.227053000000005,0.3622808473159238,05,constant folding
-clang_generated_O3_optimized.asm,0.2256320000000045,0.3600135305042714,05,constant folding
-llm_generated.asm,0.2876359999999991,0.4589457694836026,05,constant folding
-clang_generated_unoptimized.asm,0.2560709999999986,1.0,02,constant folding
-clang_generated_O2_optimized.asm,0.2258220000000008,0.8818726056445364,02,constant folding
-clang_generated_llm_optimized.asm,0.2252999999999971,0.8798341085089619,02,constant folding
-clang_generated_O1_optimized.asm,0.2240879999999947,0.8751010461942038,02,constant folding
-clang_generated_O3_optimized.asm,0.225438000000004,0.8803730215448264,02,constant folding
-llm_generated.asm,0.0025710000000032,0.0100401841676848,02,constant folding
-clang_generated_unoptimized.asm,0.2613920000000007,1.0,20,constant folding
-clang_generated_O2_optimized.asm,0.2254049999999949,0.8623255493664471,20,constant folding
-clang_generated_llm_optimized.asm,0.2294389999999992,0.8777583093591182,20,constant folding
-clang_generated_O1_optimized.asm,0.2213059999999984,0.846644120707588,20,constant folding
-clang_generated_O3_optimized.asm,0.2272259999999946,0.8692920976923316,20,constant folding
-clang_generated_unoptimized.asm,0.2231670000000036,1.0,18,constant folding
-clang_generated_O2_optimized.asm,0.2234029999999975,1.0010575040216243,18,constant folding
-clang_generated_llm_optimized.asm,0.225440000000006,1.010185197632277,18,constant folding
-clang_generated_O1_optimized.asm,0.228276000000001,1.0228931696890549,18,constant folding
-clang_generated_O3_optimized.asm,0.2254359999999948,1.0101672738352496,18,constant folding
-clang_generated_unoptimized.asm,0.2849399999999988,1.0,27,dead code elimination
-clang_generated_O2_optimized.asm,0.2502050000000011,0.8780971432582373,27,dead code elimination
-clang_generated_llm_optimized.asm,0.2474520000000026,0.8684354600968753,27,dead code elimination
-clang_generated_O1_optimized.asm,0.2479410000000044,0.8701516108654643,27,dead code elimination
-clang_generated_O3_optimized.asm,0.248035999999999,0.8704850143889943,27,dead code elimination
-clang_generated_unoptimized.asm,0.2544189999999986,1.0,11,constant folding
-clang_generated_O2_optimized.asm,0.2286909999999977,0.8988754770673535,11,constant folding
-clang_generated_llm_optimized.asm,0.2266250000000127,0.8907550143661203,11,constant folding
-clang_generated_O1_optimized.asm,0.2263650000000012,0.8897330781113144,11,constant folding
-clang_generated_O3_optimized.asm,0.2242889999999988,0.8815733101694452,11,constant folding
-clang_generated_unoptimized.asm,0.2761110000000002,1.0,29,dead code elimination
-clang_generated_O2_optimized.asm,0.22555100000001,0.8168852381832302,29,dead code elimination
-clang_generated_llm_optimized.asm,0.2224209999999971,0.8055492175248249,29,dead code elimination
-clang_generated_O1_optimized.asm,0.2267599999999987,0.8212639119774242,29,dead code elimination
-clang_generated_O3_optimized.asm,0.2279630000000025,0.8256208553806346,29,dead code elimination
-clang_generated_unoptimized.asm,0.2545390000000083,1.0,16,constant folding
-clang_generated_O2_optimized.asm,0.2266219999999918,0.8903232903405156,16,constant folding
-clang_generated_llm_optimized.asm,0.2286780000000021,0.8984006380161575,16,constant folding
-clang_generated_O1_optimized.asm,0.2267650000000003,0.8908850903004764,16,constant folding
-clang_generated_O3_optimized.asm,0.2261639999999971,0.8885239590003488,16,constant folding
-clang_generated_unoptimized.asm,0.2525460000000095,1.0,42,strength reduction
-clang_generated_O2_optimized.asm,0.2280800000000056,0.9031225994472176,42,strength reduction
-clang_generated_llm_optimized.asm,0.2276900000000097,0.9015783263247138,42,strength reduction
-clang_generated_O1_optimized.asm,0.2261939999999924,0.8956546530136449,42,strength reduction
-clang_generated_O3_optimized.asm,0.2256270000000029,0.8934095174740223,42,strength reduction
-clang_generated_unoptimized.asm,0.3472459999999984,1.0,89,copy propagation
-clang_generated_O2_optimized.asm,0.2311720000000008,0.6657297708252994,89,copy propagation
-clang_generated_llm_optimized.asm,0.2265189999999961,0.6523300484382748,89,copy propagation
-clang_generated_O1_optimized.asm,0.2224280000000078,0.6405487752198985,89,copy propagation
-clang_generated_O3_optimized.asm,0.2264440000000007,0.6521140632289553,89,copy propagation
-clang_generated_unoptimized.asm,0.3307189999999878,1.0,45,strength reduction
-clang_generated_O2_optimized.asm,0.2301850000000058,0.6960138365198685,45,strength reduction
-clang_generated_llm_optimized.asm,0.2284389999999945,0.6907344301355621,45,strength reduction
-clang_generated_O1_optimized.asm,0.2208140000000042,0.6676786032856064,45,strength reduction
-clang_generated_O3_optimized.asm,0.2264409999999941,0.6846930475721156,45,strength reduction
-clang_generated_unoptimized.asm,0.5437019999999961,1.0,73,loop unrolling
-clang_generated_O2_optimized.asm,0.2293729999999954,0.4218726434701307,73,loop unrolling
-clang_generated_llm_optimized.asm,0.226506999999998,0.4166013735465377,73,loop unrolling
-clang_generated_O1_optimized.asm,0.2255710000000022,0.4148798422665427,73,loop unrolling
-clang_generated_O3_optimized.asm,0.2283330000000063,0.4199598309368146,73,loop unrolling
-clang_generated_unoptimized.asm,0.34049499999999,1.0,87,copy propagation
-clang_generated_O2_optimized.asm,0.2251310000000046,0.6611873889484757,87,copy propagation
-clang_generated_llm_optimized.asm,0.2238740000000092,0.6574957047827892,87,copy propagation
-clang_generated_O1_optimized.asm,0.2266250000000127,0.6655751185774222,87,copy propagation
-clang_generated_O3_optimized.asm,0.2277699999999924,0.6689378698659281,87,copy propagation
-clang_generated_unoptimized.asm,0.535381000000001,1.0,80,loop unrolling
-clang_generated_O2_optimized.asm,0.2279420000000129,0.4257566107127682,80,loop unrolling
-clang_generated_llm_optimized.asm,0.2264610000000004,0.4229903564003953,80,loop unrolling
-clang_generated_O1_optimized.asm,0.2249550000000084,0.4201774063704316,80,loop unrolling
-clang_generated_O3_optimized.asm,0.2247310000000055,0.4197590127404692,80,loop unrolling
-clang_generated_unoptimized.asm,0.5366360000000014,1.0,74,loop unrolling
-clang_generated_O2_optimized.asm,0.2230720000000019,0.4156858652792606,74,loop unrolling
-clang_generated_llm_optimized.asm,0.2268579999999929,0.4227409268107102,74,loop unrolling
-clang_generated_O1_optimized.asm,0.2291499999999899,0.4270119783242074,74,loop unrolling
-clang_generated_O3_optimized.asm,0.226663000000002,0.4223775520091858,74,loop unrolling
-clang_generated_unoptimized.asm,0.2781310000000019,1.0,28,dead code elimination
-clang_generated_O2_optimized.asm,0.2321610000000049,0.8347181723720238,28,dead code elimination
-clang_generated_llm_optimized.asm,0.2300929999999965,0.8272828271569691,28,dead code elimination
-clang_generated_O1_optimized.asm,0.2289389999999969,0.8231337031830157,28,dead code elimination
-clang_generated_O3_optimized.asm,0.225395000000006,0.810391506160782,28,dead code elimination
-llm_generated.asm,0.0027369999999962,0.0098406865829274,28,dead code elimination
-clang_generated_unoptimized.asm,0.2548200000000094,1.0,17,constant folding
-clang_generated_O2_optimized.asm,0.2214960000000019,0.8692253355309386,17,constant folding
-clang_generated_llm_optimized.asm,0.2251789999999971,0.8836786751431946,17,constant folding
-clang_generated_O1_optimized.asm,0.2285290000000088,0.8968252099521249,17,constant folding
-clang_generated_O3_optimized.asm,0.2256090000000057,0.8853661408052642,17,constant folding
-clang_generated_unoptimized.asm,0.2753299999999967,1.0,10,constant folding
-clang_generated_O2_optimized.asm,0.2286619999999999,0.8305015799222846,10,constant folding
-clang_generated_llm_optimized.asm,0.2306279999999958,0.837642102204622,10,constant folding
-clang_generated_O1_optimized.asm,0.2258890000000093,0.820430029419286,10,constant folding
-clang_generated_O3_optimized.asm,0.2217420000000061,0.805368103730101,10,constant folding
-llm_generated.asm,0.2263039999999989,0.8219373115897346,10,constant folding
-clang_generated_unoptimized.asm,0.2255549999999999,1.0,19,constant folding
-clang_generated_O2_optimized.asm,0.2245240000000024,0.995429052780929,19,constant folding
-clang_generated_llm_optimized.asm,0.2298330000000135,1.0189665491787527,19,constant folding
-clang_generated_O1_optimized.asm,0.2274670000000043,1.0084768681696454,19,constant folding
-clang_generated_O3_optimized.asm,0.2232319999999958,0.9897009598545627,19,constant folding
-clang_generated_unoptimized.asm,0.3017650000000031,1.0,26,dead code elimination
-clang_generated_O2_optimized.asm,0.2280879999999996,0.755846436796836,26,dead code elimination
-clang_generated_llm_optimized.asm,0.2282670000000024,0.7564396136066146,26,dead code elimination
-clang_generated_O1_optimized.asm,0.226206999999988,0.7496131095388321,26,dead code elimination
-clang_generated_O3_optimized.asm,0.2268109999999978,0.7516146670422199,26,dead code elimination
-llm_generated.asm,0.2258159999999947,0.7483173993007549,26,dead code elimination
-clang_generated_unoptimized.asm,0.2783670000000029,1.0,21,dead code elimination
-clang_generated_O2_optimized.asm,0.2293120000000073,0.823775806758721,21,dead code elimination
-clang_generated_llm_optimized.asm,0.2256020000000091,0.810448077537951,21,dead code elimination
-clang_generated_O1_optimized.asm,0.2243720000000024,0.8060294503299604,21,dead code elimination
-clang_generated_O3_optimized.asm,0.227807999999996,0.8183728674734922,21,dead code elimination
-llm_generated.asm,0.0025190000000065,0.0090492048267451,21,dead code elimination
-clang_generated_unoptimized.asm,0.5370589999999993,1.0,75,loop unrolling
-clang_generated_O2_optimized.asm,0.2298329999999993,0.4279473949789494,75,loop unrolling
-clang_generated_llm_optimized.asm,0.2270390000000048,0.4227449870498496,75,loop unrolling
-clang_generated_O1_optimized.asm,0.2273989999999912,0.4234153044637396,75,loop unrolling
-clang_generated_O3_optimized.asm,0.2254599999999982,0.4198049003926915,75,loop unrolling
-clang_generated_unoptimized.asm,0.3227310000000045,1.0,81,copy propagation
-clang_generated_O2_optimized.asm,0.2261149999999929,0.7006299363866185,81,copy propagation
-clang_generated_llm_optimized.asm,0.2246690000000057,0.6961494247531307,81,copy propagation
-clang_generated_O1_optimized.asm,0.225323000000003,0.698175880222228,81,copy propagation
-clang_generated_O3_optimized.asm,0.2308639999999968,0.7153449777058715,81,copy propagation
-clang_generated_unoptimized.asm,0.3965720000000061,1.0,86,copy propagation
-clang_generated_O2_optimized.asm,0.2254429999999985,0.5684793681853358,86,copy propagation
-clang_generated_llm_optimized.asm,0.2246580000000051,0.5664999041788166,86,copy propagation
-clang_generated_O1_optimized.asm,0.225135999999992,0.567705233854101,86,copy propagation
-clang_generated_O3_optimized.asm,0.224607000000006,0.5663713020586489,86,copy propagation
-clang_generated_unoptimized.asm,0.5355820000000051,1.0,72,loop unrolling
-clang_generated_O2_optimized.asm,0.226466000000002,0.4228409468578105,72,loop unrolling
-clang_generated_llm_optimized.asm,0.2263360000000034,0.422598220253857,72,loop unrolling
-clang_generated_O1_optimized.asm,0.2254209999999972,0.4208897983875392,72,loop unrolling
-clang_generated_O3_optimized.asm,0.2263570000000072,0.4226374299360417,72,loop unrolling
-clang_generated_unoptimized.asm,0.2566460000000035,1.0,44,strength reduction
-clang_generated_O2_optimized.asm,0.2252460000000127,0.8776524863041296,44,strength reduction
-clang_generated_llm_optimized.asm,0.2254540000000133,0.8784629411719267,44,strength reduction
-clang_generated_O1_optimized.asm,0.2228459999999898,0.8683010839833345,44,strength reduction
-clang_generated_O3_optimized.asm,0.2233129999999903,0.8701207110182403,44,strength reduction
-clang_generated_unoptimized.asm,0.2696179999999941,1.0,43,strength reduction
-clang_generated_O2_optimized.asm,0.2270299999999991,0.8420431870275876,43,strength reduction
-clang_generated_llm_optimized.asm,0.22456600000001,0.8329043313132466,43,strength reduction
-clang_generated_O1_optimized.asm,0.2274490000000071,0.8435972375732038,43,strength reduction
-clang_generated_O3_optimized.asm,0.2245319999999964,0.8327782269729813,43,strength reduction
-clang_generated_unoptimized.asm,0.4428819999999973,1.0,88,copy propagation
-clang_generated_O2_optimized.asm,0.2258389999999934,0.5099304103576004,88,copy propagation
-clang_generated_llm_optimized.asm,0.2257740000000012,0.5097836444019007,88,copy propagation
-clang_generated_O1_optimized.asm,0.2228609999999946,0.5032062716479694,88,copy propagation
-clang_generated_O3_optimized.asm,0.2259540000000015,0.5101900732023494,88,copy propagation
-clang_generated_unoptimized.asm,0.2568179999999955,1.0,07,constant folding
-clang_generated_O2_optimized.asm,0.2208070000000077,0.8597800777204541,07,constant folding
-clang_generated_llm_optimized.asm,0.2245559999999926,0.8743779641613771,07,constant folding
-clang_generated_O1_optimized.asm,0.2273259999999908,0.8851638125053336,07,constant folding
-clang_generated_O3_optimized.asm,0.2256280000000003,0.8785521264086018,07,constant folding
-llm_generated.asm,7.5483489999999875,29.391822224299386,07,constant folding
-clang_generated_unoptimized.asm,0.2837189999999907,1.0,38,dead code elimination
-clang_generated_O2_optimized.asm,0.2272300000000058,0.8008980716836491,38,dead code elimination
-clang_generated_llm_optimized.asm,0.2297960000000074,0.809942231574251,38,dead code elimination
-clang_generated_O1_optimized.asm,0.2204289999999957,0.7769271708979764,38,dead code elimination
-clang_generated_O3_optimized.asm,0.2250200000000006,0.7931086744278952,38,dead code elimination
-clang_generated_unoptimized.asm,0.2552209999999917,1.0,36,dead code elimination
-clang_generated_O2_optimized.asm,0.225291999999996,0.8827330039456133,36,dead code elimination
-clang_generated_llm_optimized.asm,0.2228989999999981,0.8733568162494678,36,dead code elimination
-clang_generated_O1_optimized.asm,0.2270350000000007,0.8895623792713301,36,dead code elimination
-clang_generated_O3_optimized.asm,0.2193979999999982,0.8596392930049068,36,dead code elimination
-clang_generated_unoptimized.asm,0.3045219999999915,1.0,09,constant folding
-clang_generated_O2_optimized.asm,0.2281600000000025,0.749239792198951,09,constant folding
-clang_generated_llm_optimized.asm,0.2215950000000077,0.7276814154642814,09,constant folding
-clang_generated_O1_optimized.asm,0.2228719999999953,0.731874872751399,09,constant folding
-clang_generated_O3_optimized.asm,0.2216410000000053,0.7278324718739909,09,constant folding
-llm_generated.asm,0.0022710000000074,0.007457589271079,09,constant folding
-clang_generated_unoptimized.asm,0.3464319999999929,1.0,31,dead code elimination
-clang_generated_O2_optimized.asm,0.221435999999997,0.6391903750230971,31,dead code elimination
-clang_generated_llm_optimized.asm,0.2255880000000019,0.651175411047497,31,dead code elimination
-clang_generated_O1_optimized.asm,0.2255250000000046,0.6509935571771926,31,dead code elimination
-clang_generated_O3_optimized.asm,0.2280469999999894,0.6582734851283775,31,dead code elimination
-llm_generated.asm,0.0028209999999972,0.0081430121928613,31,dead code elimination
-clang_generated_unoptimized.asm,0.3366320000000087,1.0,91,copy propagation
-clang_generated_O2_optimized.asm,0.2283619999999899,0.678372822548017,91,copy propagation
-clang_generated_llm_optimized.asm,0.2278869999999955,0.6769617861640891,91,copy propagation
-clang_generated_O1_optimized.asm,0.2277020000000078,0.6764122246251157,91,copy propagation
-clang_generated_O3_optimized.asm,0.2276549999999986,0.6762726062881507,91,copy propagation
-clang_generated_unoptimized.asm,1.7216200000000017,1.0,65,loop unrolling
-clang_generated_O2_optimized.asm,0.2199360000000041,0.1277494452899036,65,loop unrolling
-clang_generated_llm_optimized.asm,0.2203069999999911,0.1279649399983683,65,loop unrolling
-clang_generated_O1_optimized.asm,0.4684290000000004,0.272086174649458,65,loop unrolling
-clang_generated_O3_optimized.asm,0.2224560000000082,0.129213182932359,65,loop unrolling
-clang_generated_unoptimized.asm,1.388570999999999,1.0,62,loop unrolling
-clang_generated_O2_optimized.asm,0.2304699999999968,0.165976388675838,62,loop unrolling
-clang_generated_llm_optimized.asm,0.228517999999994,0.1645706269250864,62,loop unrolling
-clang_generated_O1_optimized.asm,0.4471210000000098,0.3220008195475854,62,loop unrolling
-clang_generated_O3_optimized.asm,0.2301410000000032,0.1657394544463361,62,loop unrolling
-clang_generated_unoptimized.asm,0.3586259999999868,1.0,96,copy propagation
-clang_generated_O2_optimized.asm,0.2278809999999964,0.6354279946239393,96,copy propagation
-clang_generated_llm_optimized.asm,0.2225800000000219,0.6206465788872814,96,copy propagation
-clang_generated_O1_optimized.asm,0.2302600000000154,0.6420616463949183,96,copy propagation
-clang_generated_O3_optimized.asm,0.230243999999999,0.6420170316708981,96,copy propagation
-clang_generated_unoptimized.asm,0.3533290000000022,1.0,100,copy propagation
-clang_generated_O2_optimized.asm,0.2257840000000044,0.6390191577821323,100,copy propagation
-clang_generated_llm_optimized.asm,0.2269810000000234,0.6424069351794559,100,copy propagation
-clang_generated_O1_optimized.asm,0.2262320000000102,0.640287097860659,100,copy propagation
-clang_generated_O3_optimized.asm,0.2287540000000092,0.6474249212490563,100,copy propagation
-clang_generated_unoptimized.asm,0.2642579999999839,1.0,54,strength reduction
-clang_generated_O2_optimized.asm,0.2267699999999877,0.858138637240884,54,strength reduction
-clang_generated_llm_optimized.asm,0.2221049999999991,0.8404854346888747,54,strength reduction
-clang_generated_O1_optimized.asm,0.2279540000000111,0.8626191070848375,54,strength reduction
-clang_generated_O3_optimized.asm,0.2298609999999996,0.8698355395106815,54,strength reduction
-clang_generated_unoptimized.asm,0.4167879999999968,1.0,98,copy propagation
-clang_generated_O2_optimized.asm,0.2264970000000232,0.5434345518585587,98,copy propagation
-clang_generated_llm_optimized.asm,0.2247490000000027,0.5392405731451109,98,copy propagation
-clang_generated_O1_optimized.asm,0.2220740000000205,0.5328224421049124,98,copy propagation
-clang_generated_O3_optimized.asm,0.2236709999999959,0.5366541263184105,98,copy propagation
-clang_generated_unoptimized.asm,0.2551829999999881,1.0,53,strength reduction
-clang_generated_O2_optimized.asm,0.2225060000000098,0.8719467989639599,53,strength reduction
-clang_generated_llm_optimized.asm,0.227090000000004,0.8899103780424814,53,strength reduction
-clang_generated_O1_optimized.asm,0.2329510000000141,0.9128782089716984,53,strength reduction
-clang_generated_O3_optimized.asm,0.2259640000000047,0.8854978583997178,53,strength reduction
-clang_generated_unoptimized.asm,0.2894960000000139,1.0,30,dead code elimination
-clang_generated_O2_optimized.asm,0.2287780000000054,0.7902630779008845,30,dead code elimination
-clang_generated_llm_optimized.asm,0.2278209999999774,0.786957332743687,30,dead code elimination
-clang_generated_O1_optimized.asm,0.2262120000000038,0.7813993975736899,30,dead code elimination
-clang_generated_O3_optimized.asm,0.2257529999999974,0.7798138834387575,30,dead code elimination
-llm_generated.asm,0.0027049999999917,0.0093438251305427,30,dead code elimination
-clang_generated_unoptimized.asm,0.2741469999999992,1.0,37,dead code elimination
-clang_generated_O2_optimized.asm,0.2256590000000073,0.8231313857164514,37,dead code elimination
-clang_generated_llm_optimized.asm,0.2259640000000047,0.8242439275279515,37,dead code elimination
-clang_generated_O1_optimized.asm,0.2262179999999887,0.8251704377578063,37,dead code elimination
-clang_generated_O3_optimized.asm,0.2246210000000132,0.8193450958792687,37,dead code elimination
-clang_generated_unoptimized.asm,0.2561059999999884,1.0,08,constant folding
-clang_generated_O2_optimized.asm,0.2237409999999897,0.8736265452586034,08,constant folding
-clang_generated_llm_optimized.asm,0.2259640000000047,0.8823065449462916,08,constant folding
-clang_generated_O1_optimized.asm,0.2293839999999818,0.8956603906194787,08,constant folding
-clang_generated_O3_optimized.asm,0.223117000000002,0.871190054118264,08,constant folding
-llm_generated.asm,0.2224830000000111,0.8687145166455341,08,constant folding
-clang_generated_unoptimized.asm,0.2588709999999992,1.0,01,constant folding
-clang_generated_O2_optimized.asm,0.2254099999999823,0.8707425706239132,01,constant folding
-clang_generated_llm_optimized.asm,0.2262639999999862,0.8740415110228144,01,constant folding
-clang_generated_O1_optimized.asm,0.2252300000000104,0.8700472436078633,01,constant folding
-clang_generated_O3_optimized.asm,0.2277149999999892,0.8796466193586379,01,constant folding
-llm_generated.asm,0.0027629999999874,0.0106732696979863,01,constant folding
-clang_generated_unoptimized.asm,0.2859370000000183,1.0,06,constant folding
-clang_generated_O2_optimized.asm,0.2219610000000216,0.7762584065721029,06,constant folding
-clang_generated_llm_optimized.asm,0.2196820000000059,0.7682881194108907,06,constant folding
-clang_generated_O1_optimized.asm,0.2208349999999939,0.77232047618874,06,constant folding
-clang_generated_O3_optimized.asm,0.2228849999999909,0.7794898876325086,06,constant folding
-llm_generated.asm,0.0028199999999856,0.0098623123274897,06,constant folding
-clang_generated_unoptimized.asm,0.2694689999999866,1.0,39,dead code elimination
-clang_generated_O2_optimized.asm,0.2265669999999886,0.8407905918677098,39,dead code elimination
-clang_generated_llm_optimized.asm,0.2266730000000052,0.8411839580805824,39,dead code elimination
-clang_generated_O1_optimized.asm,0.22628499999999,0.8397440893015571,39,dead code elimination
-clang_generated_O3_optimized.asm,0.2268410000000074,0.8418074064178761,39,dead code elimination
-clang_generated_unoptimized.asm,0.3442670000000021,1.0,99,copy propagation
-clang_generated_O2_optimized.asm,0.2269379999999898,0.6591918481875652,99,copy propagation
-clang_generated_llm_optimized.asm,0.2257850000000019,0.655842703483054,99,copy propagation
-clang_generated_O1_optimized.asm,0.221541000000002,0.6435150624370057,99,copy propagation
-clang_generated_O3_optimized.asm,0.2259669999999971,0.6563713629246944,99,copy propagation
-clang_generated_unoptimized.asm,0.255092999999988,1.0,52,strength reduction
-clang_generated_O2_optimized.asm,0.2257380000000068,0.8849243217180301,52,strength reduction
-clang_generated_llm_optimized.asm,0.2242320000000006,0.8790205924898417,52,strength reduction
-clang_generated_O1_optimized.asm,0.2306600000000003,0.9042192455301052,52,strength reduction
-clang_generated_O3_optimized.asm,0.2262249999999994,0.8868334293767766,52,strength reduction
-clang_generated_unoptimized.asm,0.2734339999999804,1.0,55,strength reduction
-clang_generated_O2_optimized.asm,0.2220120000000065,0.8119399928319904,55,strength reduction
-clang_generated_llm_optimized.asm,0.225559000000004,0.8249120445885304,55,strength reduction
-clang_generated_O1_optimized.asm,0.2258640000000014,0.8260274874376178,55,strength reduction
-clang_generated_O3_optimized.asm,0.2234029999999904,0.8170271436617482,55,strength reduction
-clang_generated_unoptimized.asm,0.3993080000000191,1.0,97,copy propagation
-clang_generated_O2_optimized.asm,0.2221360000000061,0.556302403157451,97,copy propagation
-clang_generated_llm_optimized.asm,0.2266219999999918,0.5675368387309572,97,copy propagation
-clang_generated_O1_optimized.asm,0.2288829999999961,0.5731991345026527,97,copy propagation
-clang_generated_O3_optimized.asm,0.2255420000000185,0.56483215963619,97,copy propagation
-clang_generated_unoptimized.asm,1.063822999999985,1.0,63,loop unrolling
-clang_generated_O2_optimized.asm,0.2226519999999823,0.2092942152970799,63,loop unrolling
-clang_generated_llm_optimized.asm,0.2236450000000047,0.2102276412523586,63,loop unrolling
-clang_generated_O1_optimized.asm,0.411547000000013,0.3868566481454328,63,loop unrolling
-clang_generated_O3_optimized.asm,0.2223730000000046,0.2090319536238713,63,loop unrolling
-clang_generated_unoptimized.asm,0.5324449999999956,1.0,64,loop unrolling
-clang_generated_O2_optimized.asm,0.2285829999999862,0.4293081914563722,64,loop unrolling
-clang_generated_llm_optimized.asm,0.2238839999999982,0.4204828667749721,64,loop unrolling
-clang_generated_O1_optimized.asm,0.2233659999999986,0.4195099963376507,64,loop unrolling
-clang_generated_O3_optimized.asm,0.2222189999999955,0.4173557832264315,64,loop unrolling
-clang_generated_unoptimized.asm,0.4410910000000001,1.0,90,copy propagation
-clang_generated_O2_optimized.asm,0.2284500000000093,0.517920338433587,90,copy propagation
-clang_generated_llm_optimized.asm,0.2248570000000143,0.5097746270044372,90,copy propagation
-clang_generated_O1_optimized.asm,0.2265309999999942,0.5135697622485932,90,copy propagation
-clang_generated_O3_optimized.asm,0.2226679999999987,0.5048119322316681,90,copy propagation
-clang_generated_unoptimized.asm,0.2610610000000122,1.0,46,strength reduction
-clang_generated_O2_optimized.asm,0.2261509999999873,0.8662764641213232,46,strength reduction
-clang_generated_llm_optimized.asm,0.2251709999999889,0.8625225522003608,46,strength reduction
-clang_generated_O1_optimized.asm,0.2257040000000074,0.8645642206227545,46,strength reduction
-clang_generated_O3_optimized.asm,0.224993999999981,0.8618445497411353,46,strength reduction
-clang_generated_unoptimized.asm,0.5336969999999894,1.0,79,loop unrolling
-clang_generated_O2_optimized.asm,0.2255759999999895,0.4226667940797756,79,loop unrolling
-clang_generated_llm_optimized.asm,0.2261029999999948,0.4236542457611703,79,loop unrolling
-clang_generated_O1_optimized.asm,0.2263379999999983,0.4240945705147356,79,loop unrolling
-clang_generated_O3_optimized.asm,0.2265480000000082,0.4244880522094235,79,loop unrolling
-clang_generated_unoptimized.asm,0.2547260000000051,1.0,41,strength reduction
-clang_generated_O2_optimized.asm,0.2269990000000064,0.8911497059585666,41,strength reduction
-clang_generated_llm_optimized.asm,0.2205409999999972,0.8657969740034106,41,strength reduction
-clang_generated_O1_optimized.asm,0.2258409999999742,0.8866036447004612,41,strength reduction
-clang_generated_O3_optimized.asm,0.2273110000000144,0.8923745514788828,41,strength reduction
-clang_generated_unoptimized.asm,0.3354030000000136,1.0,83,copy propagation
-clang_generated_O2_optimized.asm,0.2249280000000055,0.6706201196769153,83,copy propagation
-clang_generated_llm_optimized.asm,0.2266049999999779,0.6756200749545136,83,copy propagation
-clang_generated_O1_optimized.asm,0.2263639999999895,0.6749015363606776,83,copy propagation
-clang_generated_O3_optimized.asm,0.2264360000000067,0.6751162034925076,83,copy propagation
-clang_generated_unoptimized.asm,0.5305700000000115,1.0,77,loop unrolling
-clang_generated_O2_optimized.asm,0.2275330000000224,0.428846335073633,77,loop unrolling
-clang_generated_llm_optimized.asm,0.2231960000000015,0.4206721073562332,77,loop unrolling
-clang_generated_O1_optimized.asm,0.2276209999999991,0.429012194432392,77,loop unrolling
-clang_generated_O3_optimized.asm,0.2302910000000224,0.4340445181597479,77,loop unrolling
-clang_generated_unoptimized.asm,0.287934000000007,1.0,48,strength reduction
-clang_generated_O2_optimized.asm,0.2256150000000047,0.7835649836420822,48,strength reduction
-clang_generated_llm_optimized.asm,0.2253589999999974,0.7826758910027712,48,strength reduction
-clang_generated_O1_optimized.asm,0.2256989999999916,0.783856717164302,48,strength reduction
-clang_generated_O3_optimized.asm,0.2280629999999917,0.7920669320052031,48,strength reduction
-clang_generated_unoptimized.asm,0.7223520000000008,1.0,70,loop unrolling
-clang_generated_O2_optimized.asm,0.2283740000000023,0.3161533435222745,70,loop unrolling
-clang_generated_llm_optimized.asm,0.226189000000005,0.3131285024475669,70,loop unrolling
-clang_generated_O1_optimized.asm,0.2261790000000019,0.3131146587813166,70,loop unrolling
-clang_generated_O3_optimized.asm,0.2263639999999895,0.3133707666068472,70,loop unrolling
-clang_generated_unoptimized.asm,0.3899630000000229,1.0,84,copy propagation
-clang_generated_O2_optimized.asm,0.2208379999999863,0.5663050084238077,84,copy propagation
-clang_generated_llm_optimized.asm,0.226286999999985,0.5802781289506228,84,copy propagation
-clang_generated_O1_optimized.asm,0.2265800000000126,0.581029482284215,84,copy propagation
-clang_generated_O3_optimized.asm,0.2264860000000226,0.5807884337745102,84,copy propagation
-clang_generated_unoptimized.asm,0.3149249999999881,1.0,24,dead code elimination
-clang_generated_O2_optimized.asm,0.2462659999999914,0.7819830118282154,24,dead code elimination
-clang_generated_llm_optimized.asm,0.2652219999999943,0.8421751210605836,24,dead code elimination
-clang_generated_O1_optimized.asm,0.2468800000000044,0.7839326823847383,24,dead code elimination
-clang_generated_O3_optimized.asm,0.2399030000000266,0.7617782011591193,24,dead code elimination
-llm_generated.asm,0.1954390000000216,0.620589029134013,24,dead code elimination
-clang_generated_unoptimized.asm,0.4305920000000185,1.0,23,dead code elimination
-clang_generated_O2_optimized.asm,0.005311000000006,0.0123341817776592,23,dead code elimination
-clang_generated_llm_optimized.asm,0.0049390000000073,0.0114702549048917,23,dead code elimination
-clang_generated_O1_optimized.asm,0.0047860000000241,0.0111149301427429,23,dead code elimination
-clang_generated_O3_optimized.asm,0.0047230000000126,0.0109686199465212,23,dead code elimination
-llm_generated.asm,0.1526670000000081,0.3545514082937016,23,dead code elimination
-clang_generated_unoptimized.asm,0.3207280000000025,1.0,15,constant folding
-clang_generated_O2_optimized.asm,0.2259159999999838,0.704385024070184,15,constant folding
-clang_generated_llm_optimized.asm,0.2575620000000072,0.803054301464185,15,constant folding
-clang_generated_O1_optimized.asm,0.2270680000000027,0.7079768526602008,15,constant folding
-clang_generated_O3_optimized.asm,0.2253900000000044,0.7027450051133752,15,constant folding
-llm_generated.asm,0.0026369999999928,0.0082219201316781,15,constant folding
-clang_generated_unoptimized.asm,0.2547710000000052,1.0,12,constant folding
-clang_generated_O2_optimized.asm,0.2225279999999827,0.8734432097843876,12,constant folding
-clang_generated_llm_optimized.asm,0.2274639999999976,0.8928174713762282,12,constant folding
-clang_generated_O1_optimized.asm,0.2259180000000071,0.8867492768015299,12,constant folding
-clang_generated_O3_optimized.asm,0.2257539999999949,0.8861055614649639,12,constant folding
-clang_generated_unoptimized.asm,0.3677399999999977,1.0,85,copy propagation
-clang_generated_O2_optimized.asm,0.2259140000000172,0.6143307771795797,85,copy propagation
-clang_generated_llm_optimized.asm,0.2273930000000064,0.6183526404525148,85,copy propagation
-clang_generated_O1_optimized.asm,0.225403,0.6129412084625045,85,copy propagation
-clang_generated_O3_optimized.asm,0.2269799999999975,0.6172295643661253,85,copy propagation
-clang_generated_unoptimized.asm,0.535728000000006,1.0,71,loop unrolling
-clang_generated_O2_optimized.asm,0.2333759999999927,0.4356240480243521,71,loop unrolling
-clang_generated_llm_optimized.asm,0.2206130000000143,0.4118003912433398,71,loop unrolling
-clang_generated_O1_optimized.asm,0.2260459999999966,0.4219417316249927,71,loop unrolling
-clang_generated_O3_optimized.asm,0.227610999999996,0.424862990174106,71,loop unrolling
-clang_generated_unoptimized.asm,0.5390150000000062,1.0,76,loop unrolling
-clang_generated_O2_optimized.asm,0.2294599999999889,0.4257024387076171,76,loop unrolling
-clang_generated_llm_optimized.asm,0.2292280000000062,0.4252720239696549,76,loop unrolling
-clang_generated_O1_optimized.asm,0.2280870000000163,0.4231551997625553,76,loop unrolling
-clang_generated_O3_optimized.asm,0.2280690000000049,0.4231218055156207,76,loop unrolling
-clang_generated_unoptimized.asm,0.378657000000004,1.0,82,copy propagation
-clang_generated_O2_optimized.asm,0.2250990000000001,0.5944667601549629,82,copy propagation
-clang_generated_llm_optimized.asm,0.2253980000000126,0.5952563929889326,82,copy propagation
-clang_generated_O1_optimized.asm,0.2261370000000226,0.5972080273176523,82,copy propagation
-clang_generated_O3_optimized.asm,0.2277229999999974,0.6013965145236851,82,copy propagation
-clang_generated_unoptimized.asm,0.2555940000000021,1.0,49,strength reduction
-clang_generated_O2_optimized.asm,0.2296509999999898,0.8984991822968769,49,strength reduction
-clang_generated_llm_optimized.asm,0.2221499999999991,0.869151858024826,49,strength reduction
-clang_generated_O1_optimized.asm,0.2258719999999812,0.8837140151958941,49,strength reduction
-clang_generated_O3_optimized.asm,0.2256519999999966,0.8828532751159839,49,strength reduction
-clang_generated_unoptimized.asm,0.3033499999999947,1.0,40,dead code elimination
-clang_generated_O2_optimized.asm,0.2254450000000076,0.7431844404154001,40,dead code elimination
-clang_generated_llm_optimized.asm,0.2278640000000109,0.751158727542492,40,dead code elimination
-clang_generated_O1_optimized.asm,0.2256959999999992,0.7440118674798193,40,dead code elimination
-clang_generated_O3_optimized.asm,0.2250780000000247,0.7419746167793925,40,dead code elimination
-clang_generated_unoptimized.asm,0.2577189999999802,1.0,47,strength reduction
-clang_generated_O2_optimized.asm,0.225875000000002,0.8764390673563817,47,strength reduction
-clang_generated_llm_optimized.asm,0.2260320000000035,0.8770482579864926,47,strength reduction
-clang_generated_O1_optimized.asm,0.2257180000000005,0.8758298767262709,47,strength reduction
-clang_generated_O3_optimized.asm,0.2258670000000222,0.8764080257956904,47,strength reduction
-clang_generated_unoptimized.asm,0.536026000000021,1.0,78,loop unrolling
-clang_generated_O2_optimized.asm,0.2260829999999885,0.4217761824985721,78,loop unrolling
-clang_generated_llm_optimized.asm,0.2279320000000098,0.4252256420397534,78,loop unrolling
-clang_generated_O1_optimized.asm,0.2256739999999979,0.4210131598093919,78,loop unrolling
-clang_generated_O3_optimized.asm,0.2257050000000049,0.4210709928249676,78,loop unrolling
-clang_generated_unoptimized.asm,0.369605000000007,1.0,13,constant folding
-clang_generated_O2_optimized.asm,0.2264250000000061,0.6126134657269294,13,constant folding
-clang_generated_llm_optimized.asm,0.2281640000000209,0.617318488656854,13,constant folding
-clang_generated_O1_optimized.asm,0.2253729999999905,0.609767183885462,13,constant folding
-clang_generated_O3_optimized.asm,0.225432000000012,0.6099268137606574,13,constant folding
-llm_generated.asm,0.0022200000000225,0.0060064122509773,13,constant folding
-clang_generated_unoptimized.asm,0.2571979999999882,1.0,14,constant folding
-clang_generated_O2_optimized.asm,0.2259439999999983,0.8784827253711486,14,constant folding
-clang_generated_llm_optimized.asm,0.2284879999999987,0.8883739375889746,14,constant folding
-clang_generated_O1_optimized.asm,0.2256500000000016,0.877339637166743,14,constant folding
-clang_generated_O3_optimized.asm,0.2259109999999964,0.8783544195522777,14,constant folding
-clang_generated_unoptimized.asm,0.2572119999999813,1.0,22,dead code elimination
-clang_generated_O2_optimized.asm,0.2305150000000253,0.8962062423216727,22,dead code elimination
-clang_generated_llm_optimized.asm,0.226460000000003,0.8804410369656914,22,dead code elimination
-clang_generated_O1_optimized.asm,0.2269369999999924,0.8822955383108442,22,dead code elimination
-clang_generated_O3_optimized.asm,0.2266500000000064,0.8811797272289897,22,dead code elimination
-clang_generated_unoptimized.asm,0.3050360000000012,1.0,25,dead code elimination
-clang_generated_O2_optimized.asm,0.2254719999999963,0.7391652132862857,25,dead code elimination
-clang_generated_llm_optimized.asm,0.2258109999999931,0.7402765575210539,25,dead code elimination
-clang_generated_O1_optimized.asm,0.2223089999999956,0.7287959453965918,25,dead code elimination
-clang_generated_O3_optimized.asm,0.2265370000000075,0.7426566044663798,25,dead code elimination
-llm_generated.asm,0.2278149999999925,0.7468462738823997,25,dead code elimination
+clang_generated_unoptimized.asm,0.2514999999999929,1.0,01,constant folding
+clang_generated_O2_optimized.asm,0.2259490000000141,0.8984055666004791,01,constant folding
+clang_generated_llm_optimized.asm,0.2274460000000147,0.9043578528827876,01,constant folding
+clang_generated_O1_optimized.asm,0.2264789999999834,0.9005129224651681,01,constant folding
+clang_generated_O3_optimized.asm,0.223669000000001,0.8893399602385975,01,constant folding
+llm_generated.asm,0.002457000000021,0.0097693836978969,01,constant folding
+clang_generated_unoptimized.asm,0.2508079999999992,1.0,02,constant folding
+clang_generated_O2_optimized.asm,0.2244659999999996,0.8949714522662765,02,constant folding
+clang_generated_llm_optimized.asm,0.2255639999999985,0.899349303052531,02,constant folding
+clang_generated_O1_optimized.asm,0.2277119999999968,0.9079136231699048,02,constant folding
+clang_generated_O3_optimized.asm,0.2208940000000012,0.8807294823131715,02,constant folding
+llm_generated.asm,0.0026249999999947,0.0104661733277837,02,constant folding
+clang_generated_unoptimized.asm,0.2518279999999997,1.0,03,constant folding
+clang_generated_O2_optimized.asm,0.2195110000000006,0.87167034642693,03,constant folding
+clang_generated_llm_optimized.asm,0.2195040000000006,0.8716425496767668,03,constant folding
+clang_generated_O1_optimized.asm,0.2213180000000001,0.8788458789332416,03,constant folding
+clang_generated_O3_optimized.asm,0.2195079999999976,0.8716584335339909,03,constant folding
+llm_generated.asm,0.2231330000000007,0.8860531791540295,03,constant folding
+clang_generated_unoptimized.asm,0.2523840000000028,1.0,04,constant folding
+clang_generated_O2_optimized.asm,0.2256859999999996,0.8942167490807542,04,constant folding
+clang_generated_llm_optimized.asm,0.2260670000000004,0.8957263534930817,04,constant folding
+clang_generated_O1_optimized.asm,0.2258589999999998,0.8949022125015741,04,constant folding
+clang_generated_O3_optimized.asm,0.2233330000000002,0.8848936541143564,04,constant folding
+llm_generated.asm,0.0025830000000013,0.0102344047166274,04,constant folding
+clang_generated_unoptimized.asm,0.626053000000006,1.0,05,constant folding
+clang_generated_O2_optimized.asm,0.2220200000000005,0.3546345117745597,05,constant folding
+clang_generated_llm_optimized.asm,0.5054919999999967,0.807426847247744,05,constant folding
+clang_generated_O1_optimized.asm,0.2240929999999963,0.3579457330289834,05,constant folding
+clang_generated_O3_optimized.asm,0.2269849999999991,0.3625651502348794,05,constant folding
+llm_generated.asm,0.2884059999999948,0.4606734573590288,05,constant folding
+clang_generated_unoptimized.asm,0.2776310000000137,1.0,06,constant folding
+clang_generated_O2_optimized.asm,0.2247020000000077,0.809354863109655,06,constant folding
+clang_generated_llm_optimized.asm,0.2244559999999751,0.8084687949111015,06,constant folding
+clang_generated_O1_optimized.asm,0.2263810000000035,0.8154024586591277,06,constant folding
+clang_generated_O3_optimized.asm,0.2267999999999972,0.8169116561190429,06,constant folding
+llm_generated.asm,0.002332999999993,0.0084032402721343,06,constant folding
+clang_generated_unoptimized.asm,0.2519339999999914,1.0,07,constant folding
+clang_generated_O2_optimized.asm,0.2244320000000073,0.8908364889217609,07,constant folding
+clang_generated_llm_optimized.asm,0.2217569999999966,0.8802186286884827,07,constant folding
+clang_generated_O1_optimized.asm,0.2229690000000062,0.885029412465224,07,constant folding
+clang_generated_O3_optimized.asm,0.2267870000000016,0.9001841752205313,07,constant folding
+llm_generated.asm,7.4962950000000035,29.754995355927576,07,constant folding
+clang_generated_unoptimized.asm,0.2510350000000017,1.0,08,constant folding
+clang_generated_O2_optimized.asm,0.2260129999999947,0.9003246559244455,08,constant folding
+clang_generated_llm_optimized.asm,0.2247500000000002,0.89529348497221,08,constant folding
+clang_generated_O1_optimized.asm,0.2234309999999766,0.890039237556417,08,constant folding
+clang_generated_O3_optimized.asm,0.2254520000000184,0.8980899077818508,08,constant folding
+llm_generated.asm,0.2234219999999993,0.8900033859820258,08,constant folding
+clang_generated_unoptimized.asm,0.3014679999999998,1.0,09,constant folding
+clang_generated_O2_optimized.asm,0.2253410000000002,0.7474790027465613,09,constant folding
+clang_generated_llm_optimized.asm,0.225482999999997,0.7479500311807459,09,constant folding
+clang_generated_O1_optimized.asm,0.2238990000000029,0.7426957421683332,09,constant folding
+clang_generated_O3_optimized.asm,0.2286670000000015,0.7585116828320141,09,constant folding
+llm_generated.asm,0.0024919999999895,0.0082662173099284,09,constant folding
+clang_generated_unoptimized.asm,0.26862899999999,1.0,10,constant folding
+clang_generated_O2_optimized.asm,0.2251100000000008,0.8379958976879234,10,constant folding
+clang_generated_llm_optimized.asm,0.2235330000000033,0.8321253475984038,10,constant folding
+clang_generated_O1_optimized.asm,0.2258390000000076,0.8407096776595828,10,constant folding
+clang_generated_O3_optimized.asm,0.2247599999999892,0.8366929854929942,10,constant folding
+llm_generated.asm,0.2244789999999881,0.8356469331308103,10,constant folding
+clang_generated_unoptimized.asm,0.3515390000000025,1.0,100,copy propagation
+clang_generated_O2_optimized.asm,0.2220770000000129,0.6317279163905325,100,copy propagation
+clang_generated_llm_optimized.asm,0.2256450000000143,0.6418775726164457,100,copy propagation
+clang_generated_O1_optimized.asm,0.226034999999996,0.6429869801074544,100,copy propagation
+clang_generated_O3_optimized.asm,0.2274979999999971,0.6471486805162314,100,copy propagation
+llm_generated.asm,0.2262640000000146,0.6436384014291816,100,copy propagation
+clang_generated_unoptimized.asm,0.2561560000000042,1.0,11,constant folding
+clang_generated_O2_optimized.asm,0.2245970000000028,0.8767977326316739,11,constant folding
+clang_generated_llm_optimized.asm,0.2254560000000083,0.8801511578881797,11,constant folding
+clang_generated_O1_optimized.asm,0.2254819999999995,0.880252658536188,11,constant folding
+clang_generated_O3_optimized.asm,0.2284890000000103,0.8919915988694646,11,constant folding
+llm_generated.asm,0.0028149999999982,0.0109893970861435,11,constant folding
+clang_generated_unoptimized.asm,0.2506860000000017,1.0,12,constant folding
+clang_generated_O2_optimized.asm,0.2212869999999895,0.8827258004036446,12,constant folding
+clang_generated_llm_optimized.asm,0.2248819999999796,0.8970664496620395,12,constant folding
+clang_generated_O1_optimized.asm,0.2230240000000094,0.8896547872637798,12,constant folding
+clang_generated_O3_optimized.asm,0.2236699999999984,0.892231716170815,12,constant folding
+clang_generated_unoptimized.asm,0.3671649999999999,1.0,13,constant folding
+clang_generated_O2_optimized.asm,0.2229319999999859,0.6071711628286627,13,constant folding
+clang_generated_llm_optimized.asm,0.2362449999999967,0.6434300655018772,13,constant folding
+clang_generated_O1_optimized.asm,0.2276279999999815,0.619961052932555,13,constant folding
+clang_generated_O3_optimized.asm,0.2446950000000072,0.6664442416897233,13,constant folding
+llm_generated.asm,0.0023820000000114,0.0064875464709638,13,constant folding
+clang_generated_unoptimized.asm,0.2549759999999992,1.0,14,constant folding
+clang_generated_O2_optimized.asm,0.226602999999983,0.8887228601906992,14,constant folding
+clang_generated_llm_optimized.asm,0.2222250000000087,0.8715526167169046,14,constant folding
+clang_generated_O1_optimized.asm,0.246103000000005,0.9652006463353644,14,constant folding
+clang_generated_O3_optimized.asm,0.2371880000000032,0.9302365712851564,14,constant folding
+clang_generated_unoptimized.asm,0.3168369999999925,1.0,15,constant folding
+clang_generated_O2_optimized.asm,0.2258309999999994,0.7127671326265708,15,constant folding
+clang_generated_llm_optimized.asm,0.2585880000000031,0.8161546789043239,15,constant folding
+clang_generated_O1_optimized.asm,0.2266290000000026,0.7152857778605656,15,constant folding
+clang_generated_O3_optimized.asm,0.2257519999999999,0.712517793060802,15,constant folding
+llm_generated.asm,0.0027200000000107,0.0085848559354203,15,constant folding
+clang_generated_unoptimized.asm,0.2525820000000038,1.0,16,constant folding
+clang_generated_O2_optimized.asm,0.2262829999999951,0.8958793579906393,16,constant folding
+clang_generated_llm_optimized.asm,0.2274570000000011,0.9005273534931137,16,constant folding
+clang_generated_O1_optimized.asm,0.2270000000000038,0.8987180400820344,16,constant folding
+clang_generated_O3_optimized.asm,0.2262539999999973,0.8957645437916947,16,constant folding
+llm_generated.asm,0.2289440000000127,0.9064145505222432,16,constant folding
+clang_generated_unoptimized.asm,0.2518740000000008,1.0,17,constant folding
+clang_generated_O2_optimized.asm,0.2263429999999999,0.8986358258494296,17,constant folding
+clang_generated_llm_optimized.asm,0.2214089999999942,0.8790466661902121,17,constant folding
+clang_generated_O1_optimized.asm,0.2267749999999893,0.9003509691353159,17,constant folding
+clang_generated_O3_optimized.asm,0.2264870000000058,0.8992075402780959,17,constant folding
+llm_generated.asm,0.2252879999999919,0.894447223611771,17,constant folding
+clang_generated_unoptimized.asm,0.2252000000000009,1.0,18,constant folding
+clang_generated_O2_optimized.asm,0.2266200000000111,1.0063055062167414,18,constant folding
+clang_generated_llm_optimized.asm,0.2285540000000026,1.0148934280639503,18,constant folding
+clang_generated_O1_optimized.asm,0.226986999999994,1.007935168738868,18,constant folding
+clang_generated_O3_optimized.asm,0.2272839999999973,1.0092539964475862,18,constant folding
+llm_generated.asm,0.2273719999999883,1.0096447602130878,18,constant folding
+clang_generated_unoptimized.asm,0.2226049999999872,1.0,19,constant folding
+clang_generated_O2_optimized.asm,0.2196200000000061,0.9865905976955536,19,constant folding
+clang_generated_llm_optimized.asm,0.225408999999999,1.012596302868363,19,constant folding
+clang_generated_O1_optimized.asm,0.2233779999999967,1.003472518586777,19,constant folding
+clang_generated_O3_optimized.asm,0.2269090000000062,1.01933469598625,19,constant folding
+llm_generated.asm,0.2262750000000011,1.0164866018284138,19,constant folding
+clang_generated_unoptimized.asm,0.2594059999999984,1.0,20,constant folding
+clang_generated_O2_optimized.asm,0.2269229999999993,0.8747793034856582,20,constant folding
+clang_generated_llm_optimized.asm,0.2294070000000019,0.8843550264835943,20,constant folding
+clang_generated_O1_optimized.asm,0.227644000000005,0.8775587303300865,20,constant folding
+clang_generated_O3_optimized.asm,0.2280459999999919,0.8791084246316327,20,constant folding
+llm_generated.asm,0.3532160000000033,1.361633886648749,20,constant folding
+clang_generated_unoptimized.asm,0.2735780000000005,1.0,21,dead code elimination
+clang_generated_O2_optimized.asm,0.225875000000002,0.8256329090789523,21,dead code elimination
+clang_generated_llm_optimized.asm,0.2271860000000032,0.8304249610714413,21,dead code elimination
+clang_generated_O1_optimized.asm,0.2267210000000119,0.8287252629963355,21,dead code elimination
+clang_generated_O3_optimized.asm,0.2209349999999972,0.807575901571021,21,dead code elimination
+llm_generated.asm,0.0025990000000035,0.0095000328973951,21,dead code elimination
+clang_generated_unoptimized.asm,0.2547710000000052,1.0,22,dead code elimination
+clang_generated_O2_optimized.asm,0.2230519999999956,0.8754999587864829,22,dead code elimination
+clang_generated_llm_optimized.asm,0.2308079999999961,0.9059429840915624,22,dead code elimination
+clang_generated_O1_optimized.asm,0.2389269999999896,0.9378108183426874,22,dead code elimination
+clang_generated_O3_optimized.asm,0.2268349999999941,0.8903485875550573,22,dead code elimination
+clang_generated_unoptimized.asm,0.428132000000005,1.0,23,dead code elimination
+clang_generated_O2_optimized.asm,0.0048480000000097,0.0113236104752965,23,dead code elimination
+clang_generated_llm_optimized.asm,0.0046389999999973,0.0108354432744979,23,dead code elimination
+clang_generated_O1_optimized.asm,0.0046119999999802,0.0107723786121575,23,dead code elimination
+clang_generated_O3_optimized.asm,0.0046329999999841,0.0108214289050668,23,dead code elimination
+llm_generated.asm,0.1528370000000052,0.3569856960003069,23,dead code elimination
+clang_generated_unoptimized.asm,0.3119130000000041,1.0,24,dead code elimination
+clang_generated_O2_optimized.asm,0.2412280000000066,0.7733823213524396,24,dead code elimination
+clang_generated_llm_optimized.asm,0.2660559999999918,0.8529814403374927,24,dead code elimination
+clang_generated_O1_optimized.asm,0.2401839999999993,0.7700352341838786,24,dead code elimination
+clang_generated_O3_optimized.asm,0.2508040000000164,0.8040831898638824,24,dead code elimination
+llm_generated.asm,0.1918290000000126,0.6150080310856237,24,dead code elimination
+clang_generated_unoptimized.asm,0.3225480000000118,1.0,25,dead code elimination
+clang_generated_O2_optimized.asm,0.2309120000000177,0.7158996490445122,25,dead code elimination
+clang_generated_llm_optimized.asm,0.2440470000000232,0.7566222701737858,25,dead code elimination
+clang_generated_O1_optimized.asm,0.2380430000000046,0.738007986408212,25,dead code elimination
+clang_generated_O3_optimized.asm,0.2459870000000137,0.7626368788521545,25,dead code elimination
+llm_generated.asm,0.235872999999998,0.7312803055668904,25,dead code elimination
+clang_generated_unoptimized.asm,0.2913790000000062,1.0,26,dead code elimination
+clang_generated_O2_optimized.asm,0.2227980000000116,0.7646330037511516,26,dead code elimination
+clang_generated_llm_optimized.asm,0.2252679999999998,0.773109935856719,26,dead code elimination
+clang_generated_O1_optimized.asm,0.2227450000000033,0.764451110066266,26,dead code elimination
+clang_generated_O3_optimized.asm,0.2263329999999968,0.7767649693354426,26,dead code elimination
+llm_generated.asm,0.2257630000000006,0.7748087542341615,26,dead code elimination
+clang_generated_unoptimized.asm,0.2833570000000094,1.0,27,dead code elimination
+clang_generated_O2_optimized.asm,0.2552359999999964,0.9007577014154864,27,dead code elimination
+clang_generated_llm_optimized.asm,0.2557469999999995,0.9025610801920934,27,dead code elimination
+clang_generated_O1_optimized.asm,0.252127999999999,0.8897892058427731,27,dead code elimination
+clang_generated_O3_optimized.asm,0.2525849999999963,0.8914020123024591,27,dead code elimination
+llm_generated.asm,0.252326999999994,0.8904915001217037,27,dead code elimination
+clang_generated_unoptimized.asm,0.2709720000000004,1.0,28,dead code elimination
+clang_generated_O2_optimized.asm,0.2232920000000007,0.8240408603102917,28,dead code elimination
+clang_generated_llm_optimized.asm,0.2211669999999941,0.8161987216391131,28,dead code elimination
+clang_generated_O1_optimized.asm,0.2230390000000142,0.8231071845061994,28,dead code elimination
+clang_generated_O3_optimized.asm,0.2242729999999966,0.8276611605627011,28,dead code elimination
+llm_generated.asm,0.0026250000000089,0.0096873477702824,28,dead code elimination
+clang_generated_unoptimized.asm,0.2798930000000013,1.0,29,dead code elimination
+clang_generated_O2_optimized.asm,0.2261220000000037,0.807887299789572,29,dead code elimination
+clang_generated_llm_optimized.asm,0.2296830000000085,0.8206100188286505,29,dead code elimination
+clang_generated_O1_optimized.asm,0.2279100000000085,0.8142754552632879,29,dead code elimination
+clang_generated_O3_optimized.asm,0.22604299999999,0.8076050490722847,29,dead code elimination
+llm_generated.asm,0.2273959999999988,0.8124390392042594,29,dead code elimination
+clang_generated_unoptimized.asm,0.282098000000019,1.0,30,dead code elimination
+clang_generated_O2_optimized.asm,0.2244149999999933,0.7955214145438047,30,dead code elimination
+clang_generated_llm_optimized.asm,0.2214909999999861,0.7851562223056213,30,dead code elimination
+clang_generated_O1_optimized.asm,0.2244670000000042,0.7957057476479416,30,dead code elimination
+clang_generated_O3_optimized.asm,0.2256330000000161,0.7998390630206558,30,dead code elimination
+llm_generated.asm,0.0023140000000125,0.0082028231324306,30,dead code elimination
+clang_generated_unoptimized.asm,0.3473140000000114,1.0,31,dead code elimination
+clang_generated_O2_optimized.asm,0.2263140000000021,0.6516120858934413,31,dead code elimination
+clang_generated_llm_optimized.asm,0.2241269999999815,0.6453151902888284,31,dead code elimination
+clang_generated_O1_optimized.asm,0.2231730000000027,0.642568396321471,31,dead code elimination
+clang_generated_O3_optimized.asm,0.2238279999999974,0.6444542978399664,31,dead code elimination
+llm_generated.asm,0.002488999999997,0.0071664257703317,31,dead code elimination
+clang_generated_unoptimized.asm,0.6672949999999993,1.0,32,dead code elimination
+clang_generated_O2_optimized.asm,0.0049810000000007,0.0074644647419818,32,dead code elimination
+clang_generated_llm_optimized.asm,0.2318129999999989,0.3473920829618072,32,dead code elimination
+clang_generated_O1_optimized.asm,0.0055820000000004,0.0083651158782853,32,dead code elimination
+clang_generated_O3_optimized.asm,0.0045159999999988,0.0067676215167187,32,dead code elimination
+llm_generated.asm,5.336046,7.9965322683371,32,dead code elimination
+clang_generated_unoptimized.asm,0.2526559999999946,1.0,33,dead code elimination
+clang_generated_O2_optimized.asm,0.2255119999999948,0.8925653853460815,33,dead code elimination
+clang_generated_llm_optimized.asm,0.2219660000000018,0.8785304920524609,33,dead code elimination
+clang_generated_O1_optimized.asm,0.2259990000000016,0.8944929073523146,33,dead code elimination
+clang_generated_O3_optimized.asm,0.2261730000000028,0.8951815907795881,33,dead code elimination
+llm_generated.asm,0.2230080000000001,0.8826546767146033,33,dead code elimination
+clang_generated_unoptimized.asm,0.2520600000000002,1.0,34,dead code elimination
+clang_generated_O2_optimized.asm,0.2236520000000013,0.8872966753947518,34,dead code elimination
+clang_generated_llm_optimized.asm,0.2211130000000025,0.8772236769023344,34,dead code elimination
+clang_generated_O1_optimized.asm,0.2222089999999994,0.881571847972702,34,dead code elimination
+clang_generated_O3_optimized.asm,0.2224420000000009,0.8824962310561008,34,dead code elimination
+llm_generated.asm,0.2220439999999968,0.8809172419265121,34,dead code elimination
+clang_generated_unoptimized.asm,0.6357870000000005,1.0,35,dead code elimination
+clang_generated_O2_optimized.asm,0.0049589999999994,0.0077997820024622,35,dead code elimination
+clang_generated_llm_optimized.asm,0.1237299999999983,0.1946092008801662,35,dead code elimination
+clang_generated_O1_optimized.asm,0.2393999999999998,0.3765412001189072,35,dead code elimination
+clang_generated_O3_optimized.asm,0.0053779999999967,0.0084588077453561,35,dead code elimination
+llm_generated.asm,11.991737,18.861249129032192,35,dead code elimination
+clang_generated_unoptimized.asm,0.2521430000000038,1.0,36,dead code elimination
+clang_generated_O2_optimized.asm,0.2221890000000002,0.8812023335963991,36,dead code elimination
+clang_generated_llm_optimized.asm,0.222216000000003,0.8813094156887153,36,dead code elimination
+clang_generated_O1_optimized.asm,0.2267640000000028,0.8993467992369387,36,dead code elimination
+clang_generated_O3_optimized.asm,0.2260699999999929,0.896594392864325,36,dead code elimination
+llm_generated.asm,0.2216910000000069,0.8792272638939159,36,dead code elimination
+clang_generated_unoptimized.asm,0.2673510000000192,1.0,37,dead code elimination
+clang_generated_O2_optimized.asm,0.2268280000000118,0.8484277223574832,37,dead code elimination
+clang_generated_llm_optimized.asm,0.2260089999999763,0.8453643337782919,37,dead code elimination
+clang_generated_O1_optimized.asm,0.2252220000000022,0.8424206380375838,37,dead code elimination
+clang_generated_O3_optimized.asm,0.2266689999999869,0.8478329985673164,37,dead code elimination
+llm_generated.asm,0.2238159999999993,0.8371616339567957,37,dead code elimination
+clang_generated_unoptimized.asm,0.274130999999997,1.0,38,dead code elimination
+clang_generated_O2_optimized.asm,0.2248109999999883,0.8200860172690821,38,dead code elimination
+clang_generated_llm_optimized.asm,0.2258400000000051,0.8238396970791615,38,dead code elimination
+clang_generated_O1_optimized.asm,0.2271739999999908,0.8287059836355368,38,dead code elimination
+clang_generated_O3_optimized.asm,0.2246700000000032,0.819571664642108,38,dead code elimination
+llm_generated.asm,0.2257139999999964,0.8233800628166784,38,dead code elimination
+clang_generated_unoptimized.asm,0.2665429999999844,1.0,39,dead code elimination
+clang_generated_O2_optimized.asm,0.2257869999999968,0.8470940898842214,39,dead code elimination
+clang_generated_llm_optimized.asm,0.2262800000000027,0.8489436976398401,39,dead code elimination
+clang_generated_O1_optimized.asm,0.2217399999999827,0.8319107986328498,39,dead code elimination
+clang_generated_O3_optimized.asm,0.2265629999999987,0.8500054400228555,39,dead code elimination
+llm_generated.asm,0.2273830000000032,0.8530818667157514,39,dead code elimination
+clang_generated_unoptimized.asm,0.3265140000000031,1.0,40,dead code elimination
+clang_generated_O2_optimized.asm,0.2232369999999832,0.683698095640558,40,dead code elimination
+clang_generated_llm_optimized.asm,0.2208499999999844,0.676387536215851,40,dead code elimination
+clang_generated_O1_optimized.asm,0.2396000000000242,0.7338123327024936,40,dead code elimination
+clang_generated_O3_optimized.asm,0.244700999999992,0.7494349400025413,40,dead code elimination
+clang_generated_unoptimized.asm,0.2519240000000025,1.0,41,strength reduction
+clang_generated_O2_optimized.asm,0.2247590000000059,0.89216986075167,41,strength reduction
+clang_generated_llm_optimized.asm,0.2222639999999955,0.8822660802463973,41,strength reduction
+clang_generated_O1_optimized.asm,0.2212220000000115,0.8781299121957789,41,strength reduction
+clang_generated_O3_optimized.asm,0.2216080000000033,0.8796621203220065,41,strength reduction
+clang_generated_unoptimized.asm,0.2567140000000023,1.0,42,strength reduction
+clang_generated_O2_optimized.asm,0.2267109999999945,0.8831267480542258,42,strength reduction
+clang_generated_llm_optimized.asm,0.2265660000000053,0.8825619171529535,42,strength reduction
+clang_generated_O1_optimized.asm,0.2290209999999888,0.8921250886199691,42,strength reduction
+clang_generated_O3_optimized.asm,0.2260589999999922,0.8805869566910655,42,strength reduction
+llm_generated.asm,0.6385520000000042,2.487406218593448,42,strength reduction
+clang_generated_unoptimized.asm,0.2671899999999994,1.0,43,strength reduction
+clang_generated_O2_optimized.asm,0.2229219999999969,0.8343201467120681,43,strength reduction
+clang_generated_llm_optimized.asm,0.2232389999999924,0.8355065683595678,43,strength reduction
+clang_generated_O1_optimized.asm,0.2215750000000014,0.8292787903738985,43,strength reduction
+clang_generated_O3_optimized.asm,0.2232869999999991,0.8356862158014883,43,strength reduction
+llm_generated.asm,0.2225130000000064,0.8327894008009541,43,strength reduction
+clang_generated_unoptimized.asm,0.2512519999999938,1.0,44,strength reduction
+clang_generated_O2_optimized.asm,0.2241180000000042,0.8920048397625084,44,strength reduction
+clang_generated_llm_optimized.asm,0.2234529999999921,0.8893580946619236,44,strength reduction
+clang_generated_O1_optimized.asm,0.2226390000000009,0.886118319456189,44,strength reduction
+clang_generated_O3_optimized.asm,0.2209399999999988,0.8793561842293962,44,strength reduction
+llm_generated.asm,0.2215970000000027,0.8819710887873854,44,strength reduction
+clang_generated_unoptimized.asm,0.3214520000000078,1.0,45,strength reduction
+clang_generated_O2_optimized.asm,0.2277999999999878,0.7086594577105827,45,strength reduction
+clang_generated_llm_optimized.asm,0.2235589999999945,0.6954661971304862,45,strength reduction
+clang_generated_O1_optimized.asm,0.225947000000005,0.7028949889874678,45,strength reduction
+clang_generated_O3_optimized.asm,0.2211620000000067,0.6880094073143155,45,strength reduction
+llm_generated.asm,0.2257469999999983,0.7022728121150058,45,strength reduction
+clang_generated_unoptimized.asm,0.2544509999999889,1.0,46,strength reduction
+clang_generated_O2_optimized.asm,0.2235569999999995,0.8785856608934897,46,strength reduction
+clang_generated_llm_optimized.asm,0.2244760000000099,0.8821973582340793,46,strength reduction
+clang_generated_O1_optimized.asm,0.2207860000000039,0.8676955484553551,46,strength reduction
+clang_generated_O3_optimized.asm,0.2233030000000155,0.8775874333369699,46,strength reduction
+clang_generated_unoptimized.asm,0.2537060000000224,1.0,47,strength reduction
+clang_generated_O2_optimized.asm,0.2253599999999949,0.8882722521342616,47,strength reduction
+clang_generated_llm_optimized.asm,0.2274830000000065,0.8966402055922463,47,strength reduction
+clang_generated_O1_optimized.asm,0.2271439999999813,0.8953040133065883,47,strength reduction
+clang_generated_O3_optimized.asm,0.2235819999999932,0.8812641403828586,47,strength reduction
+clang_generated_unoptimized.asm,0.2830199999999934,1.0,48,strength reduction
+clang_generated_O2_optimized.asm,0.2243430000000046,0.7926754292983177,48,strength reduction
+clang_generated_llm_optimized.asm,0.2237269999999966,0.7904989046710548,48,strength reduction
+clang_generated_O1_optimized.asm,0.2226840000000152,0.7868136527454611,48,strength reduction
+clang_generated_O3_optimized.asm,0.2262470000000007,0.7994028690552117,48,strength reduction
+clang_generated_unoptimized.asm,0.276976999999988,1.0,49,strength reduction
+clang_generated_O2_optimized.asm,0.2376330000000166,0.8579521043264491,49,strength reduction
+clang_generated_llm_optimized.asm,0.2428750000000263,0.876877863505045,49,strength reduction
+clang_generated_O1_optimized.asm,0.244714000000016,0.8835174039722672,49,strength reduction
+clang_generated_O3_optimized.asm,0.2440689999999961,0.8811886907577403,49,strength reduction
+clang_generated_unoptimized.asm,0.2508829999999999,1.0,50,strength reduction
+clang_generated_O2_optimized.asm,0.2218630000000008,0.8843285515559078,50,strength reduction
+clang_generated_llm_optimized.asm,0.2233199999999993,0.8901360395084534,50,strength reduction
+clang_generated_O1_optimized.asm,0.2213319999999985,0.8822120271202056,50,strength reduction
+clang_generated_O3_optimized.asm,0.2223889999999997,0.8864251463829743,50,strength reduction
+llm_generated.asm,0.2238549999999985,0.8922685076310416,50,strength reduction
+clang_generated_unoptimized.asm,0.2517799999999965,1.0,51,strength reduction
+clang_generated_O2_optimized.asm,0.2228929999999991,0.8852688855349995,51,strength reduction
+clang_generated_llm_optimized.asm,0.0022110000000026,0.0087814758916619,51,strength reduction
+clang_generated_O1_optimized.asm,0.2205520000000049,0.8759710858686471,51,strength reduction
+clang_generated_O3_optimized.asm,0.2199290000000004,0.8734967034712983,51,strength reduction
+llm_generated.asm,0.2209300000000027,0.8774723965366819,51,strength reduction
+clang_generated_unoptimized.asm,0.2516859999999781,1.0,52,strength reduction
+clang_generated_O2_optimized.asm,0.2314489999999978,0.9195942563353462,52,strength reduction
+clang_generated_llm_optimized.asm,0.2216109999999957,0.8805058684234128,52,strength reduction
+clang_generated_O1_optimized.asm,0.2229549999999847,0.8858458555501859,52,strength reduction
+clang_generated_O3_optimized.asm,0.2235220000000026,0.8880986626193833,52,strength reduction
+clang_generated_unoptimized.asm,0.2523380000000088,1.0,53,strength reduction
+clang_generated_O2_optimized.asm,0.2232960000000048,0.8849083372302111,53,strength reduction
+clang_generated_llm_optimized.asm,0.2217959999999834,0.8789639293327826,53,strength reduction
+clang_generated_O1_optimized.asm,0.2264339999999833,0.8973440385513693,53,strength reduction
+clang_generated_O3_optimized.asm,0.2274170000000026,0.901239607193505,53,strength reduction
+llm_generated.asm,0.2212470000000053,0.8767882760424414,53,strength reduction
+clang_generated_unoptimized.asm,0.2599850000000003,1.0,54,strength reduction
+clang_generated_O2_optimized.asm,0.2243199999999774,0.8628190087888806,54,strength reduction
+clang_generated_llm_optimized.asm,0.2225200000000029,0.8558955324345736,54,strength reduction
+clang_generated_O1_optimized.asm,0.2281759999999906,0.8776506336903679,54,strength reduction
+clang_generated_O3_optimized.asm,0.2449249999999949,0.9420735811681236,54,strength reduction
+llm_generated.asm,0.2258660000000247,0.8687655057023461,54,strength reduction
+clang_generated_unoptimized.asm,0.2663939999999911,1.0,55,strength reduction
+clang_generated_O2_optimized.asm,0.2233760000000018,0.8385173840252004,55,strength reduction
+clang_generated_llm_optimized.asm,0.2312440000000037,0.8680525837669447,55,strength reduction
+clang_generated_O1_optimized.asm,0.2250180000000057,0.8446811865132593,55,strength reduction
+clang_generated_O3_optimized.asm,0.2275919999999871,0.8543435662965183,55,strength reduction
+clang_generated_unoptimized.asm,0.252094999999997,1.0,56,strength reduction
+clang_generated_O2_optimized.asm,0.2223660000000009,0.8820722346734506,56,strength reduction
+clang_generated_llm_optimized.asm,0.2208539999999956,0.8760744957258106,56,strength reduction
+clang_generated_O1_optimized.asm,0.222883000000003,0.8841230488506541,56,strength reduction
+clang_generated_O3_optimized.asm,0.226033000000001,0.8966183383248524,56,strength reduction
+llm_generated.asm,0.0027080000000054,0.0107419821892759,56,strength reduction
+clang_generated_unoptimized.asm,0.2524499999999996,1.0,57,strength reduction
+clang_generated_O2_optimized.asm,0.2208959999999997,0.8750089126559718,57,strength reduction
+clang_generated_llm_optimized.asm,0.2227430000000012,0.8823252129134544,57,strength reduction
+clang_generated_O1_optimized.asm,0.2284769999999998,0.9050386215092104,57,strength reduction
+clang_generated_O3_optimized.asm,0.2206100000000006,0.8738760150524895,57,strength reduction
+llm_generated.asm,0.0022719999999996,0.0089998019409768,57,strength reduction
+clang_generated_unoptimized.asm,0.252952999999998,1.0,58,strength reduction
+clang_generated_O2_optimized.asm,0.2259010000000003,0.8930552316042987,58,strength reduction
+clang_generated_llm_optimized.asm,0.2255250000000046,0.8915687894589368,58,strength reduction
+clang_generated_O1_optimized.asm,0.2253830000000007,0.8910074203508264,58,strength reduction
+clang_generated_O3_optimized.asm,0.224187999999998,0.8862832225749441,58,strength reduction
+llm_generated.asm,0.2316819999999992,0.9159092795894934,58,strength reduction
+clang_generated_unoptimized.asm,0.2526999999999999,1.0,59,strength reduction
+clang_generated_O2_optimized.asm,0.2242369999999995,0.8873644637910552,59,strength reduction
+clang_generated_llm_optimized.asm,0.2260950000000008,0.8947170557973917,59,strength reduction
+clang_generated_O1_optimized.asm,0.2231230000000001,0.8829560743965186,59,strength reduction
+clang_generated_O3_optimized.asm,0.2264609999999995,0.8961654135338332,59,strength reduction
+llm_generated.asm,0.002485,0.0098337950138506,59,strength reduction
+clang_generated_unoptimized.asm,0.2556089999999997,1.0,60,strength reduction
+clang_generated_O2_optimized.asm,0.2303949999999943,0.901357150961017,60,strength reduction
+clang_generated_llm_optimized.asm,0.2270480000000034,0.8882629328388425,60,strength reduction
+clang_generated_O1_optimized.asm,0.2251969999999943,0.8810214037846654,60,strength reduction
+clang_generated_O3_optimized.asm,0.2257790000000028,0.883298318916795,60,strength reduction
+llm_generated.asm,0.2264100000000013,0.8857669330892165,60,strength reduction
+clang_generated_unoptimized.asm,0.7258290000000001,1.0,61,loop unrolling
+clang_generated_O2_optimized.asm,0.2283249999999999,0.3145713384281971,61,loop unrolling
+clang_generated_llm_optimized.asm,0.2310749999999999,0.3183601096125946,61,loop unrolling
+clang_generated_O1_optimized.asm,0.2248270000000001,0.3097520214816439,61,loop unrolling
+clang_generated_O3_optimized.asm,0.2268720000000001,0.3125694895078595,61,loop unrolling
+llm_generated.asm,0.002577,0.0035504230335244,61,loop unrolling
+clang_generated_unoptimized.asm,1.3812670000000082,1.0,62,loop unrolling
+clang_generated_O2_optimized.asm,0.2196270000000026,0.1590040158781766,62,loop unrolling
+clang_generated_llm_optimized.asm,0.2210220000000049,0.1600139581992501,62,loop unrolling
+clang_generated_O1_optimized.asm,0.4394110000000069,0.3181216955157868,62,loop unrolling
+clang_generated_O3_optimized.asm,0.2231020000000114,0.1615198220184874,62,loop unrolling
+llm_generated.asm,0.4377110000000073,0.3168909414327604,62,loop unrolling
+clang_generated_unoptimized.asm,1.0482049999999958,1.0,63,loop unrolling
+clang_generated_O2_optimized.asm,0.2251159999999856,0.2147633335082227,63,loop unrolling
+clang_generated_llm_optimized.asm,0.2229420000000175,0.2126893117281623,63,loop unrolling
+clang_generated_O1_optimized.asm,0.4084119999999984,0.3896298910995464,63,loop unrolling
+clang_generated_O3_optimized.asm,0.2256580000000099,0.2152804079354809,63,loop unrolling
+clang_generated_unoptimized.asm,0.5368249999999932,1.0,64,loop unrolling
+clang_generated_O2_optimized.asm,0.2197770000000218,0.4094015740698079,64,loop unrolling
+clang_generated_llm_optimized.asm,0.2230629999999962,0.4155227494993695,64,loop unrolling
+clang_generated_O1_optimized.asm,0.2240409999999997,0.4173445722535324,64,loop unrolling
+clang_generated_O3_optimized.asm,0.2281260000000031,0.4249541284403782,64,loop unrolling
+clang_generated_unoptimized.asm,1.7320060000000126,1.0,65,loop unrolling
+clang_generated_O2_optimized.asm,0.227532999999994,0.1313696372876262,65,loop unrolling
+clang_generated_llm_optimized.asm,0.2266120000000171,0.1308378839334364,65,loop unrolling
+clang_generated_O1_optimized.asm,0.4754020000000025,0.2744805733929323,65,loop unrolling
+clang_generated_O3_optimized.asm,0.226803000000018,0.1309481606876745,65,loop unrolling
+llm_generated.asm,0.4780659999999841,0.2760186743001933,65,loop unrolling
+clang_generated_unoptimized.asm,0.7204980000000001,1.0,66,loop unrolling
+clang_generated_O2_optimized.asm,0.2242749999999986,0.3112777551082704,66,loop unrolling
+clang_generated_llm_optimized.asm,0.2260000000000008,0.3136719324689324,66,loop unrolling
+clang_generated_O1_optimized.asm,0.2283190000000008,0.3168905395990007,66,loop unrolling
+clang_generated_O3_optimized.asm,0.2229650000000003,0.3094595682430767,66,loop unrolling
+llm_generated.asm,0.4385779999999997,0.6087150831785788,66,loop unrolling
+clang_generated_unoptimized.asm,0.4359889999999993,1.0,67,loop unrolling
+clang_generated_O2_optimized.asm,0.2259600000000006,0.518269956352112,67,loop unrolling
+clang_generated_llm_optimized.asm,0.224262000000003,0.5143753626811765,67,loop unrolling
+clang_generated_O1_optimized.asm,0.229734999999998,0.5269284316806121,67,loop unrolling
+clang_generated_O3_optimized.asm,0.2302339999999958,0.5280729559690639,67,loop unrolling
+llm_generated.asm,0.2621719999999996,0.6013270977020063,67,loop unrolling
+clang_generated_unoptimized.asm,0.7157199999999992,1.0,68,loop unrolling
+clang_generated_O2_optimized.asm,0.2208380000000005,0.3085536243223618,68,loop unrolling
+clang_generated_llm_optimized.asm,0.4401630000000001,0.6149932934667196,68,loop unrolling
+clang_generated_O1_optimized.asm,0.2229690000000008,0.3115310456603156,68,loop unrolling
+clang_generated_O3_optimized.asm,0.2213650000000004,0.309289945788857,68,loop unrolling
+llm_generated.asm,0.0024160000000001,0.0033756217515232,68,loop unrolling
+clang_generated_unoptimized.asm,0.7162700000000015,1.0,69,loop unrolling
+clang_generated_O2_optimized.asm,0.2209199999999995,0.3084311781869953,69,loop unrolling
+clang_generated_llm_optimized.asm,0.2227469999999982,0.3109818923031787,69,loop unrolling
+clang_generated_O1_optimized.asm,0.2214390000000037,0.3091557652840455,69,loop unrolling
+clang_generated_O3_optimized.asm,0.2201189999999968,0.3073128848060038,69,loop unrolling
+llm_generated.asm,0.4411899999999988,0.6159548773507169,69,loop unrolling
+clang_generated_unoptimized.asm,0.7157790000000261,1.0,70,loop unrolling
+clang_generated_O2_optimized.asm,0.2198710000000119,0.3071772153136707,70,loop unrolling
+clang_generated_llm_optimized.asm,0.2214960000000019,0.3094474691210468,70,loop unrolling
+clang_generated_O1_optimized.asm,0.2226260000000195,0.311026168691749,70,loop unrolling
+clang_generated_O3_optimized.asm,0.222768000000002,0.3112245539475088,70,loop unrolling
+clang_generated_unoptimized.asm,0.531975999999986,1.0,71,loop unrolling
+clang_generated_O2_optimized.asm,0.2212570000000084,0.4159153796412136,71,loop unrolling
+clang_generated_llm_optimized.asm,0.2249119999999891,0.4227859903454198,71,loop unrolling
+clang_generated_O1_optimized.asm,0.2221580000000074,0.4176090650706295,71,loop unrolling
+clang_generated_O3_optimized.asm,0.220168000000001,0.413868294810305,71,loop unrolling
+clang_generated_unoptimized.asm,0.5315009999999916,1.0,72,loop unrolling
+clang_generated_O2_optimized.asm,0.2217789999999979,0.4172692055141975,72,loop unrolling
+clang_generated_llm_optimized.asm,0.2255629999999939,0.424388665308245,72,loop unrolling
+clang_generated_O1_optimized.asm,0.2256889999999884,0.4246257297728359,72,loop unrolling
+clang_generated_O3_optimized.asm,0.2261790000000019,0.4255476471351991,72,loop unrolling
+llm_generated.asm,0.3818469999999934,0.7184313858299409,72,loop unrolling
+clang_generated_unoptimized.asm,0.5304569999999984,1.0,73,loop unrolling
+clang_generated_O2_optimized.asm,0.220411999999996,0.4155134157905291,73,loop unrolling
+clang_generated_llm_optimized.asm,0.2242960000000096,0.4228354041892373,73,loop unrolling
+clang_generated_O1_optimized.asm,0.2217180000000098,0.4179754438154469,73,loop unrolling
+clang_generated_O3_optimized.asm,0.224063000000001,0.4223961602919778,73,loop unrolling
+llm_generated.asm,0.3772530000000103,0.7111848839774221,73,loop unrolling
+clang_generated_unoptimized.asm,0.5302209999999974,1.0,74,loop unrolling
+clang_generated_O2_optimized.asm,0.2205700000000092,0.4159963486923572,74,loop unrolling
+clang_generated_llm_optimized.asm,0.2200770000000034,0.4150665477225619,74,loop unrolling
+clang_generated_O1_optimized.asm,0.2202889999999939,0.4154663809996116,74,loop unrolling
+clang_generated_O3_optimized.asm,0.2217869999999919,0.4182916180234148,74,loop unrolling
+llm_generated.asm,0.2576549999999997,0.4859388820887913,74,loop unrolling
+clang_generated_unoptimized.asm,0.532820000000001,1.0,75,loop unrolling
+clang_generated_O2_optimized.asm,0.2206180000000017,0.4140572801321297,75,loop unrolling
+clang_generated_llm_optimized.asm,0.2234499999999997,0.4193723959310823,75,loop unrolling
+clang_generated_O1_optimized.asm,0.2252539999999925,0.422758154723907,75,loop unrolling
+clang_generated_O3_optimized.asm,0.2215840000000071,0.4158702751398346,75,loop unrolling
+llm_generated.asm,0.3812500000000085,0.7155324499831235,75,loop unrolling
+clang_generated_unoptimized.asm,0.5340850000000046,1.0,76,loop unrolling
+clang_generated_O2_optimized.asm,0.2232769999999959,0.4180551784828146,76,loop unrolling
+clang_generated_llm_optimized.asm,0.2216209999999989,0.4149545484332963,76,loop unrolling
+clang_generated_O1_optimized.asm,0.2254390000000228,0.4221032232697433,76,loop unrolling
+clang_generated_O3_optimized.asm,0.2271029999999996,0.425218832208352,76,loop unrolling
+clang_generated_unoptimized.asm,0.5298750000000041,1.0,77,loop unrolling
+clang_generated_O2_optimized.asm,0.2204460000000097,0.4160339702760235,77,loop unrolling
+clang_generated_llm_optimized.asm,0.2235389999999881,0.4218711960367755,77,loop unrolling
+clang_generated_O1_optimized.asm,0.2224059999999781,0.4197329558857776,77,loop unrolling
+clang_generated_O3_optimized.asm,0.2223839999999768,0.4196914366595425,77,loop unrolling
+clang_generated_unoptimized.asm,0.5389670000000137,1.0,78,loop unrolling
+clang_generated_O2_optimized.asm,0.2342749999999966,0.4346741080622574,78,loop unrolling
+clang_generated_llm_optimized.asm,0.2433330000000069,0.4514803318199457,78,loop unrolling
+clang_generated_O1_optimized.asm,0.235872999999998,0.4376390391248295,78,loop unrolling
+clang_generated_O3_optimized.asm,0.2261590000000239,0.4196156722025991,78,loop unrolling
+clang_generated_unoptimized.asm,0.529627000000005,1.0,79,loop unrolling
+clang_generated_O2_optimized.asm,0.2199080000000037,0.4152129706378294,79,loop unrolling
+clang_generated_llm_optimized.asm,0.2221990000000175,0.4195386564507011,79,loop unrolling
+clang_generated_O1_optimized.asm,0.2229680000000087,0.4209906217017007,79,loop unrolling
+clang_generated_O3_optimized.asm,0.2220470000000034,0.419251662018744,79,loop unrolling
+clang_generated_unoptimized.asm,0.5310000000000059,1.0,80,loop unrolling
+clang_generated_O2_optimized.asm,0.2228060000000056,0.4195969868173317,80,loop unrolling
+clang_generated_llm_optimized.asm,0.2262450000000058,0.4260734463276898,80,loop unrolling
+clang_generated_O1_optimized.asm,0.2262089999999972,0.4260056497175041,80,loop unrolling
+clang_generated_O3_optimized.asm,0.222563000000008,0.4191393596986922,80,loop unrolling
+llm_generated.asm,0.2545980000000014,0.4794689265536697,80,loop unrolling
+clang_generated_unoptimized.asm,0.3168799999999976,1.0,81,copy propagation
+clang_generated_O2_optimized.asm,0.2255389999999977,0.7117489270386248,81,copy propagation
+clang_generated_llm_optimized.asm,0.2225059999999956,0.7021774804342253,81,copy propagation
+clang_generated_O1_optimized.asm,0.22037499999999,0.6954525372380449,81,copy propagation
+clang_generated_O3_optimized.asm,0.2209399999999988,0.6972355465791482,81,copy propagation
+llm_generated.asm,0.2225820000000027,0.7024173188588879,81,copy propagation
+clang_generated_unoptimized.asm,0.3727269999999976,1.0,82,copy propagation
+clang_generated_O2_optimized.asm,0.2250050000000101,0.6036723929310502,82,copy propagation
+clang_generated_llm_optimized.asm,0.2308010000000138,0.6192226482117349,82,copy propagation
+clang_generated_O1_optimized.asm,0.2235340000000008,0.5997258046774241,82,copy propagation
+clang_generated_O3_optimized.asm,0.2247019999999793,0.6028594655068744,82,copy propagation
+clang_generated_unoptimized.asm,0.3303840000000093,1.0,83,copy propagation
+clang_generated_O2_optimized.asm,0.2212639999999908,0.6697176618721988,83,copy propagation
+clang_generated_llm_optimized.asm,0.2233720000000119,0.6760981161315487,83,copy propagation
+clang_generated_O1_optimized.asm,0.2227750000000128,0.6742911278996759,83,copy propagation
+clang_generated_O3_optimized.asm,0.2235089999999786,0.6765127851226824,83,copy propagation
+clang_generated_unoptimized.asm,0.3846209999999814,1.0,84,copy propagation
+clang_generated_O2_optimized.asm,0.2241010000000187,0.5826540932503154,84,copy propagation
+clang_generated_llm_optimized.asm,0.220893000000018,0.5743134150242152,84,copy propagation
+clang_generated_O1_optimized.asm,0.2216730000000097,0.5763413854158261,84,copy propagation
+clang_generated_O3_optimized.asm,0.2222629999999981,0.5778753630197229,84,copy propagation
+clang_generated_unoptimized.asm,0.3605389999999886,1.0,85,copy propagation
+clang_generated_O2_optimized.asm,0.2222610000000031,0.6164686760655856,85,copy propagation
+clang_generated_llm_optimized.asm,0.2259969999999782,0.6268309392326084,85,copy propagation
+clang_generated_O1_optimized.asm,0.2224769999999978,0.6170677790752314,85,copy propagation
+clang_generated_O3_optimized.asm,0.2262479999999982,0.6275271191188897,85,copy propagation
+clang_generated_unoptimized.asm,0.3923840000000069,1.0,86,copy propagation
+clang_generated_O2_optimized.asm,0.2232510000000047,0.5689605080737258,86,copy propagation
+clang_generated_llm_optimized.asm,0.2234150000000028,0.5693784659924942,86,copy propagation
+clang_generated_O1_optimized.asm,0.2231029999999947,0.5685833265372461,86,copy propagation
+clang_generated_O3_optimized.asm,0.2214170000000024,0.5642865152503631,86,copy propagation
+llm_generated.asm,0.2237509999999929,0.5702347700211756,86,copy propagation
+clang_generated_unoptimized.asm,0.3351509999999962,1.0,87,copy propagation
+clang_generated_O2_optimized.asm,0.225371999999993,0.672449134867554,87,copy propagation
+clang_generated_llm_optimized.asm,0.2201459999999997,0.6568561633413066,87,copy propagation
+clang_generated_O1_optimized.asm,0.2216099999999983,0.6612243436540569,87,copy propagation
+clang_generated_O3_optimized.asm,0.2204690000000084,0.6578199080414827,87,copy propagation
+llm_generated.asm,0.222329000000002,0.6633696453240614,87,copy propagation
+clang_generated_unoptimized.asm,0.4386310000000009,1.0,88,copy propagation
+clang_generated_O2_optimized.asm,0.2229039999999997,0.5081811363081937,88,copy propagation
+clang_generated_llm_optimized.asm,0.2231270000000051,0.5086895363072942,88,copy propagation
+clang_generated_O1_optimized.asm,0.2238559999999978,0.5103515255419644,88,copy propagation
+clang_generated_O3_optimized.asm,0.2245970000000028,0.5120408726241473,88,copy propagation
+llm_generated.asm,0.2205890000000039,0.5029033515643069,88,copy propagation
+clang_generated_unoptimized.asm,0.3406880000000001,1.0,89,copy propagation
+clang_generated_O2_optimized.asm,0.2203599999999994,0.6468088104071742,89,copy propagation
+clang_generated_llm_optimized.asm,0.2215890000000087,0.6504162165970291,89,copy propagation
+clang_generated_O1_optimized.asm,0.2223529999999982,0.6526587376132948,89,copy propagation
+clang_generated_O3_optimized.asm,0.2217780000000004,0.6509709763772143,89,copy propagation
+llm_generated.asm,0.3482390000000066,1.0221639740760065,89,copy propagation
+clang_generated_unoptimized.asm,0.4382799999999918,1.0,90,copy propagation
+clang_generated_O2_optimized.asm,0.2243840000000148,0.5119649539107853,90,copy propagation
+clang_generated_llm_optimized.asm,0.2221289999999953,0.506819841197407,90,copy propagation
+clang_generated_O1_optimized.asm,0.2263349999999775,0.5164164461074696,90,copy propagation
+clang_generated_O3_optimized.asm,0.2231339999999875,0.5091128958656377,90,copy propagation
+clang_generated_unoptimized.asm,0.3332709999999963,1.0,91,copy propagation
+clang_generated_O2_optimized.asm,0.2278499999999894,0.6836778477575065,91,copy propagation
+clang_generated_llm_optimized.asm,0.2254509999999925,0.6764795016667967,91,copy propagation
+clang_generated_O1_optimized.asm,0.2259809999999902,0.678069799052401,91,copy propagation
+clang_generated_O3_optimized.asm,0.2232989999999972,0.6700222941690087,91,copy propagation
+llm_generated.asm,0.2247539999999901,0.6743881105766557,91,copy propagation
+clang_generated_unoptimized.asm,0.3437739999999998,1.0,92,copy propagation
+clang_generated_O2_optimized.asm,0.2254060000000004,0.6556807670155409,92,copy propagation
+clang_generated_llm_optimized.asm,0.2287340000000002,0.6653615456666309,92,copy propagation
+clang_generated_O1_optimized.asm,0.2265419999999993,0.6589852635743235,92,copy propagation
+clang_generated_O3_optimized.asm,0.2284059999999996,0.6644074304630362,92,copy propagation
+llm_generated.asm,0.0027590000000001,0.0080256214838823,92,copy propagation
+clang_generated_unoptimized.asm,0.3974569999999957,1.0,93,copy propagation
+clang_generated_O2_optimized.asm,0.2270719999999997,0.5713121167824499,93,copy propagation
+clang_generated_llm_optimized.asm,0.226818999999999,0.5706755699358709,93,copy propagation
+clang_generated_O1_optimized.asm,0.2281669999999991,0.5740671317903612,93,copy propagation
+clang_generated_O3_optimized.asm,0.2286179999999973,0.5752018457342549,93,copy propagation
+llm_generated.asm,0.2268180000000015,0.5706730539404362,93,copy propagation
+clang_generated_unoptimized.asm,0.4150709999999975,1.0,94,copy propagation
+clang_generated_O2_optimized.asm,0.2282879999999991,0.5499974703123093,94,copy propagation
+clang_generated_llm_optimized.asm,0.2307259999999971,0.5558711642104567,94,copy propagation
+clang_generated_O1_optimized.asm,0.226466000000002,0.5456078598601285,94,copy propagation
+clang_generated_O3_optimized.asm,0.2272449999999963,0.5474846472049305,94,copy propagation
+llm_generated.asm,0.0024819999999934,0.0059796998585626,94,copy propagation
+clang_generated_unoptimized.asm,0.3338550000000002,1.0,95,copy propagation
+clang_generated_O2_optimized.asm,0.2197609999999996,0.6582528343142966,95,copy propagation
+clang_generated_llm_optimized.asm,0.2227840000000003,0.6673076635066126,95,copy propagation
+clang_generated_O1_optimized.asm,0.2224140000000001,0.6661993979422203,95,copy propagation
+clang_generated_O3_optimized.asm,0.2229960000000002,0.6679426697218853,95,copy propagation
+llm_generated.asm,0.0022159999999997,0.0066376121370049,95,copy propagation
+clang_generated_unoptimized.asm,0.3546460000000024,1.0,96,copy propagation
+clang_generated_O2_optimized.asm,0.2220709999999996,0.6261765253238388,96,copy propagation
+clang_generated_llm_optimized.asm,0.2244059999999876,0.6327605555962456,96,copy propagation
+clang_generated_O1_optimized.asm,0.2220850000000211,0.6262160013084023,96,copy propagation
+clang_generated_O3_optimized.asm,0.2217159999999864,0.6251755271453363,96,copy propagation
+llm_generated.asm,0.2227499999999906,0.6280911105722019,96,copy propagation
+clang_generated_unoptimized.asm,0.3958790000000078,1.0,97,copy propagation
+clang_generated_O2_optimized.asm,0.2228079999999863,0.5628184369465972,97,copy propagation
+clang_generated_llm_optimized.asm,0.221855000000005,0.5604111357258168,97,copy propagation
+clang_generated_O1_optimized.asm,0.2242070000000069,0.5663523450347264,97,copy propagation
+clang_generated_O3_optimized.asm,0.2224760000000003,0.5619797968571102,97,copy propagation
+clang_generated_unoptimized.asm,0.4115740000000016,1.0,98,copy propagation
+clang_generated_O2_optimized.asm,0.222849999999994,0.5414579152230051,98,copy propagation
+clang_generated_llm_optimized.asm,0.2226920000000234,0.5410740231404864,98,copy propagation
+clang_generated_O1_optimized.asm,0.2241789999999923,0.5446869821708646,98,copy propagation
+clang_generated_O3_optimized.asm,0.2214899999999886,0.5381535276766456,98,copy propagation
+llm_generated.asm,0.2241429999999979,0.5445995130887692,98,copy propagation
+clang_generated_unoptimized.asm,0.3388980000000003,1.0,99,copy propagation
+clang_generated_O2_optimized.asm,0.2257610000000056,0.6661620900684141,99,copy propagation
+clang_generated_llm_optimized.asm,0.2234710000000177,0.6594048946881289,99,copy propagation
+clang_generated_O1_optimized.asm,0.2193149999999946,0.6471416178318974,99,copy propagation
+clang_generated_O3_optimized.asm,0.2264569999999821,0.6682158053455078,99,copy propagation
+llm_generated.asm,0.2272099999999852,0.6704377128221028,99,copy propagation
