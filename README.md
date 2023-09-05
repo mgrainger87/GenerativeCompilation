@@ -55,7 +55,7 @@ These techniques were chosen because they can be applied to relatively simple co
 
 ## Results
 
-A summary of the results is below. The [test cases and performance results for each problem](analysis/charts.md) are also available.
+A summary of the results is below. The [test cases and performance results for each problem](analysis/charts.md#problem-37) are also available.
 
 ### Overall results
 
