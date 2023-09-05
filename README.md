@@ -1,14 +1,24 @@
 # Generative Compilation
 
-This project evaluates the code compilation and optimization capabilities of large language models (LLMs). In particular, it focuses on GPT-4's ability to compile C source to assembly language and to optimize existing assembly. It gauges the performance and correctness of the generated assembly by using Clang-generated assembly as "ground truth".
+This project evaluates the code compilation and optimization capabilities of large language models (LLMs). It asks the following two questions:
 
-## Motivation
+- Given a C compilation unit, **can an LLM generate *valid* assembly**?
+- Given valid assembly, **can an LLM identify and implement *valid* optimizations for that assembly** that improve its runtime performance?
+
+By *valid assembly*, we mean assembly that translates, links, runs, and passes functional tests on a target platform.
+
+We use Clang-generated assembly as "ground truth" and as a benchmark for the performance and correctness of the generated assembly.
+
+## Motivation and Research Contribution
 
 With the rapid advancement of large language machine learning models, the boundaries of what these models can accomplish are continuously expanding. Traditionally, tasks like code compilation and optimization were exclusively the domain of dedicated software like compilers. This project aims to explore what large language models can achieve in the realm of code compilation and optimization. By pitting these models against traditional compilers, we can gauge the potential of AI in this domain, understand its limitations, and envision future collaboration between traditional software compilers and AI models.
 
 While LLMs have been used in other software engineering domains like code completion [\[1\]](#references) and solving coding challenges [\[2\]](#references), and in particular have been used to improve compiler error generation [\[3\]](#references), this is the first time an LLM has been employed to generate and optimize assembly directly.
 
-This project is a first step towards evaluating the ability of LLMs to generate machine-executable instructions. While it is unlikely that a LLM will replace a production C compiler, the potential for LLMs to compile code written in pseudo-language or in languages that are normally interpreted is intriguing. It is also possible to envision a world where new programming languages are prototyped using LLMs, allowing for more rapid iteration during the language design process.
+While it is unlikely that a LLM will replace a production C compiler, a method for generating correct and efficient assembly using an LLM is intruiguing:
+- It **provides an intermediate option** between **hand-optimized assembly** (which is labor-intensive, error-prone, and currently only used in the most performance-sensitive applications) and **compiler-generated assembly**.
+- It could be used to **compile pseudo-code** or languages that are normally interpreted.
+- It enables **rapid prototyping of new languages**, allowing for quick iteration during the language design process.
 
 ## Approach
 
