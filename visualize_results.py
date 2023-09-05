@@ -109,7 +109,7 @@ for problem in problems_list:
     )
     plt.title(f"Problem {problem} - {subset['technique'].unique()[0]}")
     plt.xlabel("Normalized CPU Time")
-    plt.xlim(0, 1.2)  # Adjusting the x-axis limit for more space between 0 and 1
+    # plt.xlim(0, 1.2)  # Adjusting the x-axis limit for more space between 0 and 1
     plt.figtext(0.5, 0.01, 'Shorter bars are better', wrap=True, horizontalalignment='center', fontsize=8, style='italic')
     plt.tight_layout()
     plt.savefig(os.path.join(analysis_dir, f'problem_{problem}_chart.png'))
