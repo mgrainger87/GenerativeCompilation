@@ -5,6 +5,7 @@ import csv
 import sys
 import pathlib
 import compilation
+import testing
 
 COMPILATION_UNIT_FILE_NAME = "compilation_unit.c"
 
@@ -99,33 +100,6 @@ def prompt_llm_based_on_results(initial_prompt, compilerError, linkerError, test
 
 	return prompt_llm(prompt)
 
-def run_test_from_csv(csv_path, executable_path):
-	failure_text = ""
-	
-	with open(csv_path, 'r') as csvfile:
-		reader = csv.DictReader(csvfile)
-		
-		for row in reader:
-			# Construct the command using the row values
-			cmd = [
-				executable_path,
-				f"int1={row['int1']}",
-				f"int2={row['int2']}",
-				f"double1={row['double1']}",
-				f"double2={row['double2']}",
-				f"expectedInt={row['expectedInt']}",
-				f"expectedDouble={row['expectedDouble']}",
-				f"iterations={row['iterations']}"
-			]
-			print(" ".join(cmd))
-			result = subprocess.run(cmd, capture_output=True, text=True)
-			if result.returncode != 0:
-				failure_text += result.stdout  # Append the output for debugging
-				failure_text += " ".join(cmd)
-				return False, failure_text  # Test failed
-			
-	return True, ""  # All tests passed
-
 def compile_and_test_assembly(assembly, driver_object_path, test_data_path, output_path):
 	# Returns: Success, Compiler error, linker error, testing error
 	
@@ -159,12 +133,12 @@ def compile_and_test_assembly(assembly, driver_object_path, test_data_path, outp
 	# Set executable permissions
 	os.chmod(executable_path, 0o755)
 	
-	success, testing_error = run_test_from_csv(test_data_path, executable_path)
+	success, testing_error, cpu_time = testing.run_test_from_csv(test_data_path, executable_path)
 	if not success:
 		print("Testing failed:", testing_error)
 		return False, compiler_error, linker_error, testing_error
 	
-	print("Testing succeeded.")
+	print(f"Testing succeeded in {cpu_time} seconds.")
 	return True, compiler_error, linker_error, testing_error
 
 def generate_test_data_from_compilation_unit_source(code_path, test_data_path):
