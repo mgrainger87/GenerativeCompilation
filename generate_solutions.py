@@ -100,7 +100,7 @@ def prompt_llm_based_on_results(querier, initial_prompt, compilerError, linkerEr
 		prompt=f"Unfortunately, I got an incorrect result when testing the generated code:\n{testingError}\nTrace through the optimized assembly with these inputs to find the problem. If, at any time, you find an error, correct the assembly, print out the new assembly, and then trace again starting at the beginning."
 
 	#return prompt_llm(prompt)
-	return querier.predict(prompt)
+	return querier.generateAssembly(prompt)
 
 def compile_and_test_assembly(assembly, driver_object_path, test_data_path, output_path):
 	# Returns: Success, Compiler error, linker error, testing error
@@ -147,7 +147,7 @@ def generate_test_data_from_compilation_unit_source(code_path, test_data_path):
 	with open(code_path, "r") as codeFile:
 		code = codeFile.read()
 
-	test_data = query_llm.LLMQuerier().predict(test_data_prompt(code)).strip().rstrip()
+	test_data = prompt_llm(test_data_prompt(code)).strip().rstrip()
 	
 	with open(test_data_path, 'w') as f:
 		f.write(test_data)
