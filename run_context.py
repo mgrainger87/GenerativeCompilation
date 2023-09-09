@@ -14,6 +14,9 @@ class ModelContext:
 			os.makedirs(path)
 		return path
 
+	def problemPath(self):
+		return self.__get_path('problems')
+
 	def generatedPath(self):
 		return self.__get_path('generated', self.__model)
 		
@@ -41,8 +44,7 @@ class ModelContext:
 	@classmethod
 	def ModelContextsForDirectory(cls, rootDirectory):
 		modelContexts = []
-		generatedPath = os.path.join(rootDirectory, 'generated')
-		for model in os.listdir(generatedPath):
+		for model in os.listdir(self.generatedPath()):
 			modelContext = cls(model, rootDirectory)
 			modelContexts.append(modelContext)
 		return modelContexts
@@ -50,7 +52,7 @@ class ModelContext:
 	def GetProblemContexts(self):
 		problem_contexts = []
 		
-		for problemNumber in os.listdir(self.generatedPath()):
+		for problemNumber in os.listdir(self.problemPath()):
 			problemContext = ProblemContext(self.__model, problemNumber, self.__rootDirectory)
 			problem_contexts.append(problemContext)
 		

@@ -8,6 +8,7 @@ import compilation
 import testing
 from query_llm import LLMQuerier
 from query_human import HumanQuerier
+from run_context import ModelContext, ProblemContext, RunContext
 
 COMPILATION_UNIT_FILE_NAME = "compilation_unit.c"
 
@@ -304,30 +305,29 @@ def handle_problem_directory(problem_directory_path, generated_directory_path, t
 
 if __name__ == "__main__":
 	# Check if the user has provided a command-line argument
-	if len(sys.argv) < 6:
+	if len(sys.argv) < 5:
 		print("Please provide correct arguments.")
 		sys.exit(1)
-	
-	problems_path = sys.argv[1]
-	generated_path = sys.argv[2]
-	model_name = sys.argv[3]
-	solutions_per_problem = int(sys.argv[4])
-	optimizations_per_solution = int(sys.argv[5])
+		
+	folder_path = sys.argv[1]
+	model_name = sys.argv[2]
+	solutions_per_problem = int(sys.argv[3])
+	optimizations_per_solution = int(sys.argv[4])
 	
 	# Check if the given folder path exists
-	if os.path.exists(problems_path):
-		# Iterate through the items in the folder
-		for item in os.listdir(problems_path):
-			item_path = os.path.join(problems_path, item)
-			generated_path = os.path.join(os.path.join(generated_path, model_name), item)
-			print(f"Generated path: {generated_path}")
+	if os.path.exists(folder_path):
+		modelContext = ModelContext(model_name, folder_path)
+		
+		problem_contexts = modelContext.GetProblemContexts()
+		
+		print(problem_contexts)
+		
+		for problemContext in problem_contexts:
+			for solution_number in range(1, solutions_per_problem + 1):
+				solution_name = f"{solution_number:02}"  # Formats the number as a two-digit string
+				solution_path = os.path.join(problemContext.generatedPath(), solution_name)
+				print(f"Solution path: {solution_path}")
+				handle_problem_directory(problemContext.problemPath(), solution_path, "/Users/morgang/code/GenerativeCompilation/test_driver.c", optimizations_per_solution)
 
-			if os.path.isdir(item_path):
-
-				for solution_number in range(1, solutions_per_problem + 1):
-					solution_name = f"{solution_number:02}"  # Formats the number as a two-digit string
-					solution_path = os.path.join(generated_path, solution_name)
-					print(f"Solution path: {solution_path}")
-					handle_problem_directory(item_path, solution_path, "/Users/morgang/code/GenerativeCompilation/test_driver.c", optimizations_per_solution)
 	else:
-		print("The provided problems folder path does not exist.")
+		print("The provided folder path does not exist.")
