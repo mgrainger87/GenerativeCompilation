@@ -286,6 +286,54 @@ def generate_performance_latex(modelContext, df):
     with open(modelContext.performanceLaTeXGraphPath(), "w") as output_file:
         output_file.write(latex_code)
 
+def generate_iterations_latex(modelContext, df):
+    # Header for the LaTeX document
+    header = r"""
+\begin{tikzpicture}
+\begin{axis}[
+    title={Performance vs Iteration},
+    xlabel={Iteration},
+    ylabel={Performance},
+    ymin=0, ymax=1,
+    legend pos=north west,
+    ymajorgrids=true,
+    grid style=dashed,
+]
+
+"""
+
+    # Iterate over rows to generate the plot commands
+    plots = []
+    for index, row in df.iterrows():
+        problem_type = row['ProblemType']
+        
+        coordinates = []
+        for i, value in enumerate(row.iloc[1:]):
+            coordinates.append(f"({i+1}, {value})")
+        
+        plots.append(rf"\addplot coordinates {{{' '.join(coordinates)}}};")
+        plots.append(rf"\addlegendentry{{{problem_type}}}")
+
+    # Footer for the LaTeX document
+    footer = r"""
+\end{axis}
+\end{tikzpicture}
+"""
+
+    return header + '\n'.join(plots) + footer
+
+# # Sample usage
+# csv_data = """
+# ProblemType,1,2,3,4,5
+# MathProblem,0.1,0.2,0.3,0.35,0.4
+# PhysicsProblem,0.5,0.55,0.6,0.65,0.7
+# ChemistryProblem,0.3,0.4,0.5,0.55,0.6
+# """
+# 
+# df = pd.read_csv(pd.compat.StringIO(csv_data))
+# latex_code = dataframe_to_latex_pgfplots(df)
+# latex_code
+
 
 def generate_markdown(modelContext):
     markdown_content = ""
