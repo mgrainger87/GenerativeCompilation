@@ -107,8 +107,42 @@ def profile_run(run_context, test_driver_source_path):
 			
 			csvwriter.writerow([filename, cpu_time, normalized_cpu_time])
 			
-# def average_profiling_results(run_context):
-# 	
+def average_cpu_times(input_files, output_file):
+	# Data structures to store CPU Times and sample counts
+	data = {}
+	samples_count = {}
+	
+	# Read each file and populate the data
+	for file in input_files:
+		with open(file, 'r') as f:
+			reader = csv.reader(f)
+			next(reader)  # skip header row
+			for row in reader:
+				filename = row[0]
+				cpu_time = float(row[1])
+				if filename not in data:
+					data[filename] = []
+					samples_count[filename] = 0
+				data[filename].append(cpu_time)
+				samples_count[filename] += 1
+	
+	# Calculate the average CPU Times
+	avg_times = {}
+	for filename, times in data.items():
+		avg_times[filename] = sum(times) / len(times)
+	
+	# Calculate the normalized CPU Times
+	max_time = max(avg_times.values())
+	normalized_times = {filename: time / max_time for filename, time in avg_times.items()}
+	
+	# Write the results to the output CSV file
+	with open(output_file, 'w', newline='') as f:
+		writer = csv.writer(f)
+		writer.writerow(['Filename', 'CPU Time', 'Normalized CPU Time', 'Samples'])
+		for filename in avg_times:
+			writer.writerow([filename, avg_times[filename], normalized_times[filename], samples_count[filename]])
+
+	return output_file
 
 if __name__ == "__main__":
 	# Check if the user has provided a command-line argument
@@ -117,19 +151,18 @@ if __name__ == "__main__":
 		sys.exit(1)
 
 	folder_path = sys.argv[1]
-	
 
 	# Check if the given folder path exists
 	if os.path.exists(folder_path):
 		problem_contexts = ProblemContext.ProblemContextsForDirectory(folder_path)
+		
 		for problemContext in problem_contexts:
+			profilingResultsPaths = []
+
 			for runContext in problemContext.GetRunContexts():
 				profile_run(runContext, "/Users/morgang/code/GenerativeCompilation/test_driver.c")
-
-		# 
-		# run_contexts = RunContext.RunContextsForDirectory(folder_path)
-		# for context in run_contexts:
-		
-		
+				profilingResultsPaths.append(runContext.profilingResultsPath())
+				
+			average_cpu_times(profilingResultsPaths, problemContext.profilingResultsPath())
 	else:
 		print("The provided folder path does not exist.")
