@@ -6,7 +6,8 @@ import sys
 import pathlib
 import compilation
 import testing
-import query_llm
+from query_llm import LLMQuerier
+from query_human import HumanQuerier
 
 COMPILATION_UNIT_FILE_NAME = "compilation_unit.c"
 
@@ -21,8 +22,8 @@ ASSEMBLY_GUIDELINES = """
 - Use appropriate register widths for an LP64 architecture, where integers are 32 bits.
 """
 
-CODE_FORMAT_REMINDERS = """Remember to mark the beginning and end of the final generated assembly with lines containing ---ASSEMBLY BEGIN--- and ---ASSEMBLY END--- respectively. Do this when you first print out the assembly -- do not repeat it just to add these markers.
-"""
+CODE_FORMAT_REMINDERS = "" # """Remember to mark the beginning and end of the final generated assembly with lines containing ---ASSEMBLY BEGIN--- and ---ASSEMBLY END--- respectively. Do this when you first print out the assembly -- do not repeat it just to add these markers.
+#"""
 
 def test_data_prompt(compilation_unit):
 	return f"""For the C function “customFunction” below, generate 10 test cases that exercise its functionality.
@@ -79,6 +80,18 @@ Guidelines:
 
 """
 
+import os
+
+def unique_file_path(filepath):
+	if not os.path.exists(filepath):
+		return filepath
+
+	base, ext = os.path.splitext(filepath)
+	counter = 1
+	while os.path.exists(f"{base}_{counter}{ext}"):
+		counter += 1
+
+	return f"{base}_{counter}{ext}"
 
 def prompt_llm(prompt):
 	print(prompt)
@@ -93,7 +106,7 @@ def prompt_llm(prompt):
 		
 	return "\n".join(lines)
 
-def prompt_llm_based_on_results(querier, initial_prompt, compilerError, linkerError, testingError):
+def prompt_llm_based_on_results(querier, initial_prompt, compilerError, linkerError, testingError, foundSolution=False):
 	prompt = initial_prompt
 	if compilerError is not None:
 		prompt=f"Unfortunately, I got a compilation error:\n{compilerError}\n Fix the error.\n{CODE_FORMAT_REMINDERS}"
@@ -101,9 +114,11 @@ def prompt_llm_based_on_results(querier, initial_prompt, compilerError, linkerEr
 		prompt=f"Unfortunately, I got a linker error:\n{linkerError}\n Fix the error. After fixing the error, print out the corrected assembly. Go it through it line by line, asking this question for each line: is this valid arm64 assembly for macOS? Also examine the program as a whole to identify errors or incompatibilities.\n{CODE_FORMAT_REMINDERS}"
 	elif testingError is not None:
 		prompt=f"Unfortunately, I got an incorrect result when testing the generated code:\n{testingError}\nTrace through the optimized assembly to find the problem. If, at any time, you find an error, correct the assembly, print out the new assembly, and then trace again starting at the beginning.\n{CODE_FORMAT_REMINDERS}"
+	elif foundSolution:
+		prompt = f"Try to (further) optimize the solution so that it runs more quickly."
 
-	#return prompt_llm(prompt)
-	return querier.generateAssembly(prompt)
+	return prompt_llm(prompt)
+	# return querier.generateAssembly(prompt)
 
 def compile_and_test_assembly(assembly, driver_object_path, test_data_path, output_path):
 	# Returns: Success, Compiler error, linker error, testing error
@@ -161,58 +176,39 @@ def generate_assembly_from_compilation_unit_source(code_path, driver_object_path
 	with open(code_path, "r") as codeFile:
 		code = codeFile.read()
 		
-		compiler_error = None
-		linker_error = None
-		testing_error = None
-		assembly = None
-		
-		querier = query_llm.LLMQuerier()
-		
-		while True:
-			assembly = prompt_llm_based_on_results(querier, generation_prompt(code), compiler_error, linker_error, testing_error)
+	return prompt_for_assembly(generation_prompt(code), driver_object_path, test_data_path, output_path)
 
-			if assembly is None:
-				# Didn't work — restart the conversation
-				compiler_error = None
-				linker_error = None
-				testing_error = None
-				querier = query_llm.LLMQuerier()
-				continue
-			
-			success, compiler_error, linker_error, testing_error = compile_and_test_assembly(assembly, driver_object_path, test_data_path, output_path)
-			if not success:
-				continue
-			
-			with open(output_path, 'w') as f:
-				f.write(assembly)
-				f.write("\n")
-			print("Assembly written to ", output_path)
-			break
-
-def optimize_assembly(compilation_unit_path, assembly_path, driver_object_path, test_data_path, output_path, hint=None):
+def optimize_assembly(compilation_unit_path, assembly_path, driver_object_path, test_data_path, output_path):
 	with open(compilation_unit_path, "r") as compilationUnitFile, open(assembly_path, "r") as assemblyFile:
 		compilation_unit = compilationUnitFile.read()
 		unoptimized_assembly = assemblyFile.read()
 		prompt = optimization_prompt(compilation_unit, unoptimized_assembly)
 	
+	return prompt_for_assembly(prompt, driver_object_path, test_data_path, output_path)
+
+def prompt_for_assembly(base_prompt, driver_object_path, test_data_path, output_path):
 	compiler_error = None
 	linker_error = None
 	testing_error = None
 	assembly = None
+	found_solution = False
 	
-	querier = query_llm.LLMQuerier()
+	querier = HumanQuerier()
 	
 	while True:
-		assembly = prompt_llm_based_on_results(querier, prompt, compiler_error, linker_error, testing_error)
+		assembly = prompt_llm_based_on_results(querier, base_prompt, compiler_error, linker_error, testing_error, found_solution)
 		
 		if assembly is None:
+			if found_solution:
+				break
+				
 			# Didn't work — restart the conversation
 			compiler_error = None
 			linker_error = None
 			testing_error = None
-			querier = query_llm.LLMQuerier()
+			querier = HumanQuerier()
 			continue
-
+	
 		success, compiler_error, linker_error, testing_error = compile_and_test_assembly(assembly, driver_object_path, test_data_path, output_path)
 		if not success:
 			continue
@@ -220,9 +216,8 @@ def optimize_assembly(compilation_unit_path, assembly_path, driver_object_path, 
 		with open(output_path, 'w') as f:
 			f.write(assembly)
 			f.write("\n")
-		print("Optimized assembly written to ", output_path)
-		break
-	
+		print("Assembly written to ", output_path)
+		found_solution = True
 
 def handle_problem_directory(problem_directory_path, test_driver_source_path):
 	print(f"Working on problem in directory {problem_directory_path}…")

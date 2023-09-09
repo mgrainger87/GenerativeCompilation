@@ -6,8 +6,7 @@ _customFunction:                        ; @customFunction
 	.cfi_startproc
 ; %bb.0:
 	str	w0, [x2]
-	mov	x8, #4607182418800017408
-	str	x8, [x3]
+	str	d0, [x3]
 	ret
 	.cfi_endproc
                                         ; -- End function

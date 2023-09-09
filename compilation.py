@@ -19,6 +19,7 @@ def compile_source(source_file_path, output_path=None, generate_assembly=False, 
 		
 		# Compile using clang
 		compile_command = ["clang", "-c", source_file_path, "-o", output_file]
+		print(compile_command)
 		
 		# If generating assembly, add the '-S' flag
 		if generate_assembly:
