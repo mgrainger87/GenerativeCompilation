@@ -101,22 +101,32 @@ def handle_problem_directory(problem_directory_path, test_driver_source_path):
 			normalized_cpu_time = cpu_time / unoptimized_cpu_time
 			
 			csvwriter.writerow([filename, cpu_time, normalized_cpu_time])
+			
+def contains_asm_files(directory):
+	"""Check if the directory contains .asm files."""
+	for root, dirs, files in os.walk(directory):
+		for file in files:
+			if file.endswith('.asm'):
+				return True
+	return False
 
 if __name__ == "__main__":
 	# Check if the user has provided a command-line argument
 	if len(sys.argv) < 2:
 		print("Please provide the folder path as a command-line argument.")
 		sys.exit(1)
-	
+
 	folder_path = sys.argv[1]
-	
+
 	# Check if the given folder path exists
 	if os.path.exists(folder_path):
-		# Iterate through the items in the folder
-		for item in os.listdir(folder_path):
-			item_path = os.path.join(folder_path, item)
-			# If the item is a directory (subfolder), print its path
-			if os.path.isdir(item_path):
-				handle_problem_directory(item_path, "/Users/morgang/code/GenerativeCompilation/test_driver.c")
+		# Iterate through the directories and subdirectories in the folder
+		for root, dirs, _ in os.walk(folder_path):
+			for dir in dirs:
+				dir_path = os.path.join(root, dir)
+				
+				# If the directory contains .asm files, call handle_problem_directory
+				if contains_asm_files(dir_path):
+					handle_problem_directory(dir_path, "/Users/morgang/code/GenerativeCompilation/test_driver.c")
 	else:
 		print("The provided folder path does not exist.")
