@@ -1,4 +1,5 @@
 import subprocess
+import sys
 
 def copy_to_pasteboard(text: str) -> None:
 	"""
@@ -6,6 +7,7 @@ def copy_to_pasteboard(text: str) -> None:
 	"""
 	process = subprocess.Popen('pbcopy', universal_newlines=True, stdin=subprocess.PIPE)
 	process.communicate(text)
+	process.wait()
 
 class HumanQuerier:
 	def generateAssembly(self, prompt):
@@ -13,11 +15,10 @@ class HumanQuerier:
 		copy_to_pasteboard(prompt)
 		lines = []
 		try:
-			while True:
-				line = input()
+			for line in sys.stdin:
+				line = line.strip()
 				lines.append(line)
 		except EOFError:
 			pass
-			
+		print(lines)
 		return "\n".join(lines)
-

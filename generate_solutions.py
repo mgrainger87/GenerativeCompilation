@@ -93,19 +93,6 @@ def unique_file_path(filepath):
 
 	return f"{base}_{counter}{ext}"
 
-def prompt_llm(prompt):
-	print(prompt)
-	lines = []
-	try:
-		while True:
-			line = input()
-			lines.append(line)
-	except EOFError:
-		pass
-		
-		
-	return "\n".join(lines)
-
 def prompt_llm_based_on_results(querier, initial_prompt, compilerError, linkerError, testingError, foundSolution=False):
 	prompt = initial_prompt
 	if compilerError is not None:
@@ -117,8 +104,7 @@ def prompt_llm_based_on_results(querier, initial_prompt, compilerError, linkerEr
 	elif foundSolution:
 		prompt = f"Try to (further) optimize the solution so that it runs more quickly."
 
-	return prompt_llm(prompt)
-	# return querier.generateAssembly(prompt)
+	return querier.generateAssembly(prompt)
 
 def compile_and_test_assembly(assembly, driver_object_path, test_data_path, output_path):
 	# Returns: Success, Compiler error, linker error, testing error
@@ -165,7 +151,7 @@ def generate_test_data_from_compilation_unit_source(code_path, test_data_path):
 	with open(code_path, "r") as codeFile:
 		code = codeFile.read()
 
-	test_data = prompt_llm(test_data_prompt(code)).strip().rstrip()
+	test_data = HumanQuerier().generateAssembly(test_data_prompt(code)).strip().rstrip()
 	
 	with open(test_data_path, 'w') as f:
 		f.write(test_data)

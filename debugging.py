@@ -125,7 +125,7 @@ def launch_process_with_debugging(binary_path, args=[], max_cpu_time=2147483647)
 		
 	# Cleanup
 	lldb.SBDebugger.Destroy(debugger)
-	return True, "Process completed successfully"
+	return True, None
 
 if __name__ == "__main__":
 	# /var/folders/nj/t3fv98pd0kldbblbczs56jfh0000gn/T/tmpc_9fa7ke int1=-8380145903517306281 int2=2966023455710716866 double1=inf double2=inf expectedInt=0 expectedDouble=nan iterations=100
