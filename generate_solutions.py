@@ -110,7 +110,8 @@ def compile_and_test_assembly(assembly, driver_object_path, test_data_path, outp
 	
 	compiler_error = None
 	linker_error = None
-	testing_error = None
+	execution_error = None
+	correctness_error = None
 
 	### Compilation stage
 	print(f"Attempting compilation…")	
@@ -118,7 +119,7 @@ def compile_and_test_assembly(assembly, driver_object_path, test_data_path, outp
 	success, compiler_error, compilation_unit_path = compilation.compile_source_from_string(assembly, suffix=".asm")
 	if not success:
 		print(f"Compilation failed: {compiler_error}")
-		return False, compiler_error, linker_error, testing_error
+		return False, compiler_error, linker_error, execution_error, correctness_error
 	
 	print(f"Compilation successful. Output saved to {compilation_unit_path}.")
 		
@@ -128,7 +129,7 @@ def compile_and_test_assembly(assembly, driver_object_path, test_data_path, outp
 	success, linker_error, executable_path = compilation.link_binary([compilation_unit_path, driver_object_path])
 	if not success:
 		print(f"Linking failed: {linker_error}")
-		return False, compiler_error, linker_error, testing_error
+		return False, compiler_error, linker_error, execution_error, correctness_error
 	
 	print("Linking succeeded.")
 	
@@ -138,13 +139,13 @@ def compile_and_test_assembly(assembly, driver_object_path, test_data_path, outp
 	# Set executable permissions
 	os.chmod(executable_path, 0o755)
 	
-	success, testing_error, cpu_time = testing.run_test_from_csv(test_data_path, executable_path)
+	success, execution_error, correctness_error, cpu_time = testing.run_test_from_csv(test_data_path, executable_path)
 	if not success:
-		print("Testing failed:", testing_error)
-		return False, compiler_error, linker_error, testing_error
+		print(f"Testing failed: {execution_error} {correctness_error}")
+		return False, compiler_error, linker_error, execution_error, correctness_error
 	
 	print(f"Testing succeeded in {cpu_time} seconds.")
-	return True, compiler_error, linker_error, testing_error
+	return True, None, None, None, None
 
 def generate_test_data_from_compilation_unit_source(code_path, test_data_path):
 	with open(code_path, "r") as codeFile:
@@ -174,14 +175,21 @@ def optimize_assembly(compilation_unit_path, assembly_path, driver_object_path, 
 def prompt_for_assembly(base_prompt, driver_object_path, test_data_path, output_path):
 	compiler_error = None
 	linker_error = None
-	testing_error = None
+	execution_error = None
+	correctness_error = None
 	assembly = None
 	found_solution = False
+	
+	# Introduce counters for each type of error
+	compiler_error_count = 0
+	linker_error_count = 0
+	execution_error_count = 0
+	correctness_error_count = 0
 	
 	querier = HumanQuerier()
 	
 	while True:
-		assembly = prompt_llm_based_on_results(querier, base_prompt, compiler_error, linker_error, testing_error, found_solution)
+		assembly = prompt_llm_based_on_results(querier, base_prompt, compiler_error, linker_error, execution_error, found_solution)
 		
 		if assembly is None or len(assembly) == 0:
 			if found_solution:
@@ -190,19 +198,33 @@ def prompt_for_assembly(base_prompt, driver_object_path, test_data_path, output_
 			# Didn't work — restart the conversation
 			compiler_error = None
 			linker_error = None
-			testing_error = None
+			execution_error = None
+			correctness_error = None
 			querier = HumanQuerier()
 			continue
 	
-		success, compiler_error, linker_error, testing_error = compile_and_test_assembly(assembly, driver_object_path, test_data_path, output_path)
+		success, compiler_error, linker_error, execution_error, correctness_error = compile_and_test_assembly(assembly, driver_object_path, test_data_path, output_path)
+		
+		# Update error counters
+		if compiler_error:
+			compiler_error_count += 1
+		if linker_error:
+			linker_error_count += 1
+		if execution_error:
+			execution_error_count += 1
+		if correctness_error:
+			correctness_error_count += 1
+	
 		if not success:
 			continue
 		
 		unique_path = unique_file_path(output_path)
 		with open(unique_path, 'w') as f:
+			# Write the error counts in a structured format
+			f.write(f"//compiler_errors={compiler_error_count},linker_errors={linker_error_count},execution_errors={execution_error_count},correctness_errors={correctness_error_count}\n")
 			f.write(assembly)
 			f.write("\n")
-		print("Assembly written to ", unique_path)
+		print(f"Assembly written to {unique_path}")
 		found_solution = True
 
 def handle_problem_directory(problem_directory_path, generated_directory_path, test_driver_source_path):
@@ -256,7 +278,7 @@ def handle_problem_directory(problem_directory_path, generated_directory_path, t
 	# Test the Clang assembly to make sure it passes our test cases
 	with open(unoptimizedClangAssemblyPath, "r") as assemblyFile:
 		assembly = assemblyFile.read()
-	success, compiler_error, linker_error, testing_error = compile_and_test_assembly(assembly, driverObjectPath, testDataPath, None)
+	success, compiler_error, linker_error, execution_error, correctness_error = compile_and_test_assembly(assembly, driverObjectPath, testDataPath, None)
 	if not success:
 		print(f"Testing on Clang-generated assembly failed: {compiler_error} {linker_error} {testing_error}")
 		if testing_error is not None:

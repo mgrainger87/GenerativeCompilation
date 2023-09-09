@@ -82,25 +82,26 @@ def launch_process_with_debugging(binary_path, args=[], max_cpu_time=2147483647)
 						stderr = process.GetSTDERR(1000)
 	
 					exit_status = process.GetExitStatus()
+					print(f"Exit status: {exit_status}")
 					signal.alarm(0)
 					if exit_status != 0:
-						return False, accumulated_stdout + accumulated_stderr
+						return False, None, accumulated_stdout + accumulated_stderr
 					else:
-						return True, accumulated_stdout + accumulated_stderr
+						return True, None, accumulated_stdout + accumulated_stderr
 				elif state == lldb.eStateCrashed:
 					signal.alarm(0)
 					return False, get_full_process_state(process, args)
 				elif state == lldb.eStateStopped:
 					if max_cpu_time_hit:
 						signal.alarm(0)
-						return False, f"CPU time limit reached: {max_cpu_time}s\n\n{get_full_process_state(process, args)}"
+						return False, f"CPU time limit reached: {max_cpu_time}s\n\n{get_full_process_state(process, args)}", None
 						
 					num_threads = process.GetNumThreads()
 					for i in range(num_threads):
 						thread = process.GetThreadAtIndex(i)
 						if thread.GetStopReason() == lldb.eStopReasonException:
 							signal.alarm(0)
-							return False, get_full_process_state(process, args)
+							return False, get_full_process_state(process, args), None
 
 	
 	except SystemExit as e:
@@ -122,7 +123,7 @@ def launch_process_with_debugging(binary_path, args=[], max_cpu_time=2147483647)
 		
 	# Cleanup
 	lldb.SBDebugger.Destroy(debugger)
-	return True, None
+	return True, None, None
 
 if __name__ == "__main__":
 	# /var/folders/nj/t3fv98pd0kldbblbczs56jfh0000gn/T/tmpc_9fa7ke int1=-8380145903517306281 int2=2966023455710716866 double1=inf double2=inf expectedInt=0 expectedDouble=nan iterations=100

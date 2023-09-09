@@ -34,7 +34,7 @@ def run_test_from_csv(csv_path, executable_path, overriddenIterations=None, useD
 			start_cpu_time = resource.getrusage(resource.RUSAGE_CHILDREN).ru_utime
 			
 			if useDebugger:
-				success, description = debugging.launch_process_with_debugging(cmd[0], cmd[1:], 10)
+				success, execution_failure, correctness_failure = debugging.launch_process_with_debugging(cmd[0], cmd[1:], 10)
 			else:
 				result = subprocess.run(cmd, capture_output=True, text=True)
 			
@@ -43,11 +43,11 @@ def run_test_from_csv(csv_path, executable_path, overriddenIterations=None, useD
 			total_cpu_time += end_cpu_time - start_cpu_time
 				
 			if useDebugger:
-				return success, description, total_cpu_time
+				return success, execution_failure, correctness_failure, total_cpu_time
 			else:
 				if result.returncode != 0:
 					failure_text += result.stdout  # Append the output for debugging
 					failure_text += " ".join(cmd)
-					return False, failure_text, total_cpu_time  # Test failed
+					return False, None, failure_text, total_cpu_time  # Test failed
 			
-	return True, None, total_cpu_time  # All tests passed
+	return True, None, None, total_cpu_time  # All tests passed
