@@ -1,5 +1,75 @@
 import os
 
+class ProblemContext:
+	def __init__(self, model, problemNumber, rootDirectory):
+		print(f"initialized problemContext with model {model}")
+		self.__model = model
+		self.__problemNumber = problemNumber
+		self.__rootDirectory = rootDirectory
+
+	def __repr__(self):
+		return f"ProblemContext(Model: {self.__model}, Problem: {self.__problemNumber})"
+	
+	def model(self):
+		return self.__model
+	
+	def problemNumber(self):
+		return self.__problemNumber
+
+	def __get_path(self, sub_directory, *args):
+		path = os.path.join(self.__rootDirectory, sub_directory, *args)
+		if not os.path.exists(path):
+			os.makedirs(path)
+		return path
+
+	def problemPath(self):
+		return self.__get_path('problems', self.__problemNumber)
+	
+	def generatedPath(self):
+		return self.__get_path('generated', self.__model, self.__problemNumber)
+	
+	def profilingPath(self):
+		return self.__get_path('profiling', self.__model, self.__problemNumber)
+	
+	def visualizationPath(self):
+		return self.__get_path('visualization', self.__model, self.__problemNumber)
+	
+	def compilationUnitPath(self):
+		return os.path.join(self.problemPath(), "compilation_unit.c")
+	
+	def testDataPath(self):
+		return os.path.join(self.problemPath(), "test_data.csv")
+	
+	def profilingResultsPath(self):
+		return os.path.join(self.profilingPath(), "performance_results.csv")
+	
+	@classmethod
+	def ProblemContextsForDirectory(cls, rootDirectory):
+		problemsData = []
+		generatedPath = os.path.join(rootDirectory, 'generated')
+		for model in os.listdir(generatedPath):
+			for problemNumber in os.listdir(os.path.join(generatedPath, model)):
+				problemContext = cls(model, problemNumber, rootDirectory)
+				problemsData.append(problemContext)
+		return problemsData
+					
+	def GetRunContexts(self):
+		run_contexts = []
+		
+		print(f"generated path {self.generatedPath()}")
+		# Assuming the structure is: generatedPath/model/problemNumber/runNumber
+		for runNumber in os.listdir(self.generatedPath()):
+			# Construct paths for problem, generated, profiling and visualization
+			generatedRunPath = os.path.join(self.generatedPath(), runNumber)
+			profilingRunPath = os.path.join(self.profilingPath(), runNumber)
+			visualizationRunPath = os.path.join(self.visualizationPath(), runNumber)
+			
+			run_context = RunContext(self.__model, self.problemNumber(), runNumber, self.problemPath(), generatedRunPath, profilingRunPath, visualizationRunPath)
+			run_contexts.append(run_context)
+				
+		return run_contexts
+
+
 class RunContext:
 	def __init__(self, model, problemNumber, runNumber, problemPath, generatedPath, profilingPath, visualizationPath):
 		self.__model = model
@@ -71,3 +141,18 @@ class RunContext:
 					runsData.append(runContext)
 					
 		return runsData
+		
+	def createProblemContext(self):
+		# Remove the run number from the paths
+		generatedPath = os.path.join(os.path.dirname(os.path.dirname(self.__generatedPath)))
+		profilingPath = os.path.join(os.path.dirname(os.path.dirname(self.__profilingPath)))
+		visualizationPath = os.path.join(os.path.dirname(os.path.dirname(self.__visualizationPath)))
+		
+		return ProblemContext(
+			self.model(),
+			self.problemNumber(),
+			self.problemPath(),
+			generatedPath,
+			profilingPath,
+			visualizationPath
+		)

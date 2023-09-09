@@ -3,16 +3,27 @@ import pandas as pd
 import os
 import matplotlib.pyplot as plt
 import sys
+from run_context import RunContext
 
-# Check if the user has provided a command-line argument
-if len(sys.argv) < 3:
-    print("Please provide the problem and analysis paths as command-line arguments.")
-    sys.exit(1)
+def visualize_run(context):
 
 
-# Load data from directory
-problems_dir = sys.argv[1]
-analysis_dir = sys.argv[2]
+if __name__ == "__main__":    
+    # Check if the user has provided a command-line argument
+    if len(sys.argv) < 2:
+        print("Please provide the folder path as a command-line argument.")
+        sys.exit(1)
+    
+    folder_path = sys.argv[1]
+    
+    # Check if the given folder path exists
+    if os.path.exists(folder_path):
+        run_contexts = RunContext.RunContextsForDirectory(folder_path)
+        for context in run_contexts:
+            visualize_run(context)
+    else:
+        print("The provided folder path does not exist.")
+
 
 if not os.path.exists(analysis_dir):
     os.makedirs(analysis_dir)

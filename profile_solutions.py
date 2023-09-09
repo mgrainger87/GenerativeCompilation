@@ -3,7 +3,7 @@ import os
 import compilation
 import testing
 import csv
-from run_context import RunContext
+from run_context import RunContext, ProblemContext
 
 def test_individual_assembly(driver_object_path, assembly_path, test_data_path, iterations=None):
 	success, compiler_error, compilation_unit_path = compilation.compile_source(assembly_path)
@@ -82,6 +82,7 @@ def profile_run(run_context, test_driver_source_path):
 
 	# List all files in the generated directory and filter for .asm files
 	asm_files = [f for f in os.listdir(generatedDirectoryPath) if f.endswith('.asm')]
+	print(f"Assembly files in {generatedDirectoryPath}: {asm_files}")
 		
 	iterations = 1
 	max_cpu_time = 0
@@ -106,13 +107,8 @@ def profile_run(run_context, test_driver_source_path):
 			
 			csvwriter.writerow([filename, cpu_time, normalized_cpu_time])
 			
-def contains_asm_files(directory):
-	"""Check if the directory contains .asm files."""
-	for root, dirs, files in os.walk(directory):
-		for file in files:
-			if file.endswith('.asm'):
-				return True
-	return False
+# def average_profiling_results(run_context):
+# 	
 
 if __name__ == "__main__":
 	# Check if the user has provided a command-line argument
@@ -125,8 +121,15 @@ if __name__ == "__main__":
 
 	# Check if the given folder path exists
 	if os.path.exists(folder_path):
-		run_contexts = RunContext.RunContextsForDirectory(folder_path)
-		for context in run_contexts:
-			profile_run(context, "/Users/morgang/code/GenerativeCompilation/test_driver.c")
+		problem_contexts = ProblemContext.ProblemContextsForDirectory(folder_path)
+		for problemContext in problem_contexts:
+			for runContext in problemContext.GetRunContexts():
+				profile_run(runContext, "/Users/morgang/code/GenerativeCompilation/test_driver.c")
+
+		# 
+		# run_contexts = RunContext.RunContextsForDirectory(folder_path)
+		# for context in run_contexts:
+		
+		
 	else:
 		print("The provided folder path does not exist.")
