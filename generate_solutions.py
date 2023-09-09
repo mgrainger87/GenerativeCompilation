@@ -301,7 +301,7 @@ if __name__ == "__main__":
 				for solution_number in range(1, solutions_per_problem + 1):
 					solution_name = f"{solution_number:02}"  # Formats the number as a two-digit string
 					solution_path = os.path.join(generated_path, solution_name)
-
+					print(f"Solution path: {solution_path}")
 					handle_problem_directory(item_path, solution_path, "/Users/morgang/code/GenerativeCompilation/test_driver.c")
 	else:
 		print("The provided problems folder path does not exist.")
