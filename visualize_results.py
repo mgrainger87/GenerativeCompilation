@@ -14,28 +14,31 @@ filename_renaming = {
     "llm_generated.asm": "LLM generated"
 }
 
-def generate_markdown(context):
+def generate_dataframes(contexts):
     # Lists to store data
-    dataframes = []
     techniques = []
+    dataframes = []
+
+    for context in contexts:
+        # Read performance_results.csv file
+        performance_file = context.profilingResultsPath()
+        
+        if os.path.exists(performance_file):
+            df = pd.read_csv(performance_file)
+            df['problem'] = context.problemNumber()
+            dataframes.append(df)
+            
+            # Read technique.txt file
+            technique_file = context.techniquePath()
+            if os.path.exists(technique_file):
+                with open(technique_file, 'r') as f:
+                    technique = f.read().strip()
+                    techniques.extend([technique] * df.shape[0])
+        
+
+def generate_markdown(context):
     
     markdown_content = ""
-    
-    
-    # Read performance_results.csv file
-    performance_file = context.profilingResultsPath()
-    
-    if os.path.exists(performance_file):
-        df = pd.read_csv(performance_file)
-        df['problem'] = context.problemNumber()
-        dataframes.append(df)
-        
-        # Read technique.txt file
-        technique_file = context.techniquePath()
-        if os.path.exists(technique_file):
-            with open(technique_file, 'r') as f:
-                technique = f.read().strip()
-                techniques.extend([technique] * df.shape[0])
                 
     # Add to Markdown file
     problem_number = context.problemNumber()
@@ -164,8 +167,8 @@ if __name__ == "__main__":
     
     # Check if the given folder path exists
     if os.path.exists(folder_path):
-        run_contexts = ProblemContext.ProblemContextsForDirectory(folder_path)
-        for context in run_contexts:
+        contexts = ProblemContext.ProblemContextsForDirectory(folder_path)
+        for context in contexts:
             print(generate_markdown(context))
     else:
         print("The provided folder path does not exist.")
