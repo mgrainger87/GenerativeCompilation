@@ -40,6 +40,9 @@ class ProblemContext:
 	def testDataPath(self):
 		return os.path.join(self.problemPath(), "test_data.csv")
 	
+	def techniquePath(self):
+		return os.path.join(self.problemPath(), "technique.txt")
+	
 	def profilingResultsPath(self):
 		return os.path.join(self.profilingPath(), "performance_results.csv")
 	
