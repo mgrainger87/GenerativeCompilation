@@ -8,6 +8,7 @@ def run_test_from_csv(csv_path, executable_path, overriddenIterations=None, useD
 	total_cpu_time = 0.0  # Track the total CPU time
 	
 	with open(csv_path, 'r') as csvfile:
+		print(csv_path)
 		reader = csv.DictReader(csvfile)
 		
 		for row in reader:

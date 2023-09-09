@@ -199,10 +199,11 @@ def prompt_for_assembly(base_prompt, driver_object_path, test_data_path, output_
 		if not success:
 			continue
 		
-		with open(output_path, 'w') as f:
+		unique_path = unique_file_path(output_path)
+		with open(unique_path, 'w') as f:
 			f.write(assembly)
 			f.write("\n")
-		print("Assembly written to ", output_path)
+		print("Assembly written to ", unique_path)
 		found_solution = True
 
 def handle_problem_directory(problem_directory_path, test_driver_source_path):
