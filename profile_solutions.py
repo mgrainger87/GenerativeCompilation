@@ -36,6 +36,22 @@ def test_individual_assembly(driver_object_path, assembly_path, test_data_path, 
 		print(f"Testing of {assembly_path} succeeded with CPU time {total_cpu_time}")
 		return True, total_cpu_time
 
+def test_assembly_files(generatedDirectoryPath, asm_files, driverObjectPath, testDataPath, iterations):
+	# Dictionary to store CPU times
+	cpu_times_dict = {}
+	
+	# Iterate through asm_files
+	for filename in asm_files:
+		if filename in cpu_times_dict:
+			continue
+		fullAssemblyPath = os.path.join(generatedDirectoryPath, filename)
+		print(f"Testing {filename}…")
+		# test_individual_assembly returns a tuple (success, cpu_time)
+		success, cpu_time = test_individual_assembly(driverObjectPath, fullAssemblyPath, testDataPath, iterations)
+		
+		if success:
+			cpu_times_dict[filename] = cpu_time
+
 
 def handle_problem_directory(problem_directory_path, test_driver_source_path):
 	results_csv_path = os.path.join(problem_directory_path, 'performance_results.csv')
@@ -64,35 +80,17 @@ def handle_problem_directory(problem_directory_path, test_driver_source_path):
 
 	# List all files in the generated directory and filter for .asm files
 	asm_files = [f for f in os.listdir(generatedDirectoryPath) if f.endswith('.asm')]
-
-	# Determine how many iterations to run
-	unoptimizedAssemblyPath = os.path.join(generatedDirectoryPath, "clang_generated_unoptimized.asm")
-	if not os.path.exists(unoptimizedAssemblyPath):
-		return
 		
 	iterations = 1
-	unoptimized_cpu_time = 0
+	max_cpu_time = 0
 	
 	print("Determining iterations…")
-	while unoptimized_cpu_time < 0.2:
+	while max_cpu_time < 1:
 		iterations *= 10
-		success, unoptimized_cpu_time = test_individual_assembly(driverObjectPath, unoptimizedAssemblyPath, testDataPath, iterations)
+		print(f"Trying {iterations} iterations…")
+		cpu_times_dict = test_assembly_files(generatedDirectoryPath, asm_files, driverObjectPath, testDataPath, iterations)
+		max_cpu_time = max(cpu_times_dict.values())
 	print(f"Using {iterations} iterations.")
-
-	# Dictionary to store CPU times
-	cpu_times_dict = {"clang_generated_unoptimized.asm": unoptimized_cpu_time}
-	
-	# Iterate through asm_files
-	for filename in asm_files:
-		if filename in cpu_times_dict:
-			continue
-		fullAssemblyPath = os.path.join(generatedDirectoryPath, filename)
-		
-		# test_individual_assembly returns a tuple (success, cpu_time)
-		success, cpu_time = test_individual_assembly(driverObjectPath, fullAssemblyPath, testDataPath, iterations)
-		
-		if success:
-			cpu_times_dict[filename] = cpu_time
 	
 	# Create or open a CSV file for writing the results
 	with open(results_csv_path, 'w', newline='') as csvfile:

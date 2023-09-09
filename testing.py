@@ -28,6 +28,8 @@ def run_test_from_csv(csv_path, executable_path, overriddenIterations=None, useD
 				f"iterations={iterations}"
 			]
 			
+			print(f"Command: {cmd}")
+			
 			# Get initial CPU time
 			start_cpu_time = resource.getrusage(resource.RUSAGE_CHILDREN).ru_utime
 			
