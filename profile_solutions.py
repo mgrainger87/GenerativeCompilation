@@ -29,9 +29,9 @@ def test_individual_assembly(driver_object_path, assembly_path, test_data_path, 
 	# Set executable permissions
 	os.chmod(executable_path, 0o755)
 	
-	success, testing_error, total_cpu_time = testing.run_test_from_csv(test_data_path, executable_path, iterations, False)
+	success, execution_error, correctness_error, total_cpu_time = testing.run_test_from_csv(test_data_path, executable_path, iterations, False)
 	if not success:
-		print("Testing failed:", testing_error)
+		print(f"Testing failed: {execution_error}, {correctness_error}")
 		return False, 0
 	else:
 		print(f"Testing of {assembly_path} succeeded with CPU time {total_cpu_time}")
@@ -52,16 +52,18 @@ def test_assembly_files(generatedDirectoryPath, asm_files, driverObjectPath, tes
 		
 		if success:
 			cpu_times_dict[filename] = cpu_time
+			
+	return cpu_times_dict
 
 
 def profile_run(run_context, test_driver_source_path):
 	results_csv_path = run_context.profilingResultsPath()
 	
 	if os.path.exists(results_csv_path):
-		print(f"Already have profiling results for {problem_directory_path}.")
+		print(f"Already have profiling results for {run_context}.")
 		return
 
-	print(f"Working on problem in directory {problem_directory_path}…")
+	print(f"Working on {run_context}…")
 	
 	codePath = run_context.compilationUnitPath()
 	
@@ -73,7 +75,7 @@ def profile_run(run_context, test_driver_source_path):
 		
 	testDataPath = run_context.testDataPath()
 		
-	generatedDirectoryPath = run_context.generatedDirectoryPath
+	generatedDirectoryPath = run_context.generatedPath()
 	if not os.path.exists(generatedDirectoryPath):
 		print(f"Solutions have not been generated in {generatedDirectoryPath}.")
 		return
@@ -96,6 +98,8 @@ def profile_run(run_context, test_driver_source_path):
 	with open(results_csv_path, 'w', newline='') as csvfile:
 		csvwriter = csv.writer(csvfile)
 		csvwriter.writerow(['Filename', 'CPU Time', 'Normalized CPU Time'])  # Writing the headers
+		
+		unoptimized_cpu_time = cpu_times_dict['clang_generated_unoptimized.asm']
 		
 		for filename, cpu_time in cpu_times_dict.items():
 			normalized_cpu_time = cpu_time / unoptimized_cpu_time
@@ -122,7 +126,7 @@ if __name__ == "__main__":
 	# Check if the given folder path exists
 	if os.path.exists(folder_path):
 		run_contexts = RunContext.RunContextsForDirectory(folder_path)
-		for context in run_context:
+		for context in run_contexts:
 			profile_run(context, "/Users/morgang/code/GenerativeCompilation/test_driver.c")
 	else:
 		print("The provided folder path does not exist.")

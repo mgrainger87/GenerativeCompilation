@@ -1,45 +1,73 @@
 import os
 
 class RunContext:
-	def __init__(self, model, problem_number, run_number, problem_path, generated_path, profiling_path, visualization_path):
-		self.model = model
-		self.problem_number = problem_number
-		self.run_number = run_number
-		self.problem_path = problem_path
-		self.generated_path = generated_path
-		self.profiling_path = profiling_path
-		self.visualization_path = visualization_path
+	def __init__(self, model, problemNumber, runNumber, problemPath, generatedPath, profilingPath, visualizationPath):
+		self.__model = model
+		self.__problemNumber = problemNumber
+		self.__runNumber = runNumber
+		self.__problemPath = problemPath
+		self.__generatedPath = generatedPath
+		self.__profilingPath = profilingPath
+		self.__visualizationPath = visualizationPath
 
 	def __repr__(self):
-		return f"RunContext(Model: {self.model}, Problem: {self.problem_number}, Run: {self.run_number})"
+		return f"RunContext(Model: {self.__model}, Problem: {self.__problemNumber}, Run: {self.__runNumber})"
+	
+	def model(self):
+		return self.__model
+	
+	def problemNumber(self):
+		return self.__problemNumber
+
+	def runNumber(self):
+		return self.__runNumber
+
+	def problemPath(self):
+		if not os.path.exists(self.__problemPath):
+			os.makedirs(self.__problemPath)
+		return self.__problemPath
+
+	def generatedPath(self):
+		if not os.path.exists(self.__generatedPath):
+			os.makedirs(self.__generatedPath)
+		return self.__generatedPath
+
+	def profilingPath(self):
+		if not os.path.exists(self.__profilingPath):
+			os.makedirs(self.__profilingPath)
+		return self.__profilingPath
+
+	def visualizationPath(self):
+		if not os.path.exists(self.__visualizationPath):
+			os.makedirs(self.__visualizationPath)
+		return self.__visualizationPath
 		
 	def compilationUnitPath(self):
-		return os.path.join(self.problem_path, "compilation_unit.c")
+		return os.path.join(self.problemPath(), "compilation_unit.c")
 		
 	def testDataPath(self):
-		return os.path.join(self.problem_path, "test_data.csv")
-
+		return os.path.join(self.problemPath(), "test_data.csv")
 	
 	def profilingResultsPath(self):
-		return os.path.join(self.profiling_path, "performance_results.csv")
-	
+		return os.path.join(self.profilingPath(), "performance_results.csv")
+
 	@classmethod
-	def RunContextsForDirectory(cls, root_directory):
-		runs_data = []
+	def RunContextsForDirectory(cls, rootDirectory):
+		runsData = []
 
 		# Start by iterating through the 'generated' directory
-		generated_path = os.path.join(root_directory, 'generated')
-		for model in os.listdir(generated_path):
-			for problem_number in os.listdir(os.path.join(generated_path, model)):
-				for run_number in os.listdir(os.path.join(generated_path, model, problem_number)):
+		generatedPath = os.path.join(rootDirectory, 'generated')
+		for model in os.listdir(generatedPath):
+			for problemNumber in os.listdir(os.path.join(generatedPath, model)):
+				for runNumber in os.listdir(os.path.join(generatedPath, model, problemNumber)):
 					
 					# Construct paths for problem, generated, profiling and visualization
-					problem_path = os.path.join(root_directory, 'problems', problem_number)
-					generated_run_path = os.path.join(generated_path, model, problem_number, run_number)
-					profiling_run_path = os.path.join(root_directory, 'profiling', model, problem_number, run_number)
-					visualization_run_path = os.path.join(root_directory, 'visualization', model, problem_number, run_number)
+					problemPath = os.path.join(rootDirectory, 'problems', problemNumber)
+					generatedRunPath = os.path.join(generatedPath, model, problemNumber, runNumber)
+					profilingRunPath = os.path.join(rootDirectory, 'profiling', model, problemNumber, runNumber)
+					visualizationRunPath = os.path.join(rootDirectory, 'visualization', model, problemNumber, runNumber)
 					
-					run_context = cls(model, problem_number, run_number, problem_path, generated_run_path, profiling_run_path, visualization_run_path)
-					runs_data.append(run_context)
+					runContext = cls(model, problemNumber, runNumber, problemPath, generatedRunPath, profilingRunPath, visualizationRunPath)
+					runsData.append(runContext)
 					
-		return runs_data
+		return runsData
