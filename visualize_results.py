@@ -35,9 +35,11 @@ filename_renaming = {
 # Iterate through each problem directory and extract the data
 for problem_dir in sorted(os.listdir(problems_dir)):
     problem_path = os.path.join(problems_dir, problem_dir)
-    if os.path.isdir(problem_path):
+    generated_directory_path = os.path.join(problem_path, "generated")
+    if os.path.isdir(problem_path) and os.path.exists(generated_directory_path):
         # Read performance_results.csv file
         performance_file = os.path.join(problem_path, 'performance_results.csv')
+        
         if os.path.exists(performance_file):
             df = pd.read_csv(performance_file)
             df['problem'] = problem_dir
@@ -60,7 +62,6 @@ for problem_dir in sorted(os.listdir(problems_dir)):
             markdown_content += "```c\n" + c_contents + "\n```\n"
             
         generated_assembly_links = []
-        generated_directory_path = os.path.join(problem_path, "generated")
         relative_generated_directory_path = os.path.relpath(generated_directory_path, start=analysis_dir)
         for generated_assembly_filename in sorted(os.listdir(generated_directory_path)):
             if generated_assembly_filename in filename_renaming.keys():

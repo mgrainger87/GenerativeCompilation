@@ -6,6 +6,7 @@ import sys
 import pathlib
 import compilation
 import testing
+import query_llm
 
 COMPILATION_UNIT_FILE_NAME = "compilation_unit.c"
 
@@ -89,7 +90,7 @@ def prompt_llm(prompt):
 		
 	return "\n".join(lines)
 
-def prompt_llm_based_on_results(initial_prompt, compilerError, linkerError, testingError):
+def prompt_llm_based_on_results(querier, initial_prompt, compilerError, linkerError, testingError):
 	prompt = initial_prompt
 	if compilerError is not None:
 		prompt=f"Unfortunately, I got a compilation error:\n{compilerError}\n Fix the error. Remember: {ASSEMBLY_GUIDELINES}"
@@ -98,7 +99,8 @@ def prompt_llm_based_on_results(initial_prompt, compilerError, linkerError, test
 	elif testingError is not None:
 		prompt=f"Unfortunately, I got an incorrect result when testing the generated code:\n{testingError}\nTrace through the optimized assembly with these inputs to find the problem. If, at any time, you find an error, correct the assembly, print out the new assembly, and then trace again starting at the beginning."
 
-	return prompt_llm(prompt)
+	#return prompt_llm(prompt)
+	return querier.predict(prompt)
 
 def compile_and_test_assembly(assembly, driver_object_path, test_data_path, output_path):
 	# Returns: Success, Compiler error, linker error, testing error
@@ -145,7 +147,7 @@ def generate_test_data_from_compilation_unit_source(code_path, test_data_path):
 	with open(code_path, "r") as codeFile:
 		code = codeFile.read()
 
-	test_data = prompt_llm(test_data_prompt(code)).strip().rstrip()
+	test_data = query_llm.LLMQuerier().predict(test_data_prompt(code)).strip().rstrip()
 	
 	with open(test_data_path, 'w') as f:
 		f.write(test_data)
@@ -161,8 +163,10 @@ def generate_assembly_from_compilation_unit_source(code_path, driver_object_path
 		testing_error = None
 		assembly = None
 		
+		querier = query_llm.LLMQuerier()
+		
 		while True:
-			assembly = prompt_llm_based_on_results(generation_prompt(code), compiler_error, linker_error, testing_error)
+			assembly = prompt_llm_based_on_results(querier, generation_prompt(code), compiler_error, linker_error, testing_error)
 			
 			success, compiler_error, linker_error, testing_error = compile_and_test_assembly(assembly, driver_object_path, test_data_path, output_path)
 			if not success:
@@ -184,6 +188,8 @@ def optimize_assembly(compilation_unit_path, assembly_path, driver_object_path, 
 	linker_error = None
 	testing_error = None
 	assembly = None
+	
+	
 	
 	while True:
 		assembly = prompt_llm_based_on_results(prompt, compiler_error, linker_error, testing_error)

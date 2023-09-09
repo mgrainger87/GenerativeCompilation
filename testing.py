@@ -33,14 +33,16 @@ def run_test_from_csv(csv_path, executable_path, overriddenIterations=None, useD
 			
 			if useDebugger:
 				success, description = debugging.launch_process_with_debugging(cmd[0], cmd[1:], 10)
-				return success, description, total_cpu_time
 			else:
 				result = subprocess.run(cmd, capture_output=True, text=True)
 			
-				# Get the CPU time after the process and compute the difference
-				end_cpu_time = resource.getrusage(resource.RUSAGE_CHILDREN).ru_utime
-				total_cpu_time += end_cpu_time - start_cpu_time
+			# Get the CPU time after the process and compute the difference
+			end_cpu_time = resource.getrusage(resource.RUSAGE_CHILDREN).ru_utime
+			total_cpu_time += end_cpu_time - start_cpu_time
 				
+			if useDebugger:
+				return success, description, total_cpu_time
+			else:
 				if result.returncode != 0:
 					failure_text += result.stdout  # Append the output for debugging
 					failure_text += " ".join(cmd)

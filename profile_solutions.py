@@ -28,7 +28,7 @@ def test_individual_assembly(driver_object_path, assembly_path, test_data_path, 
 	# Set executable permissions
 	os.chmod(executable_path, 0o755)
 	
-	success, testing_error, total_cpu_time = testing.run_test_from_csv(test_data_path, executable_path, iterations)
+	success, testing_error, total_cpu_time = testing.run_test_from_csv(test_data_path, executable_path, iterations, False)
 	if not success:
 		print("Testing failed:", testing_error)
 		return False, 0
