@@ -155,7 +155,7 @@ def generate_barcharts(modelContext, combined_df):
     plt.close()
     pass
     
-def generate_latex_pgfplots_code(df):
+def generate_error_count_latex(modelContext, df):
     # Start building the LaTeX code
     latex_code = r"""
 \begin{tikzpicture}
@@ -216,6 +216,77 @@ def generate_latex_pgfplots_code(df):
     with open(modelContext.errorLaTeXGraphPath(), "w") as output_file:
         output_file.write(latex_code)
 
+def generate_performance_latex(modelContext, df):
+    # Extract base filenames without numeric suffix
+    df['Base Filename'] = df['Filename'].str.replace(r'_\d+\.asm$', '.asm')
+
+    # Sort the dataframe by 'Normalized CPU Time' and then drop duplicates, keeping the one with the lowest "Normalized CPU Time"
+    filtered_df = df.sort_values('Normalized CPU Time').drop_duplicates(subset='Base Filename', keep='first')
+
+    # Define the label mapping
+    label_mapping = {
+        "clang_generated_unoptimized.asm": "Clang Unoptimized",
+        "clang_generated_O1_optimized.asm": "Clang O1",
+        "clang_generated_O2_optimized.asm": "Clang O2",
+        "clang_generated_O3_optimized.asm": "Clang O3",
+        "clang_generated_llm_optimized.asm": "Clang LLM optimized",
+        "llm_generated.asm": "LLM generated"
+    }
+
+    # Translate the labels
+    filtered_df['Label'] = filtered_df['Base Filename'].map(label_mapping)
+
+    # Filter out rows where label translation exists
+    filtered_df = filtered_df[filtered_df['Label'].notna()]
+
+    # Get the minimum value among "Clang O1", "Clang O2", and "Clang O3"
+    optimized_clang = filtered_df[filtered_df['Label'].isin(["Clang O1", "Clang O2", "Clang O3"])]['Normalized CPU Time'].min()
+
+    # Remove the individual entries for "Clang O1", "Clang O2", and "Clang O3"
+    filtered_df = filtered_df[~filtered_df['Label'].isin(["Clang O1", "Clang O2", "Clang O3"])]
+    
+    # Add the "Clang optimized" entry using loc
+    filtered_df.loc[len(filtered_df)] = {'Label': 'Clang optimized', 'Normalized CPU Time': optimized_clang}
+
+    # Sort by "Normalized CPU Time" again for better visualization
+    filtered_df = filtered_df.sort_values('Normalized CPU Time')
+
+    labels = filtered_df['Label'].tolist()
+    values = filtered_df['Normalized CPU Time'].tolist()
+
+    # Create color values for the bars
+    colors = ["lightgray" if "LLM" not in label else "blue" for label in labels]
+
+    # Generate the LaTeX code using \addplot coordinates with symbolic y-coordinates
+    latex_code = r"""
+\begin{tikzpicture}
+\begin{axis}[
+    xbar,
+    bar width=0.5cm,
+    xmin=0,
+    xlabel={Normalized CPU Time},
+    ytick={%s},
+    yticklabels={%s},
+    nodes near coords,
+    nodes near coords align={horizontal},
+    every axis plot/.append style={
+      bar shift=0pt,
+      fill
+    },
+    ]
+%s
+\end{axis}
+\end{tikzpicture}
+""" % (
+        ",".join([str(len(labels) - 1 - index) for index in range(len(labels))]),
+        ", ".join(['{' + label + '}' for label in reversed(labels)]),
+        "\n".join(['\\addplot [fill=' + colors[index] + '] coordinates {( ' + str(value) + ' , ' + str(len(labels) - 1 - index) + ' )};' for index, value in enumerate(values)])
+    )
+
+    with open(modelContext.performanceLaTeXGraphPath(), "w") as output_file:
+        output_file.write(latex_code)
+
+
 def generate_markdown(modelContext):
     markdown_content = ""
     
@@ -264,7 +335,8 @@ if __name__ == "__main__":
             dataframe = generate_dataframes(modelContext)
             generate_barcharts(modelContext, dataframe)
             error_df = generate_error_count_csv(modelContext, dataframe)
-            generate_latex_pgfplots_code(error_df)
+            generate_error_count_latex(modelContext, error_df)
+            generate_performance_latex(modelContext, dataframe)
     else:
         print("The provided folder path does not exist.")
 

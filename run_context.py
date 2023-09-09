@@ -29,6 +29,9 @@ class ModelContext:
 	def errorLaTeXGraphPath(self):
 		return os.path.join(self.analysisPath(), "error_counts.tex")
 		
+	def performanceLaTeXGraphPath(self):
+		return os.path.join(self.analysisPath(), "performance.tex")
+
 	@classmethod
 	def ModelContextsForDirectory(cls, rootDirectory):
 		modelContexts = []
