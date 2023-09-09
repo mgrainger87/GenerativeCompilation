@@ -121,29 +121,35 @@ class ProblemContext:
 	def GetRunContexts(self):
 		run_contexts = []
 		
-		print(f"generated path {self.generatedPath()}")
 		# Assuming the structure is: generatedPath/model/problemNumber/runNumber
 		for runNumber in os.listdir(self.generatedPath()):
 			# Construct paths for problem, generated, profiling and visualization
-			generatedRunPath = os.path.join(self.generatedPath(), runNumber)
-			profilingRunPath = os.path.join(self.profilingPath(), runNumber)
-			visualizationRunPath = os.path.join(self.visualizationPath(), runNumber)
-			
-			run_context = RunContext(self.__model, self.problemNumber(), runNumber, self.problemPath(), generatedRunPath, profilingRunPath, visualizationRunPath)
+			run_context = RunContext(self.__model, self.problemNumber(), runNumber, self.__rootDirectory)
+			run_contexts.append(run_context)
+				
+		return run_contexts
+		
+	def GetRunContexts(self, runCount):
+		run_contexts = []
+		
+		# Assuming the structure is: generatedPath/model/problemNumber/runNumber
+		for runNumber in range(1, runCount+1):
+			# Construct paths for problem, generated, profiling and visualization
+			run_number = f"{runNumber:02}"
+			run_context = RunContext(self.__model, self.problemNumber(), run_number, self.__rootDirectory)
 			run_contexts.append(run_context)
 				
 		return run_contexts
 
 
+
 class RunContext:
-	def __init__(self, model, problemNumber, runNumber, problemPath, generatedPath, profilingPath, visualizationPath):
+	def __init__(self, model, problemNumber, runNumber, rootDirectory):
+		print(f"initialized problemContext with model {model}")
 		self.__model = model
 		self.__problemNumber = problemNumber
 		self.__runNumber = runNumber
-		self.__problemPath = problemPath
-		self.__generatedPath = generatedPath
-		self.__profilingPath = profilingPath
-		self.__visualizationPath = visualizationPath
+		self.__rootDirectory = rootDirectory
 
 	def __repr__(self):
 		return f"RunContext(Model: {self.__model}, Problem: {self.__problemNumber}, Run: {self.__runNumber})"
@@ -156,35 +162,33 @@ class RunContext:
 
 	def runNumber(self):
 		return self.__runNumber
+		
+	def __get_path(self, sub_directory, *args):
+		path = os.path.join(self.__rootDirectory, sub_directory, *args)
+		if not os.path.exists(path):
+			os.makedirs(path)
+		return path
 
 	def problemPath(self):
-		if not os.path.exists(self.__problemPath):
-			os.makedirs(self.__problemPath)
-		return self.__problemPath
-
+		return self.__get_path('problems', self.__problemNumber)
+	
 	def generatedPath(self):
-		if not os.path.exists(self.__generatedPath):
-			os.makedirs(self.__generatedPath)
-		return self.__generatedPath
-
+		return self.__get_path('generated', self.__model, self.__problemNumber, self.__runNumber)
+	
 	def profilingPath(self):
-		if not os.path.exists(self.__profilingPath):
-			os.makedirs(self.__profilingPath)
-		return self.__profilingPath
-
-	def visualizationPath(self):
-		if not os.path.exists(self.__visualizationPath):
-			os.makedirs(self.__visualizationPath)
-		return self.__visualizationPath
-		
+		return self.__get_path('profiling', self.__model, self.__problemNumber, self.__runNumber)
+	
+	def analysisPath(self):
+		return self.__get_path('analysis', self.__model, self.__problemNumber, self.__runNumber)
+	
+	def failurePath(self):
+		return self.__get_path('failures', self.__model, self.__problemNumber, self.__runNumber)
+	
 	def compilationUnitPath(self):
 		return os.path.join(self.problemPath(), "compilation_unit.c")
-		
+	
 	def testDataPath(self):
 		return os.path.join(self.problemPath(), "test_data.csv")
-	
-	def profilingResultsPath(self):
-		return os.path.join(self.profilingPath(), "performance_results.csv")
 
 	@classmethod
 	def RunContextsForDirectory(cls, rootDirectory):

@@ -244,10 +244,10 @@ def has_file_with_prefix(directory_path, prefix):
 			return True
 	return False
 			
-def handle_problem_directory(problem_directory_path, generated_directory_path, test_driver_source_path, optimizations_per_solution=1):
-	print(f"Working on problem in directory {problem_directory_path}…")
+def handle_problem_run(run_context, test_driver_source_path, optimizations_per_solution=1):
+	print(f"Perforning problem run {run_context}…")
 	
-	codePath = os.path.join(problem_directory_path, COMPILATION_UNIT_FILE_NAME)
+	codePath = run_context.compilationUnitPath()
 	
 	# Compile the driver if needed
 	driverObjectPath = "/Users/morgang/code/GenerativeCompilation/test_driver.o"
@@ -258,13 +258,13 @@ def handle_problem_directory(problem_directory_path, generated_directory_path, t
 			return
 
 	# Generate test data if necessary
-	testDataPath = os.path.join(problem_directory_path, "test_data.csv")
+	testDataPath = run_context.testDataPath()
 	if os.path.exists(testDataPath):
 		print(f"Already have test data at {testDataPath}.")
 	else:
 		generate_test_data_from_compilation_unit_source(codePath, testDataPath)
 	
-	generatedDirectoryPath = generated_directory_path
+	generatedDirectoryPath = run_context.generatedPath()
 	pathlib.Path(generatedDirectoryPath).mkdir(parents=True, exist_ok=True)
 	
 	# Have Clang generate unoptimized and optimized assembly for comparison purposes if necessary.
@@ -304,6 +304,7 @@ def handle_problem_directory(problem_directory_path, generated_directory_path, t
 	
 	# Have LLM generate assembly from C compilation unit
 	generatedAssemblyPath = os.path.join(generatedDirectoryPath, "llm_generated.asm")
+	print(generatedAssemblyPath)
 	if has_file_with_prefix(generatedDirectoryPath, "llm_generated"):
 		print(f"Already have generated assembly at {generatedAssemblyPath}.")
 	else:
@@ -317,12 +318,8 @@ def handle_problem_directory(problem_directory_path, generated_directory_path, t
 		optimize_assembly(codePath, unoptimizedClangAssemblyPath, driverObjectPath, testDataPath, optimizedClangAssemblyPath, optimizations_per_solution)
 	
 def handle_problem(problemContext, solutions_per_problem, optimizations_per_solution):
-	for solution_number in range(1, solutions_per_problem + 1):
-		solution_name = f"{solution_number:02}"  # Formats the number as a two-digit string
-		solution_path = os.path.join(problemContext.generatedPath(), solution_name)
-		print(f"Solution path: {solution_path}")
-		handle_problem_directory(problemContext.problemPath(), solution_path, "/Users/morgang/code/GenerativeCompilation/test_driver.c", optimizations_per_solution)
-
+	for runContext in problemContext.GetRunContexts(solutions_per_problem):
+		handle_problem_run(runContext, "/Users/morgang/code/GenerativeCompilation/test_driver.c", optimizations_per_solution)
 
 if __name__ == "__main__":
 	# Check if the user has provided a command-line argument
