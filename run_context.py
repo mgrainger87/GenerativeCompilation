@@ -23,6 +23,9 @@ class ModelContext:
 	def markdownSummaryPath(self):
 		return os.path.join(self.analysisPath(), "charts.md")
 		
+	def errorCountPath(self):
+		return os.path.join(self.analysisPath(), "error_counts.csv")
+		
 	@classmethod
 	def ModelContextsForDirectory(cls, rootDirectory):
 		modelContexts = []
@@ -91,9 +94,6 @@ class ProblemContext:
 	def profilingResultsPath(self):
 		return os.path.join(self.profilingPath(), "performance_results.csv")
 		
-	def errorCountPath(self):
-		return os.path.join(self.profilingPath(), "error_counts.csv")
-	
 	@classmethod
 	def ProblemContextsForDirectory(cls, rootDirectory):
 		problemsData = []

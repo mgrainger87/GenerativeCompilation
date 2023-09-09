@@ -79,8 +79,6 @@ Guidelines:
 
 """
 
-import os
-
 def unique_file_path(filepath):
 	base, ext = os.path.splitext(filepath)
 	counter = 1

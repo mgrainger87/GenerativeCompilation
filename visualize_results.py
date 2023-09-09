@@ -4,6 +4,7 @@ import os
 import matplotlib.pyplot as plt
 import sys
 from run_context import ProblemContext, ModelContext
+import re
 
 filename_renaming = {
     "clang_generated_unoptimized.asm": "Clang Unoptimized",
@@ -48,6 +49,32 @@ def generate_dataframes(modelContext):
     combined_df['Generation Method'] = combined_df['Filename'].replace(filename_renaming)
 
     return combined_df
+
+def generate_error_count_csv(modelContext, combined_df):
+    # Create a copy to prevent modifying the original dataframe
+    df_copy = combined_df.copy()
+    
+    # Filter rows with "llm" in the filename
+    df_copy = df_copy[df_copy['Filename'].str.contains('llm')]
+
+    # Extract the prefix from the filename
+    df_copy['prefix'] = df_copy['Filename'].apply(lambda x: int(re.findall('_(\d)', x)[0]) if re.findall('_(\d)', x) else 0)
+
+    # Sort by problem, technique, and prefix
+    df_copy = df_copy.sort_values(by=['problem', 'technique', 'prefix'])
+
+    # Drop duplicates based on problem and technique, keeping the first occurrence (smallest prefix)
+    df_copy = df_copy.drop_duplicates(subset=['problem', 'technique'], keep='first')
+
+    # Create the desired output format
+    df_output = df_copy[['problem', 'technique', 'Compiler Errors', 'Linker Errors', 'Execution Errors', 'Correctness Errors']]
+    df_output.columns = ['Problem', 'Technique', 'Compilation Errors', 'Linking Errors', 'Execution Errors', 'Correctness Errors']
+    
+    # Write to CSV
+    output_path = modelContext.errorCountPath()
+    df_output.to_csv(output_path, index=False)
+    
+    return output_path
 
 def generate_barcharts(modelContext, combined_df):
     # Renaming 'Filename' values and column name
@@ -175,6 +202,7 @@ if __name__ == "__main__":
             generate_markdown(modelContext)
             dataframe = generate_dataframes(modelContext)
             generate_barcharts(modelContext, dataframe)
+            generate_error_count_csv(modelContext, dataframe)
     else:
         print("The provided folder path does not exist.")
 

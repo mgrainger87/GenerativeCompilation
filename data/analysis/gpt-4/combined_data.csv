@@ -1,11 +1,11 @@
-Filename,CPU Time,Normalized CPU Time,Samples,problem,technique
-clang_generated_O2_optimized.asm,2.189191499999999,0.8754946722071151,2,11,constant folding
-clang_generated_O1_optimized.asm,2.2002115,0.8799017564150172,2,11,constant folding
-clang_generated_O3_optimized.asm,2.19707,0.8786454174822474,2,11,constant folding
-clang_generated_unoptimized.asm,2.5005195,1.0,2,11,constant folding
-llm_generated.asm,2.193169000000001,0.8770853416660025,1,11,constant folding
-clang_generated_llm_optimized_5.asm,2.189041999999997,0.8754348846309727,1,11,constant folding
-clang_generated_llm_optimized_4.asm,2.1914729999999984,0.8764070826082336,1,11,constant folding
-clang_generated_llm_optimized_1.asm,2.1930309999999977,0.8770301531341781,1,11,constant folding
-clang_generated_llm_optimized_3.asm,2.2013570000000016,0.8803598612208392,1,11,constant folding
-clang_generated_llm_optimized_2.asm,2.195853,0.8781587186182712,1,11,constant folding
+Filename,CPU Time,Normalized CPU Time,Compiler Errors,Linker Errors,Execution Errors,Correctness Errors,problem,technique
+clang_generated_O1_optimized.asm,2.185039999999999,0.8683228386780907,0.0,0.0,0.0,0.0,11,constant folding
+clang_generated_O2_optimized.asm,2.1850240000000003,0.8683176820053284,0.0,0.0,0.0,0.0,11,constant folding
+clang_generated_O3_optimized.asm,2.197235499999999,0.873135186605984,0.0,0.0,0.0,0.0,11,constant folding
+clang_generated_llm_optimized_1.asm,2.2207190000000026,0.8758788491680672,0.0,0.0,0.0,0.0,11,constant folding
+clang_generated_llm_optimized_2.asm,2.2564690000000027,0.8899790882607928,0.0,0.0,0.0,2.0,11,constant folding
+clang_generated_llm_optimized_3.asm,2.2457390000000004,0.8857470444715626,1.0,0.0,0.0,2.0,11,constant folding
+clang_generated_llm_optimized_4.asm,2.205968999999996,0.8700612680039331,1.0,0.0,0.0,2.0,11,constant folding
+clang_generated_llm_optimized_5.asm,2.2053900000000013,0.8698329032924754,1.0,0.0,0.0,2.0,11,constant folding
+clang_generated_unoptimized.asm,2.5165359999999994,1.0,0.0,0.0,0.0,0.0,11,constant folding
+llm_generated.asm,2.223962,0.8771579281996106,0.0,0.0,0.0,0.0,11,constant folding
