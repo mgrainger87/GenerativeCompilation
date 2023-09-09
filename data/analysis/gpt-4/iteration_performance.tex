@@ -1,0 +1,16 @@
+
+\begin{tikzpicture}
+\begin{axis}[
+    title={Performance vs Iteration},
+    xlabel={Iteration},
+    ylabel={Performance},
+    ymin=0, ymax=1,
+    legend pos=north west,
+    ymajorgrids=true,
+    grid style=dashed,
+]
+
+\addplot coordinates {(1, 0.8758788491680672) (2, 0.8899790882607928) (3, 0.8857470444715626) (4, 0.8700612680039331) (5, 0.8698329032924754)};
+\addlegendentry{Clang LLM optimized}
+\end{axis}
+\end{tikzpicture}

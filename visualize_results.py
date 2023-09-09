@@ -75,6 +75,41 @@ def generate_error_count_csv(modelContext, combined_df):
     df_output.to_csv(output_path, index=False)
     
     return df_output
+    
+def generate_iterations_csv(modelContext, df):
+    """
+    Transforms a dataframe based on the 'Filename' and 'Normalized CPU Time' columns.
+    
+    Parameters:
+    - df: Input dataframe with columns 'Filename' and 'Normalized CPU Time'
+    
+    Returns:
+    - Transformed dataframe with base filename and one column for each suffix.
+    """
+    # Filter rows that have the expected pattern
+    df_filtered = df[df['Filename'].str.contains(r'_[0-9]+\.asm$')]
+    
+    # Split the filename using rsplit logic and extract the base filename and the suffix
+    split_df = df_filtered['Filename'].str.rsplit('_', n=1, expand=True)
+    df_filtered['Base Filename'] = split_df[0]
+    df_filtered['Suffix'] = split_df[1].str.rstrip('.asm')
+    
+    # Filter only relevant columns
+    df_subset = df_filtered[['Base Filename', 'Suffix', 'Normalized CPU Time']]
+    
+    # Pivot the data frame
+    df_pivot = df_subset.pivot(index='Base Filename', columns='Suffix', values='Normalized CPU Time').reset_index()
+    
+    # Rename columns
+    df_pivot.columns.name = None  # Remove the columns' name
+    df_pivot = df_pivot.rename(columns={'Base Filename': 'Filename'})
+    
+    # Write to CSV
+    output_path = modelContext.iterationPerformancePath()
+    df_pivot.to_csv(output_path, index=False)
+
+    return df_pivot
+
 
 def generate_barcharts(modelContext, combined_df):
     # Renaming 'Filename' values and column name
@@ -286,6 +321,16 @@ def generate_performance_latex(modelContext, df):
     with open(modelContext.performanceLaTeXGraphPath(), "w") as output_file:
         output_file.write(latex_code)
 
+def strip_asm_suffix(input_dict):
+        output_dict = {}
+        for key, value in input_dict.items():
+            if key.endswith(".asm"):
+                new_key = key[:-4]
+                output_dict[new_key] = value
+            else:
+                output_dict[key] = value
+        return output_dict
+
 def generate_iterations_latex(modelContext, df):
     # Header for the LaTeX document
     header = r"""
@@ -304,8 +349,10 @@ def generate_iterations_latex(modelContext, df):
 
     # Iterate over rows to generate the plot commands
     plots = []
+    renaming_dict = strip_asm_suffix(filename_renaming)
     for index, row in df.iterrows():
-        problem_type = row['ProblemType']
+        original_name = row['Filename']
+        problem_type = renaming_dict.get(original_name, original_name)  # Use renaming dict, or default to original name
         
         coordinates = []
         for i, value in enumerate(row.iloc[1:]):
@@ -320,7 +367,10 @@ def generate_iterations_latex(modelContext, df):
 \end{tikzpicture}
 """
 
-    return header + '\n'.join(plots) + footer
+    latex_code = header + '\n'.join(plots) + footer
+    
+    with open(modelContext.iterationPerformanceLaTeXGraphPath(), "w") as output_file:
+        output_file.write(latex_code)
 
 # # Sample usage
 # csv_data = """
@@ -382,9 +432,11 @@ if __name__ == "__main__":
             generate_markdown(modelContext)
             dataframe = generate_dataframes(modelContext)
             generate_barcharts(modelContext, dataframe)
+            generate_performance_latex(modelContext, dataframe)
             error_df = generate_error_count_csv(modelContext, dataframe)
             generate_error_count_latex(modelContext, error_df)
-            generate_performance_latex(modelContext, dataframe)
+            iteration_df = generate_iterations_csv(modelContext, dataframe)
+            generate_iterations_latex(modelContext, iteration_df)
     else:
         print("The provided folder path does not exist.")
 

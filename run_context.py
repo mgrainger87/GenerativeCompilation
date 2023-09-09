@@ -31,6 +31,12 @@ class ModelContext:
 		
 	def performanceLaTeXGraphPath(self):
 		return os.path.join(self.analysisPath(), "performance.tex")
+		
+	def iterationPerformancePath(self):
+		return os.path.join(self.analysisPath(), "iteration_performance.csv")
+
+	def iterationPerformanceLaTeXGraphPath(self):
+		return os.path.join(self.analysisPath(), "iteration_performance.tex")
 
 	@classmethod
 	def ModelContextsForDirectory(cls, rootDirectory):
