@@ -1,5 +1,44 @@
 import os
 
+class ModelContext:
+	def __init__(self, model, rootDirectory):
+		self.__model = model
+		self.__rootDirectory = rootDirectory
+
+	def __repr__(self):
+		return f"ModelContext(Model: {self.__model})"
+
+	def __get_path(self, sub_directory, *args):
+		path = os.path.join(self.__rootDirectory, sub_directory, *args)
+		if not os.path.exists(path):
+			os.makedirs(path)
+		return path
+
+	def generatedPath(self):
+		return self.__get_path('generated', self.__model)
+
+	def analysisPath(self):
+		return self.__get_path('analysis', self.__model)
+		
+	@classmethod
+	def ModelContextsForDirectory(cls, rootDirectory):
+		modelContexts = []
+		generatedPath = os.path.join(rootDirectory, 'generated')
+		for model in os.listdir(generatedPath):
+			modelContext = cls(model, rootDirectory)
+			modelContexts.append(modelContext)
+		return modelContexts
+
+	def GetProblemContexts(self):
+		problem_contexts = []
+		
+		for problemNumber in os.listdir(self.generatedPath()):
+			problemContext = ProblemContext(self.__model, problemNumber, self.__rootDirectory)
+			problem_contexts.append(problemContext)
+		
+		return problem_contexts
+
+
 class ProblemContext:
 	def __init__(self, model, problemNumber, rootDirectory):
 		print(f"initialized problemContext with model {model}")
@@ -30,6 +69,9 @@ class ProblemContext:
 	
 	def profilingPath(self):
 		return self.__get_path('profiling', self.__model, self.__problemNumber)
+
+	def analysisPath(self):
+		return self.__get_path('analysis', self.__model, self.__problemNumber)
 	
 	def visualizationPath(self):
 		return self.__get_path('visualization', self.__model, self.__problemNumber)

@@ -3,7 +3,7 @@ import pandas as pd
 import os
 import matplotlib.pyplot as plt
 import sys
-from run_context import ProblemContext
+from run_context import ProblemContext, ModelContext
 
 filename_renaming = {
     "clang_generated_unoptimized.asm": "Clang Unoptimized",
@@ -14,12 +14,14 @@ filename_renaming = {
     "llm_generated.asm": "LLM generated"
 }
 
-def generate_dataframes(contexts):
+def generate_dataframes(modelContext):
+    problemContexts = modelContext.GetProblemContexts()
+    print(problemContexts)
     # Lists to store data
     techniques = []
     dataframes = []
 
-    for context in contexts:
+    for context in problemContexts:
         # Read performance_results.csv file
         performance_file = context.profilingResultsPath()
         
@@ -34,10 +36,21 @@ def generate_dataframes(contexts):
                 with open(technique_file, 'r') as f:
                     technique = f.read().strip()
                     techniques.extend([technique] * df.shape[0])
+                    
+    # Combining all dataframes into one
+    combined_df = pd.concat(dataframes, ignore_index=True)
+    combined_df['technique'] = techniques
+    
+    # Save combined dataframe to CSV
+    combined_df.to_csv(os.path.join(modelContext.analysisPath(), 'combined_data.csv'), index=False)
+    
+    # Renaming 'Filename' values and column name
+    combined_df['Generation Method'] = combined_df['Filename'].replace(filename_renaming)
+
+    return combined_df
         
 
 def generate_markdown(context):
-    
     markdown_content = ""
                 
     # Add to Markdown file
@@ -167,9 +180,13 @@ if __name__ == "__main__":
     
     # Check if the given folder path exists
     if os.path.exists(folder_path):
-        contexts = ProblemContext.ProblemContextsForDirectory(folder_path)
-        for context in contexts:
-            print(generate_markdown(context))
+        modelContexts = ModelContext.ModelContextsForDirectory(folder_path)
+        for modelContext in modelContexts:
+            problemContexts = modelContext.GetProblemContexts()
+            for context in problemContexts:
+                print(generate_markdown(context))
+        
+            generate_dataframes(modelContext)
     else:
         print("The provided folder path does not exist.")
 

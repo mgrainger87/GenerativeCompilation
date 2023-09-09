@@ -1,0 +1,11 @@
+Filename,CPU Time,Normalized CPU Time,Samples
+clang_generated_O2_optimized.asm,2.189191499999999,0.8754946722071151,2
+clang_generated_O1_optimized.asm,2.2002115,0.8799017564150172,2
+clang_generated_O3_optimized.asm,2.19707,0.8786454174822474,2
+clang_generated_unoptimized.asm,2.5005194999999993,1.0,2
+llm_generated.asm,2.193169000000001,0.8770853416660025,1
+clang_generated_llm_optimized_5.asm,2.189041999999997,0.8754348846309727,1
+clang_generated_llm_optimized_4.asm,2.1914729999999984,0.8764070826082336,1
+clang_generated_llm_optimized_1.asm,2.1930309999999977,0.8770301531341781,1
+clang_generated_llm_optimized_3.asm,2.2013570000000016,0.8803598612208392,1
+clang_generated_llm_optimized_2.asm,2.1958529999999996,0.8781587186182712,1
