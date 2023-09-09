@@ -4,6 +4,7 @@ import compilation
 import testing
 import csv
 from run_context import RunContext, ProblemContext
+import pandas as pd
 
 def test_individual_assembly(driver_object_path, assembly_path, test_data_path, iterations=None):
 	success, compiler_error, compilation_unit_path = compilation.compile_source(assembly_path)
@@ -87,7 +88,7 @@ def profile_run(run_context, test_driver_source_path):
 	results_csv_path = run_context.profilingResultsPath()
 	
 	if os.path.exists(results_csv_path):
-		print(f"Already have profiling results for {run_context}.")
+		print(f"Already have profiling results for {run_context} at {results_csv_path}.")
 		return
 
 	print(f"Working on {run_context}…")
@@ -122,11 +123,6 @@ def profile_run(run_context, test_driver_source_path):
 		max_cpu_time = max(cpu_times_dict.values())
 	print(f"Using {iterations} iterations.")
 	
-	# Get the number of errors
-	errorsForFile = {}
-	for path in asm_files:
-		errorsForFile[path] = get_errors_dict_for_assembly(path)
-	
 	# Create or open a CSV file for writing the results
 	with open(results_csv_path, 'w', newline='') as csvfile:
 		csvwriter = csv.writer(csvfile)
@@ -141,41 +137,24 @@ def profile_run(run_context, test_driver_source_path):
 			csvwriter.writerow([filename, cpu_time, normalized_cpu_time, compiler_errors, linker_errors, execution_errors, correctness_errors])
 			
 def average_cpu_times(input_files, output_file):
-	# Data structures to store CPU Times and sample counts
-	data = {}
-	samples_count = {}
+	# Initialize an empty list to hold all dataframes
+	dfs = []
 	
-	# Read each file and populate the data
+	# Read each file into a dataframe and append to the list
 	for file in input_files:
-		with open(file, 'r') as f:
-			reader = csv.reader(f)
-			next(reader)  # skip header row
-			for row in reader:
-				filename = row[0]
-				cpu_time = float(row[1])
-				if filename not in data:
-					data[filename] = []
-					samples_count[filename] = 0
-				data[filename].append(cpu_time)
-				samples_count[filename] += 1
+		df = pd.read_csv(file)
+		dfs.append(df)
 	
-	# Calculate the average CPU Times
-	avg_times = {}
-	for filename, times in data.items():
-		avg_times[filename] = sum(times) / len(times)
+	# Concatenate all dataframes
+	combined_df = pd.concat(dfs)
 	
-	# Calculate the normalized CPU Times
-	max_time = max(avg_times.values())
-	normalized_times = {filename: time / max_time for filename, time in avg_times.items()}
+	# Group by 'Filename' and calculate the mean for numeric columns
+	averaged_df = combined_df.groupby('Filename').mean().reset_index()
 	
-	# Write the results to the output CSV file
-	with open(output_file, 'w', newline='') as f:
-		writer = csv.writer(f)
-		writer.writerow(['Filename', 'CPU Time', 'Normalized CPU Time', 'Samples'])
-		for filename in avg_times:
-			writer.writerow([filename, avg_times[filename], normalized_times[filename], samples_count[filename]])
+	# Save the result to the specified output file
+	averaged_df.to_csv(output_file, index=False)
 
-	return output_file
+
 
 if __name__ == "__main__":
 	# Check if the user has provided a command-line argument

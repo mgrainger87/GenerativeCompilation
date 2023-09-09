@@ -1,11 +1,11 @@
-Filename,CPU Time,Normalized CPU Time
-clang_generated_O2_optimized.asm,2.1968989999999984,0.8785501536433714
-clang_generated_O1_optimized.asm,2.21049,0.8839852579145139
-clang_generated_O3_optimized.asm,2.1984689999999993,0.8791780039638555
-llm_generated.asm,2.193169000000001,0.8770585092513956
-clang_generated_unoptimized.asm,2.500595999999998,1.0
-clang_generated_llm_optimized_5.asm,2.189041999999997,0.8754081027083138
-clang_generated_llm_optimized_4.asm,2.1914729999999984,0.8763802709434072
-clang_generated_llm_optimized_1.asm,2.1930309999999977,0.8770033224079378
-clang_generated_llm_optimized_3.asm,2.2013570000000016,0.8803329286298159
-clang_generated_llm_optimized_2.asm,2.1958529999999996,0.8781318533661581
+Filename,CPU Time,Normalized CPU Time,Compiler Errors,Linker Errors,Execution Errors,Correctness Errors
+clang_generated_O2_optimized.asm,2.184266000000001,0.8615013382408743,0,0,0,0
+clang_generated_O1_optimized.asm,2.184684999999998,0.8616665969871627,0,0,0,0
+clang_generated_O3_optimized.asm,2.208306999999998,0.870983403919984,0,0,0,0
+llm_generated.asm,2.223962,0.8771579281996106,0,0,0,0
+clang_generated_unoptimized.asm,2.535418,1.0,0,0,0,0
+clang_generated_llm_optimized_5.asm,2.2053900000000013,0.8698329032924754,1,0,0,2
+clang_generated_llm_optimized_4.asm,2.205968999999996,0.8700612680039331,1,0,0,2
+clang_generated_llm_optimized_1.asm,2.2207190000000026,0.8758788491680672,0,0,0,0
+clang_generated_llm_optimized_3.asm,2.2457390000000004,0.8857470444715626,1,0,0,2
+clang_generated_llm_optimized_2.asm,2.2564690000000027,0.8899790882607928,0,0,0,2
