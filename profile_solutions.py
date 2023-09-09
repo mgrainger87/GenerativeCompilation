@@ -54,7 +54,34 @@ def test_assembly_files(generatedDirectoryPath, asm_files, driverObjectPath, tes
 			cpu_times_dict[filename] = cpu_time
 			
 	return cpu_times_dict
-
+	
+def get_errors_from_assembly(path_to_assembly):
+	# Extract errors from the file into a dictionary
+	def get_errors_dict_for_assembly(path):
+		errors_dict = {}
+		
+		with open(path, 'r') as file:
+			first_line = file.readline().strip()
+			
+			# Check if it starts with //
+			if first_line.startswith('//'):
+				# Remove the starting '//' and split the string by comma
+				items = first_line[2:].split(',')
+				
+				for item in items:
+					key, value = item.split('=')
+					errors_dict[key] = int(value)
+		
+		return errors_dict
+	
+	# Extract individual error values from the dictionary
+	errors_dict = get_errors_dict_for_assembly(path_to_assembly)
+	compiler_errors = errors_dict.get('compiler_errors', 0)
+	linker_errors = errors_dict.get('linker_errors', 0)
+	execution_errors = errors_dict.get('execution_errors', 0)
+	correctness_errors = errors_dict.get('correctness_errors', 0)
+	
+	return compiler_errors, linker_errors, execution_errors, correctness_errors
 
 def profile_run(run_context, test_driver_source_path):
 	results_csv_path = run_context.profilingResultsPath()
@@ -95,17 +122,23 @@ def profile_run(run_context, test_driver_source_path):
 		max_cpu_time = max(cpu_times_dict.values())
 	print(f"Using {iterations} iterations.")
 	
+	# Get the number of errors
+	errorsForFile = {}
+	for path in asm_files:
+		errorsForFile[path] = get_errors_dict_for_assembly(path)
+	
 	# Create or open a CSV file for writing the results
 	with open(results_csv_path, 'w', newline='') as csvfile:
 		csvwriter = csv.writer(csvfile)
-		csvwriter.writerow(['Filename', 'CPU Time', 'Normalized CPU Time'])  # Writing the headers
+		csvwriter.writerow(['Filename', 'CPU Time', 'Normalized CPU Time', 'Compiler Errors', 'Linker Errors', 'Execution Errors', 'Correctness Errors'])  # Writing the headers
 		
 		unoptimized_cpu_time = cpu_times_dict['clang_generated_unoptimized.asm']
 		
 		for filename, cpu_time in cpu_times_dict.items():
 			normalized_cpu_time = cpu_time / unoptimized_cpu_time
+			compiler_errors, linker_errors, execution_errors, correctness_errors = get_errors_from_assembly(os.path.join(run_context.generatedPath(), filename))
 			
-			csvwriter.writerow([filename, cpu_time, normalized_cpu_time])
+			csvwriter.writerow([filename, cpu_time, normalized_cpu_time, compiler_errors, linker_errors, execution_errors, correctness_errors])
 			
 def average_cpu_times(input_files, output_file):
 	# Data structures to store CPU Times and sample counts

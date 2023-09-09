@@ -90,6 +90,9 @@ class ProblemContext:
 	
 	def profilingResultsPath(self):
 		return os.path.join(self.profilingPath(), "performance_results.csv")
+		
+	def errorCountPath(self):
+		return os.path.join(self.profilingPath(), "error_counts.csv")
 	
 	@classmethod
 	def ProblemContextsForDirectory(cls, rootDirectory):
