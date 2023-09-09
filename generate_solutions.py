@@ -14,8 +14,7 @@ COMPILATION_UNIT_FILE_NAME = "compilation_unit.c"
 ASSEMBLY_GUIDELINES = """
 - Follow the arm64 calling convention strictly. Write out which registers are used for which parameters before generating the assembly.
 - Preserve the values of caller-saved and/or callee-saved registers where necessary.
-- Mangle function names according to Clang conventions for C (not C++).
-- Align functions appropriately for arm64.
+- Mangle function names according to Clang conventions for C (not C++). Mark symbols as global where necessary. Align symbols appropriately for arm64.
 - Follow arm64 convention for local labels starting with a numeric value, which makes them assembler-local.
 - Before branching for a function call, be sure to save all required registers.
 - Use only valid arm64 instructions. ARM64 assembly does not allow direct floating-point literals with the fadd instruction.
@@ -98,13 +97,13 @@ def prompt_llm_based_on_results(querier, initial_prompt, compilerError, linkerEr
 	if compilerError is not None:
 		prompt=f"Unfortunately, I got a compilation error:\n{compilerError}\n Fix the error.\n{CODE_FORMAT_REMINDERS}"
 	elif linkerError is not None:
-		prompt=f"Unfortunately, I got a linker error:\n{linkerError}\n Fix the error. After fixing the error, print out the corrected assembly. Go it through it line by line, asking this question for each line: is this valid arm64 assembly for macOS? Also examine the program as a whole to identify errors or incompatibilities.\n{CODE_FORMAT_REMINDERS}"
+		prompt=f"Unfortunately, I got a linker error:\n{linkerError}\n Fix the error.\n{CODE_FORMAT_REMINDERS}"
 	elif testingError is not None:
-		prompt=f"Unfortunately, I got an incorrect result when testing the generated code:\n{testingError}\nTrace through the optimized assembly to find the problem. If, at any time, you find an error, correct the assembly, print out the new assembly, and then trace again starting at the beginning.\n{CODE_FORMAT_REMINDERS}"
+		prompt=f"Unfortunately, I got an incorrect result when testing the generated code:\n{testingError}\nTrace through the optimized assembly line-by-line to find the problem. If, at any time, you find an error, correct the assembly, print out the new assembly, and then trace again starting at the beginning.\n{CODE_FORMAT_REMINDERS}"
 	elif foundSolution:
 		prompt = f"Try to (further) optimize the solution so that it runs more quickly."
 
-	return querier.generateAssembly(prompt)
+	return querier.generateAssembly(prompt).strip()
 
 def compile_and_test_assembly(assembly, driver_object_path, test_data_path, output_path):
 	# Returns: Success, Compiler error, linker error, testing error
@@ -184,7 +183,7 @@ def prompt_for_assembly(base_prompt, driver_object_path, test_data_path, output_
 	while True:
 		assembly = prompt_llm_based_on_results(querier, base_prompt, compiler_error, linker_error, testing_error, found_solution)
 		
-		if assembly is None:
+		if assembly is None or len(assembly) == 0:
 			if found_solution:
 				break
 				
@@ -206,7 +205,7 @@ def prompt_for_assembly(base_prompt, driver_object_path, test_data_path, output_
 		print("Assembly written to ", unique_path)
 		found_solution = True
 
-def handle_problem_directory(problem_directory_path, test_driver_source_path):
+def handle_problem_directory(problem_directory_path, generated_directory_path, test_driver_source_path):
 	print(f"Working on problem in directory {problem_directory_path}…")
 	
 	codePath = os.path.join(problem_directory_path, COMPILATION_UNIT_FILE_NAME)
@@ -226,7 +225,7 @@ def handle_problem_directory(problem_directory_path, test_driver_source_path):
 	else:
 		generate_test_data_from_compilation_unit_source(codePath, testDataPath)
 	
-	generatedDirectoryPath = os.path.join(problem_directory_path, "generated")
+	generatedDirectoryPath = generated_directory_path
 	pathlib.Path(generatedDirectoryPath).mkdir(parents=True, exist_ok=True)
 	
 	# Have Clang generate unoptimized and optimized assembly for comparison purposes if necessary.
@@ -279,22 +278,30 @@ def handle_problem_directory(problem_directory_path, test_driver_source_path):
 		optimize_assembly(codePath, unoptimizedClangAssemblyPath, driverObjectPath, testDataPath, optimizedClangAssemblyPath)
 	
 
-
 if __name__ == "__main__":
 	# Check if the user has provided a command-line argument
-	if len(sys.argv) < 2:
-		print("Please provide the folder path as a command-line argument.")
+	if len(sys.argv) < 5:
+		print("Please provide correct arguments.")
 		sys.exit(1)
 	
-	folder_path = sys.argv[1]
+	problems_path = sys.argv[1]
+	generated_path = sys.argv[2]
+	model_name = sys.argv[3]
+	solutions_per_problem = int(sys.argv[4])
 	
 	# Check if the given folder path exists
-	if os.path.exists(folder_path):
+	if os.path.exists(problems_path):
 		# Iterate through the items in the folder
-		for item in os.listdir(folder_path):
-			item_path = os.path.join(folder_path, item)
-			# If the item is a directory (subfolder), print its path
+		for item in os.listdir(problems_path):
+			item_path = os.path.join(problems_path, item)
+			generated_path = os.path.join(generated_path, model_name).join(item)
+			
 			if os.path.isdir(item_path):
-				handle_problem_directory(item_path, "/Users/morgang/code/GenerativeCompilation/test_driver.c")
+
+				for solution_number in range(1, solutions_per_problem + 1):
+					solution_name = f"{solution_number:02}"  # Formats the number as a two-digit string
+					solution_path = os.path.join(generated_path, solution_name)
+
+					handle_problem_directory(item_path, solution_path, "/Users/morgang/code/GenerativeCompilation/test_driver.c")
 	else:
-		print("The provided folder path does not exist.")
+		print("The provided problems folder path does not exist.")

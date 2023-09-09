@@ -5,10 +5,13 @@ import os
 def terminate_debugged_process(pid):
 	"""Send a signal to terminate the specified process."""
 	os.kill(pid, signal.SIGTERM)
-
-def handle_exception_or_crash(process):	
+	
+def get_full_process_state(process, args):	
 	description = ""
-
+	
+	# Get the command-line arguments of the target
+	description += f"Command-line Arguments: {args}\n"
+	
 	# Detailed information about the thread that caused the crash
 	for thread in process:
 		if thread.GetStopReason() == lldb.eStopReasonException:
@@ -23,48 +26,44 @@ def handle_exception_or_crash(process):
 					if child_register.IsValid():
 						description += f"{child_register.GetName()} = {child_register.GetValue()}\n"
 			
-			# Get a backtrace of the thread
-			description += "Backtrace:\n"
-			for frame in thread.frames:
-				description += str(frame) + "\n"
-				
 			description += f"Thread {thread.GetIndexID()} Stop Reason: {thread.GetStopDescription(1000)}\n"
 	
-	return False, description
+		# Get a backtrace of the thread
+		description += f"Thread {thread.GetThreadID()} Backtrace:\n"
+		for frame in thread.frames:
+			description += str(frame) + "\n"
+
+	return description
 
 
 def launch_process_with_debugging(binary_path, args=[], max_cpu_time=2147483647):
-	# Initialize the debugger
 	debugger = lldb.SBDebugger.Create()
 	debugger.SetAsync(True)
-	
-	# Create a target from a file and arch
 	target = debugger.CreateTarget(binary_path)
 	if not target:
 		return False, f"Failed to create target for {binary_path}"
-
-	# Set up launch info
-	launch_info = lldb.SBLaunchInfo(args)
 	
-	# Launch the process using launch info.
+	launch_info = lldb.SBLaunchInfo(args)
 	listener = debugger.GetListener()
 	error = lldb.SBError()
 	process = target.Launch(launch_info, error)
 	if not error.Success():
 		return False, f"Error launching process: {error.GetCString()}"
-
-	# Set the timer
+	
+	max_cpu_time_hit = False
+	
 	def alarm_handler(signum, frame):
-		terminate_debugged_process(process.GetProcessID())
-		raise SystemExit("Time limit reached")
-
+		nonlocal max_cpu_time_hit
+		max_cpu_time_hit = True
+		process.Stop()
+		raise SystemExit(f"Time limit reached\n\n")
+	
 	signal.signal(signal.SIGALRM, alarm_handler)
 	signal.alarm(max_cpu_time)
-
+	
 	accumulated_stdout = ""
 	accumulated_stderr = ""
 	
-	# Main event handling loop
 	event = lldb.SBEvent()
 	try:
 		while True:
@@ -76,39 +75,29 @@ def launch_process_with_debugging(binary_path, args=[], max_cpu_time=2147483647)
 					while stdout:
 						accumulated_stdout += stdout
 						stdout = process.GetSTDOUT(1000)
-
+	
 					stderr = process.GetSTDERR(1000)
 					while stderr:
 						accumulated_stderr += stderr
 						stderr = process.GetSTDERR(1000)
-					
+	
 					exit_status = process.GetExitStatus()
+					signal.alarm(0)
 					if exit_status != 0:
-						signal.alarm(0)
 						return False, accumulated_stdout + accumulated_stderr
 					else:
-						break
-				
+						return True, accumulated_stdout + accumulated_stderr
 				elif state == lldb.eStateCrashed:
-					return handle_exception_or_crash(process)
-			if lldb.SBProcess.EventIsProcessEvent(event):
-					state = lldb.SBProcess.GetStateFromEvent(event)
-					if state == lldb.eStateExited:
-						print(f"Process exited with status: {process.GetExitStatus()}")
-						break
-					elif state == lldb.eStateStopped:
-						num_threads = process.GetNumThreads()
-						for i in range(num_threads):
-							thread = process.GetThreadAtIndex(i)
-							if thread.GetStopReason() == lldb.eStopReasonException:
-								signal.alarm(0)
-								return handle_exception_or_crash(process)
-					elif state == lldb.eStateRunning:
-						continue
-
+					signal.alarm(0)
+					return False, get_full_process_state(process, args)
+				elif state == lldb.eStateStopped:
+					if max_cpu_time_hit:
+						signal.alarm(0)
+						return False, f"CPU time limit reached: {max_cpu_time}s\n\n{get_full_process_state(process, args)}"
+	
 	except SystemExit as e:
-		return False, f"CPU time limit reached: {max_cpu_time}s"
-
+		return False, f"CPU time limit reached: {max_cpu_time}s\n\n{get_full_process_state(process, args)}"
+	
 	# Disable the alarm at the end
 	signal.alarm(0)
 	
