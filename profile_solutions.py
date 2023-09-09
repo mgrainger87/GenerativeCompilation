@@ -3,6 +3,7 @@ import os
 import compilation
 import testing
 import csv
+from run_context import RunContext
 
 def test_individual_assembly(driver_object_path, assembly_path, test_data_path, iterations=None):
 	success, compiler_error, compilation_unit_path = compilation.compile_source(assembly_path)
@@ -53,8 +54,8 @@ def test_assembly_files(generatedDirectoryPath, asm_files, driverObjectPath, tes
 			cpu_times_dict[filename] = cpu_time
 
 
-def handle_problem_directory(problem_directory_path, test_driver_source_path):
-	results_csv_path = os.path.join(problem_directory_path, 'performance_results.csv')
+def profile_run(run_context, test_driver_source_path):
+	results_csv_path = run_context.profilingResultsPath()
 	
 	if os.path.exists(results_csv_path):
 		print(f"Already have profiling results for {problem_directory_path}.")
@@ -62,20 +63,19 @@ def handle_problem_directory(problem_directory_path, test_driver_source_path):
 
 	print(f"Working on problem in directory {problem_directory_path}…")
 	
-	codePath = os.path.join(problem_directory_path, "compilation_unit.c")
+	codePath = run_context.compilationUnitPath()
 	
 	# Compile the driver
-	driverObjectPath = "/Users/morgang/code/GenerativeCompilation/test_driver.o"
 	success, errorMessage, driverObjectPath = compilation.compile_source(test_driver_source_path)
 	if not success:
 		print(errorMessage)
 		return
 		
-	testDataPath = os.path.join(problem_directory_path, "test_data.csv")
+	testDataPath = run_context.testDataPath()
 		
-	generatedDirectoryPath = os.path.join(problem_directory_path, "generated")
+	generatedDirectoryPath = run_context.generatedDirectoryPath
 	if not os.path.exists(generatedDirectoryPath):
-		print("Solutions have not been generated.")
+		print(f"Solutions have not been generated in {generatedDirectoryPath}.")
 		return
 
 	# List all files in the generated directory and filter for .asm files
@@ -117,16 +117,12 @@ if __name__ == "__main__":
 		sys.exit(1)
 
 	folder_path = sys.argv[1]
+	
 
 	# Check if the given folder path exists
 	if os.path.exists(folder_path):
-		# Iterate through the directories and subdirectories in the folder
-		for root, dirs, _ in os.walk(folder_path):
-			for dir in dirs:
-				dir_path = os.path.join(root, dir)
-				
-				# If the directory contains .asm files, call handle_problem_directory
-				if contains_asm_files(dir_path):
-					handle_problem_directory(dir_path, "/Users/morgang/code/GenerativeCompilation/test_driver.c")
+		run_contexts = RunContext.RunContextsForDirectory(folder_path)
+		for context in run_context:
+			profile_run(context, "/Users/morgang/code/GenerativeCompilation/test_driver.c")
 	else:
 		print("The provided folder path does not exist.")
