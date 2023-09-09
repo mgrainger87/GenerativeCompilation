@@ -14,7 +14,7 @@ def extract_assembly(output: str) -> str:
 	
 	# Check if both markers are present
 	if start_index == -1 or end_index == -1:
-		return "Assembly markers not found!"
+		return None
 	
 	# Extract the assembly code
 	assembly_code = output[start_index + len(start_marker):end_index].strip()

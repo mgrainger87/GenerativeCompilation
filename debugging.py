@@ -84,6 +84,7 @@ def launch_process_with_debugging(binary_path, args=[], max_cpu_time=2147483647)
 					
 					exit_status = process.GetExitStatus()
 					if exit_status != 0:
+						signal.alarm(0)
 						return False, accumulated_stdout + accumulated_stderr
 					else:
 						break
@@ -100,6 +101,7 @@ def launch_process_with_debugging(binary_path, args=[], max_cpu_time=2147483647)
 						for i in range(num_threads):
 							thread = process.GetThreadAtIndex(i)
 							if thread.GetStopReason() == lldb.eStopReasonException:
+								signal.alarm(0)
 								return handle_exception_or_crash(process)
 					elif state == lldb.eStateRunning:
 						continue

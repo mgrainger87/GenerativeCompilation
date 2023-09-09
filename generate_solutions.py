@@ -93,11 +93,11 @@ def prompt_llm(prompt):
 def prompt_llm_based_on_results(querier, initial_prompt, compilerError, linkerError, testingError):
 	prompt = initial_prompt
 	if compilerError is not None:
-		prompt=f"Unfortunately, I got a compilation error:\n{compilerError}\n Fix the error. Remember: {ASSEMBLY_GUIDELINES}"
+		prompt=f"Unfortunately, I got a compilation error:\n{compilerError}\n Fix the error. Remember to mark the beginning and end of the final generated assembly with lines containing ---ASSEMBLY BEGIN--- and ---ASSEMBLY END--- respectively."
 	elif linkerError is not None:
-		prompt=f"Unfortunately, I got a linker error:\n{linkerError}\n Fix the error. After fixing the error, print out the corrected assembly. Go it through it line by line, asking this question for each line: is this valid arm64 assembly for macOS? Also examine the program as a whole to identify errors or incompatibilities."
+		prompt=f"Unfortunately, I got a linker error:\n{linkerError}\n Fix the error. After fixing the error, print out the corrected assembly. Go it through it line by line, asking this question for each line: is this valid arm64 assembly for macOS? Also examine the program as a whole to identify errors or incompatibilities. Remember to mark the beginning and end of the final generated assembly with lines containing ---ASSEMBLY BEGIN--- and ---ASSEMBLY END--- respectively."
 	elif testingError is not None:
-		prompt=f"Unfortunately, I got an incorrect result when testing the generated code:\n{testingError}\nTrace through the optimized assembly with these inputs to find the problem. If, at any time, you find an error, correct the assembly, print out the new assembly, and then trace again starting at the beginning."
+		prompt=f"Unfortunately, I got an incorrect result when testing the generated code:\n{testingError}\nTrace through the optimized assembly to find the problem. If, at any time, you find an error, correct the assembly, print out the new assembly, and then trace again starting at the beginning. Remember to mark the beginning and end of the final generated assembly with lines containing ---ASSEMBLY BEGIN--- and ---ASSEMBLY END--- respectively."
 
 	#return prompt_llm(prompt)
 	return querier.generateAssembly(prompt)
@@ -167,6 +167,14 @@ def generate_assembly_from_compilation_unit_source(code_path, driver_object_path
 		
 		while True:
 			assembly = prompt_llm_based_on_results(querier, generation_prompt(code), compiler_error, linker_error, testing_error)
+
+			if assembly is None:
+				# Didn't work — restart the conversation
+				compiler_error = None
+				linker_error = None
+				testing_error = None
+				querier = query_llm.LLMQuerier()
+				continue
 			
 			success, compiler_error, linker_error, testing_error = compile_and_test_assembly(assembly, driver_object_path, test_data_path, output_path)
 			if not success:
@@ -189,11 +197,19 @@ def optimize_assembly(compilation_unit_path, assembly_path, driver_object_path, 
 	testing_error = None
 	assembly = None
 	
-	
+	querier = query_llm.LLMQuerier()
 	
 	while True:
-		assembly = prompt_llm_based_on_results(prompt, compiler_error, linker_error, testing_error)
+		assembly = prompt_llm_based_on_results(querier, prompt, compiler_error, linker_error, testing_error)
 		
+		if assembly is None:
+			# Didn't work — restart the conversation
+			compiler_error = None
+			linker_error = None
+			testing_error = None
+			querier = query_llm.LLMQuerier()
+			continue
+
 		success, compiler_error, linker_error, testing_error = compile_and_test_assembly(assembly, driver_object_path, test_data_path, output_path)
 		if not success:
 			continue
