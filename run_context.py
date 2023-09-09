@@ -16,9 +16,12 @@ class ModelContext:
 
 	def generatedPath(self):
 		return self.__get_path('generated', self.__model)
-
+		
 	def analysisPath(self):
 		return self.__get_path('analysis', self.__model)
+		
+	def markdownSummaryPath(self):
+		return os.path.join(self.analysisPath(), "charts.md")
 		
 	@classmethod
 	def ModelContextsForDirectory(cls, rootDirectory):
