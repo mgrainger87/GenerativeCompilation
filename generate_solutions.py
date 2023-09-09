@@ -21,6 +21,9 @@ ASSEMBLY_GUIDELINES = """
 - Use appropriate register widths for an LP64 architecture, where integers are 32 bits.
 """
 
+CODE_FORMAT_REMINDERS = """Remember to mark the beginning and end of the final generated assembly with lines containing ---ASSEMBLY BEGIN--- and ---ASSEMBLY END--- respectively. Do this when you first print out the assembly -- do not repeat it just to add these markers.
+"""
+
 def test_data_prompt(compilation_unit):
 	return f"""For the C function “customFunction” below, generate 10 test cases that exercise its functionality.
 	
@@ -93,11 +96,11 @@ def prompt_llm(prompt):
 def prompt_llm_based_on_results(querier, initial_prompt, compilerError, linkerError, testingError):
 	prompt = initial_prompt
 	if compilerError is not None:
-		prompt=f"Unfortunately, I got a compilation error:\n{compilerError}\n Fix the error. Remember to mark the beginning and end of the final generated assembly with lines containing ---ASSEMBLY BEGIN--- and ---ASSEMBLY END--- respectively."
+		prompt=f"Unfortunately, I got a compilation error:\n{compilerError}\n Fix the error.\n{CODE_FORMAT_REMINDERS}"
 	elif linkerError is not None:
-		prompt=f"Unfortunately, I got a linker error:\n{linkerError}\n Fix the error. After fixing the error, print out the corrected assembly. Go it through it line by line, asking this question for each line: is this valid arm64 assembly for macOS? Also examine the program as a whole to identify errors or incompatibilities. Remember to mark the beginning and end of the final generated assembly with lines containing ---ASSEMBLY BEGIN--- and ---ASSEMBLY END--- respectively."
+		prompt=f"Unfortunately, I got a linker error:\n{linkerError}\n Fix the error. After fixing the error, print out the corrected assembly. Go it through it line by line, asking this question for each line: is this valid arm64 assembly for macOS? Also examine the program as a whole to identify errors or incompatibilities.\n{CODE_FORMAT_REMINDERS}"
 	elif testingError is not None:
-		prompt=f"Unfortunately, I got an incorrect result when testing the generated code:\n{testingError}\nTrace through the optimized assembly to find the problem. If, at any time, you find an error, correct the assembly, print out the new assembly, and then trace again starting at the beginning. Remember to mark the beginning and end of the final generated assembly with lines containing ---ASSEMBLY BEGIN--- and ---ASSEMBLY END--- respectively."
+		prompt=f"Unfortunately, I got an incorrect result when testing the generated code:\n{testingError}\nTrace through the optimized assembly to find the problem. If, at any time, you find an error, correct the assembly, print out the new assembly, and then trace again starting at the beginning.\n{CODE_FORMAT_REMINDERS}"
 
 	#return prompt_llm(prompt)
 	return querier.generateAssembly(prompt)

@@ -30,10 +30,10 @@ def extract_assembly(output: str) -> str:
 class LLMQuerier:
 	def __init__(self):
 		self.llm = OpenAI(
-		  model_name="gpt-3.5-turbo-16k", # default model
+		  model_name="gpt-4",
 		  temperature=0.9)
 		  
-		template = """The following is a conversation between a helpful and logical assistant who is skilled at generating computer assembly language and are working with a human to generate assembly language in a conversation style. When asked,the AI generates arm64 assembly that compiles on macOS. It explains its thought process as much as possible before generating the assembly. It marks the beginning and end of the final generated assembly with lines containing ---ASSEMBLY BEGIN--- and ---ASSEMBLY END--- respectively. When making changes, it always outputs the full complete assembly again.
+		template = """The following is a conversation between a helpful and logical assistant who is skilled at generating computer assembly language and are working with a human to generate assembly language in a conversation style. When asked,the AI generates arm64 assembly that compiles on macOS. It explains its thought process as much as possible before generating the assembly. It marks the beginning and end of the final generated assembly with lines containing ---ASSEMBLY BEGIN--- and ---ASSEMBLY END--- respectively. When making changes, it always outputs the full complete assembly.
 		
 		Current conversation:
 		{history}
