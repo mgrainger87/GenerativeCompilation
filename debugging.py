@@ -94,6 +94,14 @@ def launch_process_with_debugging(binary_path, args=[], max_cpu_time=2147483647)
 					if max_cpu_time_hit:
 						signal.alarm(0)
 						return False, f"CPU time limit reached: {max_cpu_time}s\n\n{get_full_process_state(process, args)}"
+						
+					num_threads = process.GetNumThreads()
+					for i in range(num_threads):
+						thread = process.GetThreadAtIndex(i)
+						if thread.GetStopReason() == lldb.eStopReasonException:
+							signal.alarm(0)
+							return False, get_full_process_state(process, args)
+
 	
 	except SystemExit as e:
 		return False, f"CPU time limit reached: {max_cpu_time}s\n\n{get_full_process_state(process, args)}"

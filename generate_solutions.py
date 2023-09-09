@@ -294,8 +294,9 @@ if __name__ == "__main__":
 		# Iterate through the items in the folder
 		for item in os.listdir(problems_path):
 			item_path = os.path.join(problems_path, item)
-			generated_path = os.path.join(generated_path, model_name).join(item)
-			
+			generated_path = os.path.join(os.path.join(generated_path, model_name), item)
+			print(f"Generated path: {generated_path}")
+
 			if os.path.isdir(item_path):
 
 				for solution_number in range(1, solutions_per_problem + 1):
