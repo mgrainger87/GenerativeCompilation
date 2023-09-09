@@ -74,7 +74,7 @@ def generate_error_count_csv(modelContext, combined_df):
     output_path = modelContext.errorCountPath()
     df_output.to_csv(output_path, index=False)
     
-    return output_path
+    return df_output
 
 def generate_barcharts(modelContext, combined_df):
     # Renaming 'Filename' values and column name
@@ -154,6 +154,67 @@ def generate_barcharts(modelContext, combined_df):
     plt.savefig(os.path.join(modelContext.analysisPath(), 'average_performance_overall.png'))
     plt.close()
     pass
+    
+def generate_latex_pgfplots_code(df):
+    # Start building the LaTeX code
+    latex_code = r"""
+\begin{tikzpicture}
+\begin{axis}[
+    ybar stacked,
+    symbolic x coords={""" 
+    
+    # Add problem types to x coords
+    problems = df['Problem'].unique()
+    for problem in problems:
+        latex_code += f"{problem},"
+    latex_code = latex_code[:-1]  # Remove trailing comma
+    
+    latex_code += r"""},
+    xtick=data,
+    ylabel={Number of Errors},
+    legend pos=north west,
+    legend cell align={left},
+    legend style={draw=none}
+]
+
+\addplot+[ybar] plot coordinates {"""
+    
+    # Add Compilation Errors data
+    for _, row in df.iterrows():
+        latex_code += f"({row['Problem']},{row['Compilation Errors']})"
+    latex_code += r"""};
+\addlegendentry{Compilation Errors}
+
+\addplot+[ybar] plot coordinates {"""
+    
+    # Add Linking Errors data
+    for _, row in df.iterrows():
+        latex_code += f"({row['Problem']},{row['Linking Errors']})"
+    latex_code += r"""};
+\addlegendentry{Linking Errors}
+
+\addplot+[ybar] plot coordinates {"""
+    
+    # Add Execution Errors data
+    for _, row in df.iterrows():
+        latex_code += f"({row['Problem']},{row['Execution Errors']})"
+    latex_code += r"""};
+\addlegendentry{Execution Errors}
+
+\addplot+[ybar] plot coordinates {"""
+    
+    # Add Correctness Errors data
+    for _, row in df.iterrows():
+        latex_code += f"({row['Problem']},{row['Correctness Errors']})"
+    latex_code += r"""};
+\addlegendentry{Correctness Errors}
+
+\end{axis}
+\end{tikzpicture}
+"""
+
+    with open(modelContext.errorLaTeXGraphPath(), "w") as output_file:
+        output_file.write(latex_code)
 
 def generate_markdown(modelContext):
     markdown_content = ""
@@ -202,7 +263,8 @@ if __name__ == "__main__":
             generate_markdown(modelContext)
             dataframe = generate_dataframes(modelContext)
             generate_barcharts(modelContext, dataframe)
-            generate_error_count_csv(modelContext, dataframe)
+            error_df = generate_error_count_csv(modelContext, dataframe)
+            generate_latex_pgfplots_code(error_df)
     else:
         print("The provided folder path does not exist.")
 

@@ -26,6 +26,9 @@ class ModelContext:
 	def errorCountPath(self):
 		return os.path.join(self.analysisPath(), "error_counts.csv")
 		
+	def errorLaTeXGraphPath(self):
+		return os.path.join(self.analysisPath(), "error_counts.tex")
+		
 	@classmethod
 	def ModelContextsForDirectory(cls, rootDirectory):
 		modelContexts = []
