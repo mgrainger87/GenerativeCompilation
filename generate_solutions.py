@@ -91,9 +91,9 @@ def unique_file_path(filepath):
 def prompt_llm_based_on_results(querier, initial_prompt, compilerError, linkerError, executionError, correctnessError, foundSolution=False):
 	prompt = initial_prompt
 	if compilerError is not None:
-		prompt=f"Unfortunately, I got a compilation error:\n{compilerError}\n Fix the error.\n{CODE_FORMAT_REMINDERS}"
+		prompt=f"Unfortunately, I got a compilation error:\n{compilerError}\n Fix the error. Print out the full assembly after fixing it.\n{CODE_FORMAT_REMINDERS}"
 	elif linkerError is not None:
-		prompt=f"Unfortunately, I got a linker error:\n{linkerError}\n Fix the error.\n{CODE_FORMAT_REMINDERS}"
+		prompt=f"Unfortunately, I got a linker error:\n{linkerError}\n Fix the error. Print out the full assembly after fixing it.\n{CODE_FORMAT_REMINDERS}"
 	elif executionError is not None:
 		prompt=f"Unfortunately, I got an error when runnning the generated code:\n{executionError}\nTrace through the optimized assembly line-by-line to find the problem. If, at any time, you find an error, correct the assembly, print out the new assembly, and then trace again starting at the beginning.\n{CODE_FORMAT_REMINDERS}"
 	elif correctnessError is not None:
@@ -156,21 +156,21 @@ def generate_test_data_from_compilation_unit_source(code_path, test_data_path):
 		f.write("\n")
 	
 
-def generate_assembly_from_compilation_unit_source(code_path, driver_object_path, test_data_path, output_path, optimizations_per_solution):
+def generate_assembly_from_compilation_unit_source(code_path, driver_object_path, test_data_path, output_path, failure_path, optimizations_per_solution):
 	with open(code_path, "r") as codeFile:
 		code = codeFile.read()
 		
-	return prompt_for_assembly(generation_prompt(code), driver_object_path, test_data_path, output_path, optimizations_per_solution)
+	return prompt_for_assembly(generation_prompt(code), driver_object_path, test_data_path, output_path, failure_path, optimizations_per_solution)
 
-def optimize_assembly(compilation_unit_path, assembly_path, driver_object_path, test_data_path, output_path, optimizations_per_solution):
+def optimize_assembly(compilation_unit_path, assembly_path, driver_object_path, test_data_path, output_path, failure_path, optimizations_per_solution):
 	with open(compilation_unit_path, "r") as compilationUnitFile, open(assembly_path, "r") as assemblyFile:
 		compilation_unit = compilationUnitFile.read()
 		unoptimized_assembly = assemblyFile.read()
 		prompt = optimization_prompt(compilation_unit, unoptimized_assembly)
 	
-	return prompt_for_assembly(prompt, driver_object_path, test_data_path, output_path, optimizations_per_solution)
+	return prompt_for_assembly(prompt, driver_object_path, test_data_path, output_path, failure_path, optimizations_per_solution)
 
-def prompt_for_assembly(base_prompt, driver_object_path, test_data_path, output_path, optimizations_per_solution):
+def prompt_for_assembly(base_prompt, driver_object_path, test_data_path, output_path, failure_path, optimizations_per_solution):
 	compiler_error = None
 	linker_error = None
 	execution_error = None
@@ -214,6 +214,10 @@ def prompt_for_assembly(base_prompt, driver_object_path, test_data_path, output_
 			correctness_error_count += 1
 	
 		if not success:
+			unique_path, number_of_failures = unique_file_path(failure_path)
+			with open(unique_path, 'w') as f:
+				f.write(assembly)
+				f.write("\n")
 			continue
 		
 		unique_path, number_of_solutions = unique_file_path(output_path)
@@ -304,18 +308,19 @@ def handle_problem_run(run_context, test_driver_source_path, optimizations_per_s
 	
 	# Have LLM generate assembly from C compilation unit
 	generatedAssemblyPath = os.path.join(generatedDirectoryPath, "llm_generated.asm")
-	print(generatedAssemblyPath)
+	failurePath = os.path.join(run_context.failurePath(), "generation_failure.asm")
 	if has_file_with_prefix(generatedDirectoryPath, "llm_generated"):
 		print(f"Already have generated assembly at {generatedAssemblyPath}.")
 	else:
-		generate_assembly_from_compilation_unit_source(codePath, driverObjectPath, testDataPath, generatedAssemblyPath, optimizations_per_solution)
+		generate_assembly_from_compilation_unit_source(codePath, driverObjectPath, testDataPath, generatedAssemblyPath, failurePath, optimizations_per_solution)
 	
 	# Have LLM optimize Clang-generated assembly	
 	optimizedClangAssemblyPath = os.path.join(generatedDirectoryPath, "clang_generated_llm_optimized.asm")
+	failurePath = os.path.join(run_context.failurePath(), "optimization_failure.asm")
 	if has_file_with_prefix(generatedDirectoryPath, "clang_generated_llm_optimized"):
 		print(f"Already have output for {optimizedClangAssemblyPath}.")
 	else:
-		optimize_assembly(codePath, unoptimizedClangAssemblyPath, driverObjectPath, testDataPath, optimizedClangAssemblyPath, optimizations_per_solution)
+		optimize_assembly(codePath, unoptimizedClangAssemblyPath, driverObjectPath, testDataPath, optimizedClangAssemblyPath, failurePath, optimizations_per_solution)
 	
 def handle_problem(problemContext, solutions_per_problem, optimizations_per_solution):
 	for runContext in problemContext.GetRunContexts(solutions_per_problem):
