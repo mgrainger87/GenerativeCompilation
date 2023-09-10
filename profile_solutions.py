@@ -171,7 +171,7 @@ if __name__ == "__main__":
 		for problemContext in problem_contexts:
 			profilingResultsPaths = []
 
-			for runContext in problemContext.GetRunContexts():
+			for runContext in problemContext.GetExistingRunContexts():
 				profile_run(runContext, "/Users/morgang/code/GenerativeCompilation/test_driver.c")
 				profilingResultsPaths.append(runContext.profilingResultsPath())
 				

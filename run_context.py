@@ -118,7 +118,7 @@ class ProblemContext:
 				problemsData.append(problemContext)
 		return problemsData
 					
-	def GetRunContexts(self):
+	def GetExistingRunContexts(self):
 		run_contexts = []
 		
 		# Assuming the structure is: generatedPath/model/problemNumber/runNumber
@@ -189,6 +189,9 @@ class RunContext:
 	
 	def testDataPath(self):
 		return os.path.join(self.problemPath(), "test_data.csv")
+		
+	def profilingResultsPath(self):
+		return os.path.join(self.profilingPath(), "performance_results.csv")
 
 	@classmethod
 	def RunContextsForDirectory(cls, rootDirectory):
