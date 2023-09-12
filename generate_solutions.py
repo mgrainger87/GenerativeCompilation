@@ -178,7 +178,7 @@ def optimize_assembly(compilation_unit_path, assembly_path, driver_object_path, 
 
 def add_semicolon_at_start(input_string):
 	lines = input_string.split('\n')
-	modified_lines = [';' + line for line in lines]
+	modified_lines = ['; ' + line for line in lines]
 	return '\n'.join(modified_lines)
 
 def prompt_for_assembly(base_prompt, driver_object_path, test_data_path, output_path, failure_path, optimizations_per_solution):
@@ -199,6 +199,12 @@ def prompt_for_assembly(base_prompt, driver_object_path, test_data_path, output_
 	
 	while True:
 		assembly = prompt_llm_based_on_results(querier, base_prompt, compiler_error, linker_error, execution_error, correctness_error, found_solution)
+		
+		if assembly.strip().lower() == "fail":
+			unique_path, number_of_solutions = unique_file_path(output_path)
+			with open(unique_path, 'w') as f:
+				f.write("Manually failed.\n")
+			break
 		
 		if assembly is None or len(assembly) == 0:
 			if found_solution:
@@ -227,10 +233,11 @@ def prompt_for_assembly(base_prompt, driver_object_path, test_data_path, output_
 		if not success:
 			unique_path, number_of_failures = unique_file_path(failure_path)
 			with open(unique_path, 'w') as f:
-				f.write(add_semicolon_at_start(f"Compiler error: {compiler_error}"))
-				f.write(add_semicolon_at_start(f"Linker error: {linker_error}"))
-				f.write(add_semicolon_at_start(f"Excecution error: {execution_error}"))
-				f.write(add_semicolon_at_start(f"Correctness error: {correctness_error}"))
+				f.write(add_semicolon_at_start(f"compiler_errors={compiler_error_count},linker_errors={linker_error_count},execution_errors={execution_error_count},correctness_errors={correctness_error_count}\n"))
+				f.write(add_semicolon_at_start(f"Compiler error: {compiler_error}\n"))
+				f.write(add_semicolon_at_start(f"Linker error: {linker_error}\n"))
+				f.write(add_semicolon_at_start(f"Execution error: {execution_error}\n"))
+				f.write(add_semicolon_at_start(f"Correctness error: {correctness_error}\n"))
 				f.write(assembly)
 				f.write("\n")
 			continue
