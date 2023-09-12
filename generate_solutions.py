@@ -97,13 +97,13 @@ def unique_file_path(filepath):
 def prompt_llm_based_on_results(querier, initial_prompt, compilerError, linkerError, executionError, correctnessError, foundSolution=False):
 	prompt = initial_prompt
 	if compilerError is not None:
-		prompt=f"Unfortunately, I got a compilation error:\n{compilerError}\n Fix the error. Print out the full assembly after fixing it.\n{CODE_FORMAT_REMINDERS}"
+		prompt=f"When attempting to translate the assembly provided, I got the following error.\n{compilerError}\n Fix the error and print out the full corrected assembly. Examine the corrected assembly line-by-line to ensure that it will compile.\n{CODE_FORMAT_REMINDERS}"
 	elif linkerError is not None:
-		prompt=f"Unfortunately, I got a linker error:\n{linkerError}\n Fix the error. Print out the full assembly after fixing it.\n{CODE_FORMAT_REMINDERS}"
+		prompt=f"When attempting to link the assembly you provided to the test driver, I got the following error.\n{linkerError}\nFix the error and print out the full corrected assembly. Examine the corrected assembly line-by-line to identify any other linking errors.\n{CODE_FORMAT_REMINDERS}"
 	elif executionError is not None:
-		prompt=f"Unfortunately, I got an error when runnning the generated code:\n{executionError}\nTrace through the optimized assembly line-by-line to find the problem. If, at any time, you find an error, correct the assembly, print out the new assembly, and then trace again starting at the beginning.\n{CODE_FORMAT_REMINDERS}"
+		prompt=f"\n{executionError}\n{CODE_FORMAT_REMINDERS}"
 	elif correctnessError is not None:
-		prompt=f"Unfortunately, I got an incorrect result when testing the generated code:\n{correctnessError}\nTrace through the optimized assembly line-by-line to find the problem. If, at any time, you find an error, correct the assembly, print out the new assembly, and then trace again starting at the beginning.\n{CODE_FORMAT_REMINDERS}"
+		prompt=f"When attempting to translate the assembly you provided with the input given below, I got an incorrect result:\n{correctnessError}\nFix the error and print out the full corrected assembly. Trace through the corrected assembly line-by-line with the given input to make sure it now returns the correct answer.\n{CODE_FORMAT_REMINDERS}"
 	elif foundSolution:
 		prompt = f"Try to (further) optimize the solution so that it runs more quickly."
 
@@ -219,19 +219,27 @@ def prompt_for_assembly(base_prompt, driver_object_path, test_data_path, output_
 			continue
 	
 		success, compiler_error, linker_error, execution_error, correctness_error = compile_and_test_assembly(assembly, driver_object_path, test_data_path, output_path)
-		
+		filename_string = None
 		# Update error counters
 		if compiler_error:
 			compiler_error_count += 1
+			filename_string = "COMPILER"
 		if linker_error:
 			linker_error_count += 1
+			filename_string = "LINKER"
 		if execution_error:
 			execution_error_count += 1
+			filename_string = "EXECUTION"
 		if correctness_error:
 			correctness_error_count += 1
+			filename_string = "CORRECTNESS"
 	
 		if not success:
 			unique_path, number_of_failures = unique_file_path(failure_path)
+			if filename_string:
+				base, ext = os.path.splitext(filepath)
+				unique_path = f"{base}_{filename_string}{ext}"
+			
 			with open(unique_path, 'w') as f:
 				f.write(add_semicolon_at_start(f"compiler_errors={compiler_error_count},linker_errors={linker_error_count},execution_errors={execution_error_count},correctness_errors={correctness_error_count}\n"))
 				f.write(add_semicolon_at_start(f"Compiler error: {compiler_error}\n"))

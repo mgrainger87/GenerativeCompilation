@@ -35,20 +35,22 @@ def get_full_process_state(process, args):
 
 	return description
 
+def full_error_text(process, args, specific_error):
+	return f"When executing the assembly you provided with the input values below, {specific_error}. Examine the stack trace below and compare each value in register state to find errors. If needed, trace through the generated assembly line-by-line with the provided input values. Fix the error and print out the full corrected assembly. Trace through the corrected assembly line-by-line with the provided input values to make sure it executes successfully and returns the correct answer. \n\n{get_full_process_state(process, args)}"
 
 def launch_process_with_debugging(binary_path, args=[], max_cpu_time=2147483647):
 	debugger = lldb.SBDebugger.Create()
 	debugger.SetAsync(True)
 	target = debugger.CreateTarget(binary_path)
 	if not target:
-		return False, f"Failed to create target for {binary_path}"
+		return False, f"Failed to create target for {binary_path}", None
 	
 	launch_info = lldb.SBLaunchInfo(args)
 	listener = debugger.GetListener()
 	error = lldb.SBError()
 	process = target.Launch(launch_info, error)
 	if not error.Success():
-		return False, f"Error launching process: {error.GetCString()}"
+		return False, f"Error launching process: {error.GetCString()}", None
 	
 	max_cpu_time_hit = False
 	
@@ -90,22 +92,25 @@ def launch_process_with_debugging(binary_path, args=[], max_cpu_time=2147483647)
 						return True, None, accumulated_stdout + accumulated_stderr
 				elif state == lldb.eStateCrashed:
 					signal.alarm(0)
-					return False, get_full_process_state(process, args)
+					return False, full_error_text(process, args, "the program crashed"), None
 				elif state == lldb.eStateStopped:
 					if max_cpu_time_hit:
 						signal.alarm(0)
-						return False, f"CPU time limit reached: {max_cpu_time}s\n\n{get_full_process_state(process, args)}", None
+						return False, full_error_text(process, args, "the program ran forever"), None
 						
 					num_threads = process.GetNumThreads()
 					for i in range(num_threads):
 						thread = process.GetThreadAtIndex(i)
 						if thread.GetStopReason() == lldb.eStopReasonException:
 							signal.alarm(0)
+							return False, full_error_text(process, args, "the program crashed"), None
+
 							return False, get_full_process_state(process, args), None
 
 	
 	except SystemExit as e:
-		return False, f"CPU time limit reached: {max_cpu_time}s\n\n{get_full_process_state(process, args)}"
+		return False, full_error_text(process, args, "the program ran forever"), None
+
 	
 	# Disable the alarm at the end
 	signal.alarm(0)
