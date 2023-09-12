@@ -176,6 +176,11 @@ def optimize_assembly(compilation_unit_path, assembly_path, driver_object_path, 
 	
 	return prompt_for_assembly(prompt, driver_object_path, test_data_path, output_path, failure_path, optimizations_per_solution)
 
+def add_semicolon_at_start(input_string):
+	lines = input_string.split('\n')
+	modified_lines = [';' + line for line in lines]
+	return '\n'.join(modified_lines)
+
 def prompt_for_assembly(base_prompt, driver_object_path, test_data_path, output_path, failure_path, optimizations_per_solution):
 	compiler_error = None
 	linker_error = None
@@ -222,10 +227,10 @@ def prompt_for_assembly(base_prompt, driver_object_path, test_data_path, output_
 		if not success:
 			unique_path, number_of_failures = unique_file_path(failure_path)
 			with open(unique_path, 'w') as f:
-				f.write(f"Compiler error: {compiler_error}")
-				f.write(f"Linker error: {linker_error}")
-				f.write(f"Excecution error: {execution_error}")
-				f.write(f"Correctness error: {correctness_error}")
+				f.write(add_semicolon_at_start(f"Compiler error: {compiler_error}"))
+				f.write(add_semicolon_at_start(f"Linker error: {linker_error}"))
+				f.write(add_semicolon_at_start(f"Excecution error: {execution_error}"))
+				f.write(add_semicolon_at_start(f"Correctness error: {correctness_error}"))
 				f.write(assembly)
 				f.write("\n")
 			continue
