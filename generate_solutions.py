@@ -13,13 +13,19 @@ from run_context import ModelContext, ProblemContext, RunContext
 COMPILATION_UNIT_FILE_NAME = "compilation_unit.c"
 
 ASSEMBLY_GUIDELINES = """
-- Follow the arm64 calling convention strictly. Write out which registers are used for which parameters before generating the assembly.
-- Preserve the values of caller-saved and/or callee-saved registers where necessary.
+
+- Follow the arm64 calling convention strictly. Preserve the values of caller-saved and/or callee-saved registers where necessary.
 - Mangle function names according to Clang conventions for C (not C++). Mark symbols as global where necessary. Align symbols appropriately for arm64.
-- Follow arm64 convention for local labels starting with a numeric value, which makes them assembler-local.
+- Follow arm64 convention for local labels starting with a numeric value.
 - Before branching for a function call, be sure to save all required registers.
-- Use only valid arm64 instructions. ARM64 assembly does not allow direct floating-point literals with the fadd instruction.
+- Use only valid arm64 instructions.
 - Use appropriate register widths for an LP64 architecture, where integers are 32 bits.
+
+Steps to follow:
+
+- Write out which registers are used for which parameters before generating the assembly.
+- After generating the assembly, check it again against the guidelines and correct it if needed.
+- Trace the assembly line-by-line with different test values that collectively exercise all of the control paths in the function.
 """
 
 CODE_FORMAT_REMINDERS = "" # """Remember to mark the beginning and end of the final generated assembly with lines containing ---ASSEMBLY BEGIN--- and ---ASSEMBLY END--- respectively. Do this when you first print out the assembly -- do not repeat it just to add these markers.
@@ -50,7 +56,7 @@ Function:
 """
 
 def generation_prompt(compilation_unit):
-	return f"""Generate arm64 LP64 assembly for macOS that corresponds to the C compilation unit below. Follow these guidelines:
+	return f"""Generate valid arm64 LP64 assembly for macOS that corresponds to the provided C compilation unit. Follow these guidelines:
 
 {ASSEMBLY_GUIDELINES}
 
@@ -64,7 +70,7 @@ Compilation unit:
 """
 
 def optimization_prompt(compilation_unit, unoptimized_assembly):
-	return f"""Optimize the provided arm64 assembly that corresponds to the provided C compilation unit.
+	return f"""Optimize the provided arm64 LP64 assembly for macOS that corresponds to the provided C compilation unit.
 
 Compilation unit:
 
@@ -216,6 +222,10 @@ def prompt_for_assembly(base_prompt, driver_object_path, test_data_path, output_
 		if not success:
 			unique_path, number_of_failures = unique_file_path(failure_path)
 			with open(unique_path, 'w') as f:
+				f.write(f"Compiler error: {compiler_error}")
+				f.write(f"Linker error: {linker_error}")
+				f.write(f"Excecution error: {execution_error}")
+				f.write(f"Correctness error: {correctness_error}")
 				f.write(assembly)
 				f.write("\n")
 			continue
