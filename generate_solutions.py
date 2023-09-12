@@ -233,12 +233,12 @@ def prompt_for_assembly(base_prompt, driver_object_path, test_data_path, output_
 		if correctness_error:
 			correctness_error_count += 1
 			filename_string = "CORRECTNESS"
+			
+		total_errors = compiler_error_count + linker_error_count + execution_error_count + correctness_error_count
 	
 		if not success:
-			unique_path, number_of_failures = unique_file_path(failure_path)
-			if filename_string:
-				base, ext = os.path.splitext(filepath)
-				unique_path = f"{base}_{filename_string}{ext}"
+			base, ext = os.path.splitext(failure_path)
+			unique_path = f"{base}_{total_errors}_{filename_string}{ext}"
 			
 			with open(unique_path, 'w') as f:
 				f.write(add_semicolon_at_start(f"compiler_errors={compiler_error_count},linker_errors={linker_error_count},execution_errors={execution_error_count},correctness_errors={correctness_error_count}\n"))
