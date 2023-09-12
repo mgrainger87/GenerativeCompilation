@@ -1,17 +1,19 @@
-; compiler_errors=0,linker_errors=0,execution_errors=4,correctness_errors=0
+; compiler_errors=0,linker_errors=1,execution_errors=5,correctness_errors=0
 ; ; Compiler error: None
 ; ; Linker error: None
-; ; Execution error: Command-line Arguments: ['int1=1000', 'int2=0', 'double1=1000.0', 'double2=0.0', 'expectedInt=1000', 'expectedDouble=1000.0', 'iterations=100']
+; ; Execution error: When executing the assembly you provided with the input values below, the program crashed. Examine the stack trace below and compare each value in register state to find errors. If needed, trace through the generated assembly line-by-line with the provided input values. Fix the error and print out the full corrected assembly. Trace through the corrected assembly line-by-line with the provided input values to make sure it executes successfully and returns the correct answer. 
+; 
+; Command-line Arguments: ['int1=1000', 'int2=0', 'double1=1000.0', 'double2=0.0', 'expectedInt=1000', 'expectedDouble=1000.0', 'iterations=100']
 ; Crash detected on thread 1:
 ; Registers:
 ; x0 = 0x00000000000003e8
 ; x1 = 0x0000000000000000
 ; x2 = 0x000000016fdff988
 ; x3 = 0x000000016fdff980
-; x4 = 0x0000000000000000
-; x5 = 0x000000016fdff950
+; x4 = 0x0000000000000064
+; x5 = 0x000000000000000a
 ; x6 = 0x000000000000000a
-; x7 = 0x0000000000000170
+; x7 = 0x0000000000000000
 ; x8 = 0x0000000000000000
 ; x9 = 0x0000000000000064
 ; x10 = 0x0000000000000002
@@ -23,7 +25,7 @@
 ; x16 = 0x00000001ac3e092c
 ; x17 = 0x000000020bfc7298
 ; x18 = 0x0000000000000000
-; x19 = 0x0000000100003a50
+; x19 = 0x0000000100003a58
 ; x20 = 0x000000010000c000
 ; x21 = 0x000000010000d910
 ; x22 = 0x000000016fdffb20
@@ -34,18 +36,18 @@
 ; x27 = 0x0000000000000000
 ; x28 = 0x0000000000000000
 ; fp = 0x000000016fdff940
-; lr = 0x0000000100003c78
+; lr = 0x0000000100003c80
 ; sp = 0x000000016fdff940
-; pc = 0x0000000100003958
+; pc = 0x0000000100003964
 ; cpsr = 0x80001000
 ; w0 = 0x000003e8
 ; w1 = 0x00000000
 ; w2 = 0x6fdff988
 ; w3 = 0x6fdff980
-; w4 = 0x00000000
-; w5 = 0x6fdff950
+; w4 = 0x00000064
+; w5 = 0x0000000a
 ; w6 = 0x0000000a
-; w7 = 0x00000170
+; w7 = 0x00000000
 ; w8 = 0x00000000
 ; w9 = 0x00000064
 ; w10 = 0x00000002
@@ -57,7 +59,7 @@
 ; w16 = 0xac3e092c
 ; w17 = 0x0bfc7298
 ; w18 = 0x00000000
-; w19 = 0x00003a50
+; w19 = 0x00003a58
 ; w20 = 0x0000c000
 ; w21 = 0x0000d910
 ; w22 = 0x6fdffb20
@@ -105,10 +107,10 @@
 ; s1 = 0
 ; s2 = 0
 ; s3 = 3.82047143E-37
-; s4 = 4.56680853E+14
-; s5 = -7.76871046E+18
-; s6 = 2.61523248E-9
-; s7 = -0.598931432
+; s4 = -7.99887717E+24
+; s5 = 1.47693926E-21
+; s6 = 3.79526513E-32
+; s7 = -587.666626
 ; s8 = 0
 ; s9 = 0
 ; s10 = 0
@@ -121,26 +123,26 @@
 ; s17 = 2.80259693E-45
 ; s18 = 1.08664755E-31
 ; s19 = 0
-; s20 = 4.56680853E+14
-; s21 = -7.76871046E+18
-; s22 = -3296.90625
-; s23 = 1.52252166E-9
-; s24 = 7.95724532E-7
-; s25 = 1.06234254E-14
-; s26 = 1.74105589E-20
-; s27 = 5.41358854E+33
-; s28 = -2.3269539E+23
-; s29 = 3.80650003E+35
-; s30 = 44.4143295
+; s20 = -7.99887717E+24
+; s21 = 1.47693926E-21
+; s22 = 1.71113911E-7
+; s23 = -1.14034397E+20
+; s24 = -0.23819311
+; s25 = 3.80062534E-29
+; s26 = -8.96352998E-30
+; s27 = -2.18530593E-25
+; s28 = 7.21395505E+22
+; s29 = -3.29192886E-30
+; s30 = 2.40034837E-19
 ; s31 = 0
 ; d0 = 1000
 ; d1 = 0
 ; d2 = 0
 ; d3 = 7.9499288951273625E-275
-; d4 = 2.2509166340602036E-177
-; d5 = -2.1753441523956064E-265
-; d6 = -1.770300235851397E+242
-; d7 = -1.6183535336133039E+47
+; d4 = 1.3520310506340691E+269
+; d5 = 2.7915317836517101E-282
+; d6 = -3.5498772433347774E+103
+; d7 = -1.8240546817033412E-163
 ; d8 = 0
 ; d9 = 0
 ; d10 = 0
@@ -153,36 +155,46 @@
 ; d17 = 9.8813129168249309E-324
 ; d18 = 5.9245434102707407E-270
 ; d19 = 0
-; d20 = 2.2509166340602036E-177
-; d21 = -2.1753441523956064E-265
-; d22 = -1.9116629107176799E-199
-; d23 = 4.5295884699860287E-128
-; d24 = 2.5617236671776147E+297
-; d25 = -482464.78930425498
-; d26 = 3.7933275318245012E+197
-; d27 = 1.8548815944461242E-266
-; d28 = 2.8697101191804517E-112
-; d29 = 2.2710438240363924E+42
-; d30 = 2.4590251943723684E+63
+; d20 = 1.3520310506340691E+269
+; d21 = 2.7915317836517101E-282
+; d22 = 2.6206729560523284E+32
+; d23 = 4447311.5120738614
+; d24 = 2.4183671868270458E+177
+; d25 = 1.1732120791424152E+241
+; d26 = -6.6651367815374772E-166
+; d27 = 3.7379728321800613E-73
+; d28 = -9.5894402746128766E-32
+; d29 = 2.0272444301632932E+69
+; d30 = 2.2638091516124666E+127
 ; d31 = 0
-; far = 0x0000000000000000
+; far = 0x0000000000000064
 ; esr = 0x92000046
 ; exception = 0x00000000
-; Thread 1 Stop Reason: EXC_BAD_ACCESS (code=1, address=0x0)
-; Thread 12592821 Backtrace:
-; frame #0: [33m0x0000000100003958[0m tmpmh9d1fo6`customFunction + 8
-; frame #1: [33m0x0000000100003c78[0m tmpmh9d1fo6`main + 552
+; Thread 1 Stop Reason: EXC_BAD_ACCESS (code=1, address=0x64)
+; Thread 12733680 Backtrace:
+; frame #0: [33m0x0000000100003964[0m tmpw1ylc15s`customFunction + 16
+; frame #1: [33m0x0000000100003c80[0m tmpw1ylc15s`main + 552
 ; frame #2: [33m0x00000001ac0c7f28[0m dyld`start + 2236
 ; 
 ; ; Correctness error: None
-; .globl _customFunction
+; .text
+.globl _customFunction
 .p2align 2
 _customFunction:
+.cfi_startproc
+
 stp x29, x30, [sp, #-16]!
-mov x29, sp
-str x0, [x4]
-sxtw x9, x5
-str d0, [x9]
+add x29, sp, #0
+.cfi_def_cfa w29, 16
+.cfi_offset w30, -8
+.cfi_offset w29, -16
+
+ldr x4, [sp, #16]
+mov x5, x6   // FIXED: load outDouble pointer from x6
+
+str w0, [x4]
+str d2, [x5]
 
 ldp x29, x30, [sp], #16
 ret
+.cfi_endproc
