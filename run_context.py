@@ -108,6 +108,12 @@ class ProblemContext:
 	def profilingResultsPath(self):
 		return os.path.join(self.profilingPath(), "performance_results.csv")
 		
+	def generationFailurePath(self):
+		return os.path.join(self.problemPath(), "generation_failure.asm")
+		
+	def optimizationFailurePath(self):
+		return os.path.join(self.problemPath(), "optimization_failure.asm")
+		
 	@classmethod
 	def ProblemContextsForDirectory(cls, rootDirectory):
 		problemsData = []

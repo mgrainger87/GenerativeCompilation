@@ -6,7 +6,8 @@
 ; ; Linker error: None
 ; ; Execution error: None
 ; ; Correctness error: None
-; .section	__TEXT,__text,regular,pure_instructions
+;
+.section	__TEXT,__text,regular,pure_instructions
 .build_version macos, 13, 0	sdk_version 13, 3
 .globl	_customFunction                 ; -- Begin function customFunction
 .p2align	2

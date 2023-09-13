@@ -8,7 +8,8 @@
 ; 
 ; ; Execution error: None
 ; ; Correctness error: None
-; .globl customFunction
+;
+.globl customFunction
 .text
 .p2align 4
 

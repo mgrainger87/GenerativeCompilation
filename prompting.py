@@ -1,9 +1,10 @@
 import os
+import compilation
 from query_llm import LLMQuerier
 from query_human import HumanQuerier
+import re
 
 ASSEMBLY_GUIDELINES = """
-
 - Follow the arm64 calling convention strictly. Preserve the values of caller-saved and/or callee-saved registers where necessary.
 - Mangle function names according to Clang conventions for C (not C++). Mark symbols as global where necessary. Align symbols appropriately for arm64.
 - Follow arm64 convention for local labels starting with a numeric value.
@@ -86,8 +87,11 @@ Compilation unit:
 ```
 {compilation_unit}
 ```
+
 Incorrect assembly:
+```
 {bad_assembly}
+```
 
 Error:
 {error}
@@ -98,12 +102,32 @@ Guidelines:
 
 """
 
+def remove_comments_from_assembly(assembly_string):
+	content = assembly_string.splitlines()
+
+	stripped_content = []
+	for line in content:
+		# Check for ; style comment
+		if ';' in line:
+			line = line.split(';', 1)[0]
+
+		# Check for // style comment
+		if '//' in line:
+			line = line.split('//', 1)[0]
+
+		# Append to the stripped_content list only if line is not empty
+		stripped_line = line.strip()
+		if stripped_line:
+			stripped_content.append(stripped_line)
+
+	# Join the list to form a string
+	return '\n'.join(stripped_content)
 
 def correct_existing_assembly(code_path, bad_assembly_path, compiler_error, linker_error, execution_error, correctness_error, driver_object_path, test_data_path, output_path, failure_path, optimizations_per_solution):
 	with open(code_path, "r") as codeFile:
 		code = codeFile.read()
 	with open(bad_assembly_path, "r") as assemblyFile:
-		badAssembly = assemblyFile.read()
+		badAssembly = remove_comments_from_assembly(assemblyFile.read())
 
 	return prompt_for_assembly(correction_prompt(code, badAssembly, compiler_error, linker_error, execution_error, correctness_error), driver_object_path, test_data_path, output_path, failure_path, optimizations_per_solution)
 
@@ -122,6 +146,7 @@ def optimize_assembly(compilation_unit_path, assembly_path, driver_object_path, 
 	return prompt_for_assembly(prompt, driver_object_path, test_data_path, output_path, failure_path, optimizations_per_solution)
 
 def get_error_instructions_based_on_results(compilerError, linkerError, executionError, correctnessError):
+	prompt = ""
 	if compilerError is not None:
 		prompt=f"When attempting to translate the assembly provided, I got the following error.\n{compilerError}\n Fix the error and print out the full corrected assembly. Examine the corrected assembly line-by-line to ensure that it will compile.\n{CODE_FORMAT_REMINDERS}"
 	elif linkerError is not None:
@@ -148,6 +173,14 @@ def add_semicolon_at_start(input_string):
 	modified_lines = ['; ' + line for line in lines]
 	return '\n'.join(modified_lines)
 
+def unique_file_path(filepath):
+	base, ext = os.path.splitext(filepath)
+	counter = 1
+	while os.path.exists(f"{base}_{counter}{ext}"):
+		counter += 1
+	
+	return f"{base}_{counter}{ext}", counter
+	
 def prompt_for_assembly(base_prompt, driver_object_path, test_data_path, output_path, failure_path, optimizations_per_solution):
 	compiler_error = None
 	linker_error = None
@@ -185,7 +218,7 @@ def prompt_for_assembly(base_prompt, driver_object_path, test_data_path, output_
 			querier = HumanQuerier()
 			continue
 	
-		success, compiler_error, linker_error, execution_error, correctness_error = compile_and_test_assembly(assembly, driver_object_path, test_data_path, output_path)
+		success, compiler_error, linker_error, execution_error, correctness_error = compilation.compile_and_test_assembly(assembly, driver_object_path, test_data_path, output_path)
 		filename_string = None
 		# Update error counters
 		if compiler_error:
