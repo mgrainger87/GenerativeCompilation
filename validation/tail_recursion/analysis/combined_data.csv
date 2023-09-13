@@ -1,7 +1,0 @@
-Filename,CPU Time,Normalized CPU Time,problem,technique
-clang_generated_unoptimized.asm,0.7717830000000001,1.0,03,tail recursion optimization
-clang_generated_O2_optimized.asm,0.3572349999999999,0.4628697444748069,03,tail recursion optimization
-clang_generated_llm_optimized.asm,0.222736,0.2885992565267699,03,tail recursion optimization
-clang_generated_O1_optimized.asm,0.6129850000000001,0.7942452736067004,03,tail recursion optimization
-clang_generated_O3_optimized.asm,0.3522370000000001,0.456393830908429,03,tail recursion optimization
-llm_generated.asm,0.5206870000000001,0.6746546632926613,03,tail recursion optimization
