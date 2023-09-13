@@ -1,4 +1,4 @@
-; compiler_errors=0,linker_errors=4,execution_errors=0,correctness_errors=0
+; compiler_errors=0,linker_errors=3,execution_errors=0,correctness_errors=0
 ; ; Compiler error: None
 ; ; Linker error: Undefined symbols for architecture arm64:
 ;   "_customFunction", referenced from:
@@ -8,7 +8,8 @@
 ; 
 ; ; Execution error: None
 ; ; Correctness error: None
-; .p2align 2
+;
+.p2align 2
 .globl customFunction
 customFunction:
 // Save callee-saved registers

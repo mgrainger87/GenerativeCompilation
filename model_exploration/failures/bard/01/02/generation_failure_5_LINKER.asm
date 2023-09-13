@@ -1,7 +1,6 @@
-; compiler_errors=0,linker_errors=1,execution_errors=0,correctness_errors=0
+; compiler_errors=0,linker_errors=5,execution_errors=0,correctness_errors=0
 ; ; Compiler error: None
-; ; Linker error: ld: warning: arm64 function not 4-byte aligned: customFunction from /var/folders/nj/t3fv98pd0kldbblbczs56jfh0000gn/T/tmp8geski_z.o
-; Undefined symbols for architecture arm64:
+; ; Linker error: Undefined symbols for architecture arm64:
 ;   "_customFunction", referenced from:
 ;       _main in tmpujdc4ibt.o
 ; ld: symbol(s) not found for architecture arm64
@@ -9,8 +8,8 @@
 ; 
 ; ; Execution error: None
 ; ; Correctness error: None
-; // Function prologue
-.globl customFunction
+;
+.p2align 2
 customFunction:
 // Save callee-saved registers
 stp x19, x20, [sp, #-16]!
