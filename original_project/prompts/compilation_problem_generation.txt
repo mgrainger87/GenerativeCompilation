@@ -1,0 +1,17 @@
+Given the following function prototype, write 10 C functions (compilation units) that have that prototype.
+
+The function prototype is designed to allow for inputs and outputs of multiple types. The function outputs are returned using the final three parameters. You do not need to use all of the input parameters nor all of the output parameters.
+
+- The functions should be as simple as possible.
+- The functions should vary in structure.
+- Do not include any comments in the code.
+- Do not depend on functions outside of the compilation unit, including those from the standard library. Do not import any header files.
+- Any helper functions you use should be marked static.
+- Avoid integer division.
+- Avoid the % (modulo) operator.
+- The value of at least one of the outputs should depend on the value of at least one of the inputs in some way.
+
+Function prototype:
+```void customFunction(int int1, int int2, 
+					double double1, double double2, 
+					int *outInt, double *outDouble);```
