@@ -3,10 +3,25 @@ import os
 import compilation
 import pathlib
 import prompting
+import glob
 from run_context import ModelContext
 
+def has_similar_files(file_path):
+	# Get the directory and base name of the file
+	directory, file_name = os.path.split(file_path)
+	file_name_base, file_extension = os.path.splitext(file_name)
+	
+	# Create a glob pattern to search for similar files
+	pattern = os.path.join(directory, f"{file_name_base}_*[0-9]{file_extension}")
+	
+	# Find files that match the pattern
+	similar_files = glob.glob(pattern)
+	
+	# Check if there are any similar files
+	return len(similar_files) > 0
+
 def handle_problem_run(run_context, compilation_unit_path, test_data_path, test_driver_source_path, optimizations_per_solution=1):
-	print(f"Perforning problem run {run_context}…")
+	print(f"Performing problem run {run_context}…")
 	
 	codePath = compilation_unit_path
 	
@@ -63,8 +78,7 @@ def handle_problem_run(run_context, compilation_unit_path, test_data_path, test_
 		base, ext = os.path.splitext(badAssemblyFilename)
 		if ext == ".asm":
 			generatedAssemblyPath = os.path.join(generatedDirectoryPath, f"{base}_CORRECTED.asm")
-			
-			if os.path.exists(generatedAssemblyPath):
+			if has_similar_files(generatedAssemblyPath):
 				print(f"Already have generated assembly at {generatedAssemblyPath}.")
 			else:
 				badAssemblyFilePath = os.path.join(run_context.problemPath(), badAssemblyFilename)

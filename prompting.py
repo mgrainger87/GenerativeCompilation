@@ -148,13 +148,13 @@ def optimize_assembly(compilation_unit_path, assembly_path, driver_object_path, 
 def get_error_instructions_based_on_results(compilerError, linkerError, executionError, correctnessError):
 	prompt = ""
 	if compilerError is not None:
-		prompt=f"When attempting to translate the assembly provided, I got the following error.\n{compilerError}\n Fix the error and print out the full corrected assembly. Examine the corrected assembly line-by-line to ensure that it will compile.\n{CODE_FORMAT_REMINDERS}"
+		prompt=f"When attempting to assemble the assembly you provided, I got the following error.\n{compilerError}\n Fix the error and print out the full corrected assembly. Examine the corrected assembly line-by-line to ensure that it will compile.\n{CODE_FORMAT_REMINDERS}"
 	elif linkerError is not None:
-		prompt=f"When attempting to link the assembly provided to the test driver, I got the following error.\n{linkerError}\nFix the error and print out the full corrected assembly. Examine the corrected assembly line-by-line to identify any other linking errors.\n{CODE_FORMAT_REMINDERS}"
+		prompt=f"When attempting to link the assembly you provided to the test driver, I got the following error.\n{linkerError}\nFix the error and print out the full corrected assembly. Examine the corrected assembly line-by-line to identify any other linking errors.\n{CODE_FORMAT_REMINDERS}"
 	elif executionError is not None:
 		prompt=f"\n{executionError}\n{CODE_FORMAT_REMINDERS}"
 	elif correctnessError is not None:
-		prompt=f"When attempting to translate the assembly provided with the input given below, I got an incorrect result:\n{correctnessError}\nFix the error and print out the full corrected assembly. Trace through the corrected assembly line-by-line with the given input to make sure it now returns the correct answer.\n{CODE_FORMAT_REMINDERS}"
+		prompt=f"When attempting to test the assembly you provided with the input given below, I got an incorrect result:\n{correctnessError}\nFix the error and print out the full corrected assembly. Trace through the corrected assembly line-by-line with the given input to make sure it now returns the correct answer.\n{CODE_FORMAT_REMINDERS}"
 	return prompt
 
 def prompt_llm_based_on_results(querier, initial_prompt, compilerError, linkerError, executionError, correctnessError, foundSolution=False):

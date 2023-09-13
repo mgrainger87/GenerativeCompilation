@@ -36,7 +36,7 @@ def has_file_with_prefix(directory_path, prefix):
 	return False
 			
 def handle_problem_run(run_context, test_driver_source_path, optimizations_per_solution=1):
-	print(f"Perforning problem run {run_context}…")
+	print(f"Performing problem run {run_context}…")
 	
 	codePath = run_context.compilationUnitPath()
 	
