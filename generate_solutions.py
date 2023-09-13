@@ -107,7 +107,7 @@ def handle_problem_run(run_context, test_driver_source_path, optimizations_per_s
 	if has_file_with_prefix(generatedDirectoryPath, "clang_generated_llm_optimized"):
 		print(f"Already have output for {optimizedClangAssemblyPath}.")
 	else:
-		optimize_assembly(codePath, unoptimizedClangAssemblyPath, driverObjectPath, testDataPath, optimizedClangAssemblyPath, failurePath, optimizations_per_solution)
+		prompting.optimize_assembly(codePath, unoptimizedClangAssemblyPath, driverObjectPath, testDataPath, optimizedClangAssemblyPath, failurePath, optimizations_per_solution)
 	
 def handle_problem(problemContext, solutions_per_problem, optimizations_per_solution):
 	for runContext in problemContext.GetRunContexts(solutions_per_problem):
