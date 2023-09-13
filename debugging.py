@@ -36,7 +36,7 @@ def get_full_process_state(process, args):
 	return description
 
 def full_error_text(process, args, specific_error):
-	return f"When executing the assembly you provided with the input values below, {specific_error}. Examine the stack trace below and compare each value in register state to find errors. If needed, trace through the generated assembly line-by-line with the provided input values. Fix the error and print out the full corrected assembly. Trace through the corrected assembly line-by-line with the provided input values to make sure it executes successfully and returns the correct answer. \n\n{get_full_process_state(process, args)}"
+	return f"When executing the assembly provided with the input values below, {specific_error}. Examine the stack trace below and compare each value in register state to find errors. If needed, trace through the generated assembly line-by-line with the provided input values. Fix the error and print out the full corrected assembly. Trace through the corrected assembly line-by-line with the provided input values to make sure it executes successfully and returns the correct answer. \n\n{get_full_process_state(process, args)}"
 
 def launch_process_with_debugging(binary_path, args=[], max_cpu_time=2147483647):
 	debugger = lldb.SBDebugger.Create()
