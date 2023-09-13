@@ -13,8 +13,8 @@ def normalize_filename(filename):
 	return filename
 
 def process_directory(directory_path):
-	# Dictionary to store counts of valid files
-	file_counts = defaultdict(int)
+	# Dictionary to store counts of valid files (successes) and failures
+	file_counts = defaultdict(lambda: {'successes': 0, 'failures': 0})
 
 	# Traverse through the directory recursively
 	for root, dirs, files in os.walk(directory_path):
@@ -26,10 +26,11 @@ def process_directory(directory_path):
 					with open(os.path.join(root, file), 'r') as f:
 						content = f.read().strip()
 					
-					# Check if content is not "Manually failed."
-					if content != "Manually failed.":
-						normalized_name = normalize_filename(file)
-						file_counts[normalized_name] += 1
+					normalized_name = normalize_filename(file)
+					if content == "Manually failed.":
+						file_counts[normalized_name]['failures'] += 1
+					else:
+						file_counts[normalized_name]['successes'] += 1
 						
 	return file_counts
 
@@ -39,10 +40,10 @@ def write_to_csv(file_counts, output_path):
 		csv_writer = csv.writer(csvfile)
 		
 		# Write the header
-		csv_writer.writerow(["Filename", "Count"])
+		csv_writer.writerow(["Filename", "Successes", "Failures"])
 		# Write the counts for each file
-		for filename, count in file_counts.items():
-			csv_writer.writerow([filename, count])
+		for filename, counts in file_counts.items():
+			csv_writer.writerow([filename, counts['successes'], counts['failures']])
 
 if __name__ == "__main__":
 	if len(sys.argv) < 2:
@@ -53,12 +54,10 @@ if __name__ == "__main__":
 	
 	for model in ModelContext.ModelContextsForDirectory(directory_path):
 		for problem in model.GetProblemContexts():
-			# Get the failure counts
-			successes_count = process_directory(problem.generatedPath())
+			# Get the successes and failures counts
+			counts = process_directory(problem.generatedPath())
 			
 			# Write to CSV
 			csv_path = os.path.join(problem.generatedPath(), "generated_summary.csv")
-			write_to_csv(successes_count, csv_path)
+			write_to_csv(counts, csv_path)
 			print(f"Results written to: {csv_path}")
-			
-	

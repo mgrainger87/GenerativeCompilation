@@ -5,7 +5,7 @@ import sys
 
 def generate_latex_code_from_summary(folder_path):
 	# Filenames to look for
-	target_files = ["clang_generated_llm_optimized", "llm_generated"]
+	target_files = ["clang_generated_llm_optimized", "llm_generated", "generation_failure", "optimization_failure"]
 	
 	# Dictionary to store count data for each model
 	counts_data = {}
@@ -30,7 +30,7 @@ def generate_latex_code_from_summary(folder_path):
 						# Check for filenames with suffixes
 						rows_with_target = df[df['Filename'].str.startswith(target)]
 						for _, row in rows_with_target.iterrows():
-							model_counts[target] += row['Count']
+							model_counts[target] += row['Failures']
 			
 			counts_data[model] = model_counts
 
@@ -47,8 +47,9 @@ def generate_latex_code_from_summary(folder_path):
 		latex_code.append(f"{target}:")
 		coordinates = []
 		for model in ['claude', 'bard', 'gpt-3.5', 'gpt-4']:
-			count = counts_data[model][target]
-			coordinates.append(f"({formatted_model_names[model]},{count})")
+			if model in counts_data:
+				count = counts_data[model][target]
+				coordinates.append(f"({formatted_model_names[model]},{count})")
 		latex_code.append(f"\\addplot[sharp plot, mark=*] coordinates {{{' '.join(coordinates)}}};\n")
 
 	latex_output = "\n".join(latex_code)
