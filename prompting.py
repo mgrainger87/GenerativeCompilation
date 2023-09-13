@@ -76,6 +76,37 @@ Guidelines:
 
 """
 
+def correction_prompt(compilation_unit, bad_assembly, compiler_error, linker_error, execution_error, correctness_error):
+	error = get_error_instructions_based_on_results(compiler_error, linker_error, execution_error, correctness_error)
+	
+	return f"""Given the compilation unit, arm64 LP64 assembly for macOS, and error below, correct the assembly so that it assembles, links, and runs correctly.
+
+Compilation unit:
+
+```
+{compilation_unit}
+```
+Incorrect assembly:
+{bad_assembly}
+
+Error:
+{error}
+
+Guidelines:
+
+{ASSEMBLY_GUIDELINES}
+
+"""
+
+
+def correct_existing_assembly(code_path, bad_assembly_path, compiler_error, linker_error, execution_error, correctness_error, driver_object_path, test_data_path, output_path, failure_path, optimizations_per_solution):
+	with open(code_path, "r") as codeFile:
+		code = codeFile.read()
+	with open(bad_assembly_path, "r") as assemblyFile:
+		badAssembly = assemblyFile.read()
+
+	return prompt_for_assembly(correction_prompt(code, badAssembly, compiler_error, linker_error, execution_error, correctness_error), driver_object_path, test_data_path, output_path, failure_path, optimizations_per_solution)
+
 def generate_assembly_from_compilation_unit_source(code_path, driver_object_path, test_data_path, output_path, failure_path, optimizations_per_solution):
 	with open(code_path, "r") as codeFile:
 		code = codeFile.read()
@@ -90,16 +121,23 @@ def optimize_assembly(compilation_unit_path, assembly_path, driver_object_path, 
 	
 	return prompt_for_assembly(prompt, driver_object_path, test_data_path, output_path, failure_path, optimizations_per_solution)
 
-def prompt_llm_based_on_results(querier, initial_prompt, compilerError, linkerError, executionError, correctnessError, foundSolution=False):
-	prompt = initial_prompt
+def get_error_instructions_based_on_results(compilerError, linkerError, executionError, correctnessError):
 	if compilerError is not None:
 		prompt=f"When attempting to translate the assembly provided, I got the following error.\n{compilerError}\n Fix the error and print out the full corrected assembly. Examine the corrected assembly line-by-line to ensure that it will compile.\n{CODE_FORMAT_REMINDERS}"
 	elif linkerError is not None:
-		prompt=f"When attempting to link the assembly you provided to the test driver, I got the following error.\n{linkerError}\nFix the error and print out the full corrected assembly. Examine the corrected assembly line-by-line to identify any other linking errors.\n{CODE_FORMAT_REMINDERS}"
+		prompt=f"When attempting to link the assembly provided to the test driver, I got the following error.\n{linkerError}\nFix the error and print out the full corrected assembly. Examine the corrected assembly line-by-line to identify any other linking errors.\n{CODE_FORMAT_REMINDERS}"
 	elif executionError is not None:
 		prompt=f"\n{executionError}\n{CODE_FORMAT_REMINDERS}"
 	elif correctnessError is not None:
-		prompt=f"When attempting to translate the assembly you provided with the input given below, I got an incorrect result:\n{correctnessError}\nFix the error and print out the full corrected assembly. Trace through the corrected assembly line-by-line with the given input to make sure it now returns the correct answer.\n{CODE_FORMAT_REMINDERS}"
+		prompt=f"When attempting to translate the assembly provided with the input given below, I got an incorrect result:\n{correctnessError}\nFix the error and print out the full corrected assembly. Trace through the corrected assembly line-by-line with the given input to make sure it now returns the correct answer.\n{CODE_FORMAT_REMINDERS}"
+	return prompt
+
+def prompt_llm_based_on_results(querier, initial_prompt, compilerError, linkerError, executionError, correctnessError, foundSolution=False):
+	prompt = initial_prompt
+	
+	error_prompt = get_error_instructions_based_on_results(compilerError, linkerError, executionError, correctnessError)
+	if error_prompt:
+		prompt = error_prompt
 	elif foundSolution:
 		prompt = f"Try to (further) optimize the solution so that it runs more quickly."
 	

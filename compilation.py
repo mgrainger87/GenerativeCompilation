@@ -84,3 +84,45 @@ def link_binary(unit_paths, output_path=None):
 			return False, result.stderr.decode("utf-8"), None
 	except Exception as e:
 		return False, str(e), None
+
+def compile_and_test_assembly(assembly, driver_object_path, test_data_path, output_path):
+	# Returns: Success, Compiler error, linker error, testing error
+	
+	compiler_error = None
+	linker_error = None
+	execution_error = None
+	correctness_error = None
+	
+	### Compilation stage
+	print(f"Attempting compilation…")	
+			
+	success, compiler_error, compilation_unit_path = compilation.compile_source_from_string(assembly, suffix=".asm")
+	if not success:
+		print(f"Compilation failed: {compiler_error}")
+		return False, compiler_error, linker_error, execution_error, correctness_error
+	
+	print(f"Compilation successful. Output saved to {compilation_unit_path}.")
+		
+	### Link stage
+	print(f"Linking against {driver_object_path}…")
+	
+	success, linker_error, executable_path = compilation.link_binary([compilation_unit_path, driver_object_path])
+	if not success:
+		print(f"Linking failed: {linker_error}")
+		return False, compiler_error, linker_error, execution_error, correctness_error
+	
+	print("Linking succeeded.")
+	
+	### Testing stage
+	print("Testing…")
+	
+	# Set executable permissions
+	os.chmod(executable_path, 0o755)
+	
+	success, execution_error, correctness_error, cpu_time = testing.run_test_from_csv(test_data_path, executable_path)
+	if not success:
+		print(f"Testing failed: {execution_error} {correctness_error}")
+		return False, compiler_error, linker_error, execution_error, correctness_error
+	
+	print(f"Testing succeeded in {cpu_time} seconds.")
+	return True, None, None, None, None

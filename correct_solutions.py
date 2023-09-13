@@ -1,52 +1,12 @@
-import os
-import tempfile
-import subprocess
-import csv
 import sys
-import pathlib
+import os
+from run_context import ModelContext
 import compilation
-import testing
-from run_context import ModelContext, ProblemContext, RunContext
-import prompting
 
-COMPILATION_UNIT_FILE_NAME = "compilation_unit.c"
-
-def unique_file_path(filepath):
-	base, ext = os.path.splitext(filepath)
-	counter = 1
-	while os.path.exists(f"{base}_{counter}{ext}"):
-		counter += 1
-
-	return f"{base}_{counter}{ext}", counter
-
-def generate_test_data_from_compilation_unit_source(code_path, test_data_path):
-	with open(code_path, "r") as codeFile:
-		code = codeFile.read()
-
-	test_data = HumanQuerier().generateAssembly(prompting.test_data_prompt(code)).strip().rstrip()
-	
-	with open(test_data_path, 'w') as f:
-		f.write(test_data)
-		f.write("\n")
-
-def has_file_with_prefix(directory_path, prefix):
-	"""
-	Check if a directory has any file with a given prefix.
-	
-	:param directory_path: Path to the directory.
-	:param prefix: The file prefix to look for.
-	:return: True if a file with the prefix exists, False otherwise.
-	"""
-	
-	for filename in os.listdir(directory_path):
-		if filename.startswith(prefix):
-			return True
-	return False
-			
-def handle_problem_run(run_context, test_driver_source_path, optimizations_per_solution=1):
+def handle_problem_run(run_context, compilation_unit_path, test_data_path, test_driver_source_path, optimizations_per_solution=1):
 	print(f"Perforning problem run {run_context}…")
 	
-	codePath = run_context.compilationUnitPath()
+	codePath = compilation_unit_path
 	
 	# Compile the driver if needed
 	driverObjectPath = "/Users/morgang/code/GenerativeCompilation/test_driver.o"
@@ -55,13 +15,8 @@ def handle_problem_run(run_context, test_driver_source_path, optimizations_per_s
 		if not success:
 			print(errorMessage)
 			return
-
-	# Generate test data if necessary
-	testDataPath = run_context.testDataPath()
-	if os.path.exists(testDataPath):
-		print(f"Already have test data at {testDataPath}.")
-	else:
-		generate_test_data_from_compilation_unit_source(codePath, testDataPath)
+	
+	testDataPath = test_data_path
 	
 	generatedDirectoryPath = run_context.generatedPath()
 	pathlib.Path(generatedDirectoryPath).mkdir(parents=True, exist_ok=True)
@@ -72,29 +27,29 @@ def handle_problem_run(run_context, test_driver_source_path, optimizations_per_s
 		success, error, _ = compilation.compile_source(codePath, unoptimizedClangAssemblyPath, True)
 		if not success:
 			print(f"Failed to compile source from {codePath}: {error}")
-
+	
 	o1OptimizedClangAssemblyPath = os.path.join(generatedDirectoryPath, "clang_generated_O1_optimized.asm")
 	if not os.path.exists(o1OptimizedClangAssemblyPath):
 		success, error, _ = compilation.compile_source(codePath, o1OptimizedClangAssemblyPath, True, "O1")
 		if not success:
 			print(f"Failed to compile source from {codePath}: {error}")
-
+	
 	o2OptimizedClangAssemblyPath = os.path.join(generatedDirectoryPath, "clang_generated_O2_optimized.asm")
 	if not os.path.exists(o2OptimizedClangAssemblyPath):
 		success, error, _ = compilation.compile_source(codePath, o2OptimizedClangAssemblyPath, True, "O2")
 		if not success:
 			print(f"Failed to compile source from {codePath}: {error}")
-
+	
 	o3OptimizedClangAssemblyPath = os.path.join(generatedDirectoryPath, "clang_generated_O3_optimized.asm")
 	if not os.path.exists(o3OptimizedClangAssemblyPath):
 		success, error, _ = compilation.compile_source(codePath, o3OptimizedClangAssemblyPath, True, "O3")
 		if not success:
 			print(f"Failed to compile source from {codePath}: {error}")
-
+	
 	# Test the Clang assembly to make sure it passes our test cases
 	with open(unoptimizedClangAssemblyPath, "r") as assemblyFile:
 		assembly = assemblyFile.read()
-	success, compiler_error, linker_error, execution_error, correctness_error = compilation.compile_and_test_assembly(assembly, driverObjectPath, testDataPath, None)
+	success, compiler_error, linker_error, execution_error, correctness_error = compile_and_test_assembly(assembly, driverObjectPath, testDataPath, None)
 	if not success:
 		print(f"Testing on Clang-generated assembly failed: {compiler_error} {linker_error} {testing_error}")
 		if testing_error is not None:
@@ -116,10 +71,10 @@ def handle_problem_run(run_context, test_driver_source_path, optimizations_per_s
 		print(f"Already have output for {optimizedClangAssemblyPath}.")
 	else:
 		optimize_assembly(codePath, unoptimizedClangAssemblyPath, driverObjectPath, testDataPath, optimizedClangAssemblyPath, failurePath, optimizations_per_solution)
-	
-def handle_problem(problemContext, solutions_per_problem, optimizations_per_solution):
-	for runContext in problemContext.GetRunContexts(solutions_per_problem):
-		handle_problem_run(runContext, "/Users/morgang/code/GenerativeCompilation/test_driver.c", optimizations_per_solution)
+
+def handle_problem(problemContext, compilation_unit_path, test_data_path, solutions_per_problem, optimizations_per_solution):
+		for runContext in problemContext.GetRunContexts(solutions_per_problem):
+			handle_problem_run(runContext, compilation_unit_path, test_data_path, "/Users/morgang/code/GenerativeCompilation/test_driver.c", optimizations_per_solution)
 
 if __name__ == "__main__":
 	# Check if the user has provided a command-line argument
@@ -129,8 +84,8 @@ if __name__ == "__main__":
 		
 	folder_path = sys.argv[1]
 	model_name = sys.argv[2]
-	solutions_per_problem = int(sys.argv[3])
-	optimizations_per_solution = int(sys.argv[4])
+	compilation_unit_path = sys.argv[3]
+	test_data_path = sys.argv[4]
 	
 	# Check if the given folder path exists
 	if os.path.exists(folder_path):
@@ -141,7 +96,7 @@ if __name__ == "__main__":
 		print(problem_contexts)
 		
 		for problemContext in problem_contexts:
-			handle_problem(problemContext, solutions_per_problem, optimizations_per_solution)
-
+			handle_problem(problemContext, compilation_unit_path, test_data_path,  1, 1)
+	
 	else:
 		print("The provided folder path does not exist.")
