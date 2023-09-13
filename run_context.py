@@ -44,9 +44,13 @@ class ModelContext:
 	@classmethod
 	def ModelContextsForDirectory(cls, rootDirectory):
 		modelContexts = []
-		for model in os.listdir(self.generatedPath()):
-			modelContext = cls(model, rootDirectory)
-			modelContexts.append(modelContext)
+		
+		generatedPath = os.path.join(rootDirectory, 'generated')
+		if os.path.exists(generatedPath):
+			for model in os.listdir(generatedPath):
+				if os.path.isdir(os.path.join(generatedPath, model)):
+					modelContext = cls(model, rootDirectory)
+					modelContexts.append(modelContext)
 		return modelContexts
 
 	def GetProblemContexts(self):
@@ -93,6 +97,9 @@ class ProblemContext:
 
 	def analysisPath(self):
 		return self.__get_path('analysis', self.__model, self.__problemNumber)
+		
+	def failurePath(self):
+		return self.__get_path('failures', self.__model, self.__problemNumber)
 	
 	def visualizationPath(self):
 		return self.__get_path('visualization', self.__model, self.__problemNumber)
