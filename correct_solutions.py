@@ -21,7 +21,7 @@ def has_similar_files(file_path):
 	return len(similar_files) > 0
 
 def handle_problem_run(run_context, compilation_unit_path, test_data_path, test_driver_source_path, optimizations_per_solution=1):
-	print(f"Performing problem run {run_context}…")
+	print(f"Performing problem run {run_context} {run_context.generatedPath()}…")
 	
 	codePath = compilation_unit_path
 	

@@ -177,7 +177,8 @@
 ; frame #2: [33m0x00000001ac0c7f28[0m dyld`start + 2236
 ; 
 ; ; Correctness error: None
-; .section	__TEXT,__text,regular,pure_instructions
+;
+.section	__TEXT,__text,regular,pure_instructions
 .build_version macos, 13, 0	sdk_version 13, 3
 .globl	_customFunction                 ; -- Begin function customFunction
 .p2align	2
