@@ -1,5 +1,8 @@
-Failure Type,Count
-COMPILER,49
-EXECUTION,12
-LINKER,32
-CORRECTNESS,4
+Failure Type,Prefix,Count
+COMPILER,generation_failure,27
+LINKER,generation_failure,29
+EXECUTION,generation_failure,1
+EXECUTION,optimization_failure,11
+LINKER,optimization_failure,3
+COMPILER,optimization_failure,22
+CORRECTNESS,optimization_failure,4

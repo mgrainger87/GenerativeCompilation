@@ -44,11 +44,12 @@ def generate_latex_code_from_summary(folder_path):
 	}
 
 	for target in target_files:
+		latex_code.append(f"{target}:")
 		coordinates = []
 		for model in ['claude', 'bard', 'gpt-3.5', 'gpt-4']:
 			count = counts_data[model][target]
 			coordinates.append(f"({formatted_model_names[model]},{count})")
-		latex_code.append(f"\\addplot[sharp plot, mark=*] coordinates {{{' '.join(coordinates)}}};")
+		latex_code.append(f"\\addplot[sharp plot, mark=*] coordinates {{{' '.join(coordinates)}}};\n")
 
 	latex_output = "\n".join(latex_code)
 	return latex_output

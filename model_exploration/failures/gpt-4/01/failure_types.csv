@@ -1,2 +1,2 @@
-Failure Type,Count
-COMPILER,1
+Failure Type,Prefix,Count
+COMPILER,generation_failure,1

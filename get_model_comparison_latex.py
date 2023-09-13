@@ -10,8 +10,8 @@ def generate_latex_code(folder_path):
 		'EXECUTION': 'Execution',
 		'CORRECTNESS': 'Correctness'
 	}
-
-	# Dictionary to store failure data for each model
+	
+	# Dictionary to store failure data for each model and prefix
 	failure_data = {}
 	model_folders = os.listdir(folder_path)
 
@@ -24,35 +24,21 @@ def generate_latex_code(folder_path):
 			subfolders = [d for d in os.listdir(model_path) if os.path.isdir(os.path.join(model_path, d))]
 			total_subfolders = len(subfolders)
 
-			# Initialize failure counts for this model
-			failure_counts = {
-				'Assembler': 0,
-				'Linker': 0,
-				'Execution': 0,
-				'Correctness': 0
-			}
-
 			# Iterate through each subfolder to read failure_types.csv
 			for subfolder in subfolders:
 				csv_path = os.path.join(model_path, subfolder, "failure_types.csv")
 				if os.path.exists(csv_path):
 					df = pd.read_csv(csv_path)
 
-					# Check if 'Failure Type' column exists
-					if 'Failure Type' in df.columns:
-						for index, row in df.iterrows():
+					# Group by prefix and aggregate the counts
+					for prefix, group in df.groupby('Prefix'):
+						for index, row in group.iterrows():
 							failure_type = failure_mapping.get(row['Failure Type'], None)
 							if failure_type:
-								failure_counts[failure_type] += row['Count']
-
-			# Compute average failures for this model
-			for key in failure_counts:
-				failure_counts[key] /= total_subfolders
-
-			failure_data[model] = failure_counts
+								failure_data.setdefault(prefix, {}).setdefault(model, {}).setdefault(failure_type, 0)
+								failure_data[prefix][model][failure_type] += row['Count']
 
 	# Generate LaTeX code based on the failure data
-	latex_code = []
 	failure_types_order = ['Assembler', 'Linker', 'Execution', 'Correctness']
 	fill_colors = ['cyan', None, None, 'lightgray']
 	formatted_model_names = {
@@ -62,16 +48,20 @@ def generate_latex_code(folder_path):
 		'gpt-4': 'GPT-4'
 	}
 
-	for i, failure_type in enumerate(failure_types_order):
-		coordinates = []
-		for model in failure_data.keys():
-			avg_failures = failure_data[model][failure_type]
-			coordinates.append(f"({formatted_model_names[model]},{avg_failures:.2f})")
-		fill_option = f"fill={fill_colors[i]}" if fill_colors[i] else ""
-		latex_code.append(f"\\addplot+[ybar, {fill_option}] plot coordinates {{{' '.join(coordinates)}}};")
+	latex_outputs = {}
+	for prefix, data in failure_data.items():
+		latex_code = []
+		for i, failure_type in enumerate(failure_types_order):
+			coordinates = []
+			for model in data.keys():
+				avg_failures = data[model].get(failure_type, 0) / total_subfolders
+				coordinates.append(f"({formatted_model_names[model]},{avg_failures:.2f})")
+			fill_option = f"fill={fill_colors[i]}" if fill_colors[i] else ""
+			latex_code.append(f"\\addplot+[ybar, {fill_option}] plot coordinates {{{' '.join(coordinates)}}};")
+		
+		latex_outputs[prefix] = "\n".join(latex_code) + "\n\\legend{Assembler,Linker,Execution,Correctness}"
 
-	latex_output = "\n".join(latex_code) + "\n\\legend{Assembler,Linker,Execution,Correctness}"
-	return latex_output
+	return latex_outputs
 
 if __name__ == "__main__":
 	if len(sys.argv) < 2:
@@ -79,5 +69,8 @@ if __name__ == "__main__":
 		sys.exit(1)
 
 	folder_path = sys.argv[1]
-	latex_output = generate_latex_code(os.path.join(folder_path, 'failures'))
-	print(latex_output)
+	latex_outputs = generate_latex_code(os.path.join(folder_path, 'failures'))
+	
+	for prefix, latex_output in latex_outputs.items():
+		print(f"\nLaTeX for {prefix}:\n")
+		print(latex_output)
