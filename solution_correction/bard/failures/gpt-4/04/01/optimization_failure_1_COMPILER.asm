@@ -1,11 +1,9 @@
-; compiler_errors=1,linker_errors=1,execution_errors=0,correctness_errors=0
-; ; Compiler error: None
-; ; Linker error: Undefined symbols for architecture arm64:
-;   "printf", referenced from:
-;       _printInt in tmpwg3mkcpx.o
-; ld: symbol(s) not found for architecture arm64
-; clang: error: linker command failed with exit code 1 (use -v to see invocation)
+; compiler_errors=1,linker_errors=0,execution_errors=0,correctness_errors=0
+; ; Compiler error: /var/folders/nj/t3fv98pd0kldbblbczs56jfh0000gn/T/tmp4odo60o0.asm:14:1: error: unrecognized instruction mnemonic, did you mean: stlr, str, strb, strh, sttr, stur, stxr?
+; fstr d0, [x3]
+; ^
 ; 
+; ; Linker error: None
 ; ; Execution error: None
 ; ; Correctness error: None
 ; .build_version macos, 13, 0	sdk_version 13, 3
@@ -21,7 +19,7 @@ _customFunction:
 str	w0, [x2]
 
 // Store double1 to *outDouble
-str	d0, [x3]
+fstr	d0, [x3]
 
 ret
 .cfi_endproc
