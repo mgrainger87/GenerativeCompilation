@@ -53,8 +53,9 @@ class ModelContext:
 		problem_contexts = []
 		
 		for problemNumber in os.listdir(self.problemPath()):
-			problemContext = ProblemContext(self.__model, problemNumber, self.__rootDirectory)
-			problem_contexts.append(problemContext)
+			if os.path.isdir(os.path.join(self.problemPath(), problemNumber)):
+				problemContext = ProblemContext(self.__model, problemNumber, self.__rootDirectory)
+				problem_contexts.append(problemContext)
 		
 		return problem_contexts
 

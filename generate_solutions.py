@@ -11,14 +11,6 @@ import prompting
 
 COMPILATION_UNIT_FILE_NAME = "compilation_unit.c"
 
-def unique_file_path(filepath):
-	base, ext = os.path.splitext(filepath)
-	counter = 1
-	while os.path.exists(f"{base}_{counter}{ext}"):
-		counter += 1
-
-	return f"{base}_{counter}{ext}", counter
-
 def generate_test_data_from_compilation_unit_source(code_path, test_data_path):
 	with open(code_path, "r") as codeFile:
 		code = codeFile.read()
