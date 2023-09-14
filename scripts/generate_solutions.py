@@ -44,7 +44,7 @@ def handle_problem_run(run_context, test_driver_source_path, optimizations_per_s
 	# Compile the driver if needed
 	driverObjectPath = "/Users/morgang/code/GenerativeCompilation/test_driver.o"
 	if not os.path.exists(driverObjectPath):
-		success, errorMessage, driverObjectPath = compilation.compile_source(test_driver_source_path)
+		success, errorMessage, driverObjectPath = compilation.compile_source(test_driver_source_path, driverObjectPath)
 		if not success:
 			print(errorMessage)
 			return
@@ -65,6 +65,16 @@ def handle_problem_run(run_context, test_driver_source_path, optimizations_per_s
 		success, error, _ = compilation.compile_source(codePath, unoptimizedClangAssemblyPath, True)
 		if not success:
 			print(f"Failed to compile source from {codePath}: {error}")
+			
+		# Test the Clang assembly to make sure it passes our test cases
+		with open(unoptimizedClangAssemblyPath, "r") as assemblyFile:
+			assembly = assemblyFile.read()
+		success, compiler_error, linker_error, execution_error, correctness_error = compilation.compile_and_test_assembly(assembly, driverObjectPath, testDataPath, None)
+		if not success:
+			print(f"Testing on Clang-generated assembly failed: {compiler_error} {linker_error} {testing_error}")
+			if testing_error is not None:
+				os.remove(testDataPath)
+			return
 
 	o1OptimizedClangAssemblyPath = os.path.join(generatedDirectoryPath, "clang_generated_O1_optimized.asm")
 	if not os.path.exists(o1OptimizedClangAssemblyPath):
@@ -83,16 +93,6 @@ def handle_problem_run(run_context, test_driver_source_path, optimizations_per_s
 		success, error, _ = compilation.compile_source(codePath, o3OptimizedClangAssemblyPath, True, "O3")
 		if not success:
 			print(f"Failed to compile source from {codePath}: {error}")
-
-	# Test the Clang assembly to make sure it passes our test cases
-	with open(unoptimizedClangAssemblyPath, "r") as assemblyFile:
-		assembly = assemblyFile.read()
-	success, compiler_error, linker_error, execution_error, correctness_error = compilation.compile_and_test_assembly(assembly, driverObjectPath, testDataPath, None)
-	if not success:
-		print(f"Testing on Clang-generated assembly failed: {compiler_error} {linker_error} {testing_error}")
-		if testing_error is not None:
-			os.remove(testDataPath)
-		return
 	
 	# Have LLM generate assembly from C compilation unit
 	generatedAssemblyPath = os.path.join(generatedDirectoryPath, "llm_generated.asm")
