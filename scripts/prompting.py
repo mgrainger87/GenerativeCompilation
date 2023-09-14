@@ -10,7 +10,7 @@ ASSEMBLY_GUIDELINES = """
 - Follow arm64 convention for local labels starting with a numeric value.
 - Be sure to save all required registers, particularly the link register, before branching for a function call and restore them as needed afterwards.
 - Use only valid arm64 instructions.
-- Use appropriate register widths for an LP64 architecture, where integers are 32 bits.
+- Use appropriate register widths for an LP64 architecture. In particular, integers are 32 bits, so when comparing or modifying integer values, use wX instead of xX registers.
 - Always assume that the code calling the function is impemented correctly.
 
 Steps to follow:
