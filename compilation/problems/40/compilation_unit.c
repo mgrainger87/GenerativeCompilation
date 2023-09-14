@@ -1,9 +1,10 @@
 
 void customFunction(int int1, int int2, double double1, double double2, int *outInt, double *outDouble) {
-    if (double1 <= 2.0) {
-        *outDouble = double2;
+    if(double2 < 10) {
         *outInt = int2;
-        return;
+        *outDouble = double1 * double2;
+    } else {
+        customFunction(int1+2, int2, double1+1, double2-1, outInt, outDouble);
     }
-    customFunction(int1, int2 + 1, double1 - 0.4, double2, outInt, outDouble);
 }
+    

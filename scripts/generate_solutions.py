@@ -8,6 +8,7 @@ import compilation
 import testing
 from run_context import ModelContext, ProblemContext, RunContext
 import prompting
+import query_human
 
 COMPILATION_UNIT_FILE_NAME = "compilation_unit.c"
 
@@ -15,7 +16,7 @@ def generate_test_data_from_compilation_unit_source(code_path, test_data_path):
 	with open(code_path, "r") as codeFile:
 		code = codeFile.read()
 
-	test_data = HumanQuerier().generateAssembly(prompting.test_data_prompt(code)).strip().rstrip()
+	test_data = query_human.HumanQuerier().generateAssembly(prompting.test_data_prompt(code)).strip().rstrip()
 	
 	with open(test_data_path, 'w') as f:
 		f.write(test_data)
@@ -102,12 +103,12 @@ def handle_problem_run(run_context, test_driver_source_path, optimizations_per_s
 		prompting.generate_assembly_from_compilation_unit_source(codePath, driverObjectPath, testDataPath, generatedAssemblyPath, failurePath, optimizations_per_solution)
 	
 	# Have LLM optimize Clang-generated assembly	
-	optimizedClangAssemblyPath = os.path.join(generatedDirectoryPath, "clang_generated_llm_optimized.asm")
-	failurePath = os.path.join(run_context.failurePath(), "optimization_failure.asm")
-	if has_file_with_prefix(generatedDirectoryPath, "clang_generated_llm_optimized"):
-		print(f"Already have output for {optimizedClangAssemblyPath}.")
-	else:
-		prompting.optimize_assembly(codePath, unoptimizedClangAssemblyPath, driverObjectPath, testDataPath, optimizedClangAssemblyPath, failurePath, optimizations_per_solution)
+	# optimizedClangAssemblyPath = os.path.join(generatedDirectoryPath, "clang_generated_llm_optimized.asm")
+	# failurePath = os.path.join(run_context.failurePath(), "optimization_failure.asm")
+	# if has_file_with_prefix(generatedDirectoryPath, "clang_generated_llm_optimized"):
+	# 	print(f"Already have output for {optimizedClangAssemblyPath}.")
+	# else:
+	# 	prompting.optimize_assembly(codePath, unoptimizedClangAssemblyPath, driverObjectPath, testDataPath, optimizedClangAssemblyPath, failurePath, optimizations_per_solution)
 	
 def handle_problem(problemContext, solutions_per_problem, optimizations_per_solution):
 	for runContext in problemContext.GetRunContexts(solutions_per_problem):

@@ -8,13 +8,15 @@ ASSEMBLY_GUIDELINES = """
 - Follow the arm64 calling convention strictly. Preserve the values of caller-saved and/or callee-saved registers where necessary.
 - Mangle function names according to Clang conventions for C (not C++). Mark symbols as global where necessary. Align symbols appropriately for arm64.
 - Follow arm64 convention for local labels starting with a numeric value.
-- Before branching for a function call, be sure to save all required registers.
+- Be sure to save all required registers, particularly the link register, before branching for a function call and restore them as needed afterwards.
 - Use only valid arm64 instructions.
 - Use appropriate register widths for an LP64 architecture, where integers are 32 bits.
+- Always assume that the code calling the function is impemented correctly.
 
 Steps to follow:
 
 - Write out which registers are used for which parameters before generating the assembly.
+- If there are multiple functions, generate the assembly for one function at a time. At the end, output the combined assembly.
 - After generating the assembly, check it again against the guidelines and correct it if needed.
 - Trace the assembly line-by-line with different test values that collectively exercise all of the control paths in the function.
 """
@@ -30,7 +32,7 @@ Write a Python version of customFunction and use it to determine the expected ou
 Output those test cases in comma-separated value format according to the given format. The number of iterations should always be 100. Do not write the CSV to a file; output it directly. Include a header row in the CSV.
 
 
-If an input or output parameter is not relevant, use 0 for its provided or expected value as appropriate.
+If an input or output parameter is not relevant, use 0 for its provided or expected value as appropriate. If the function is recursive, the test cases should not exceed 50 recursive calls.
 
 CSV format (do not add extra spaces):
 
