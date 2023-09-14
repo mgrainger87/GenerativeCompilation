@@ -11,6 +11,7 @@ ASSEMBLY_GUIDELINES = """
 - Be sure to save all required registers, particularly the link register, before branching for a function call and restore them as needed afterwards.
 - Use only valid arm64 instructions.
 - Use appropriate register widths for an LP64 architecture. In particular, integers are 32 bits, so when comparing or modifying integer values, use wX instead of xX registers.
+- The arm64 instruction set doesn't allow for immediate floating point values to be used with the fadd and fsub instructions directly. Instead, load immediate values into a floating-point register first.
 - Always assume that the code calling the function is impemented correctly.
 
 Steps to follow:
