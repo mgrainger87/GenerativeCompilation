@@ -69,7 +69,6 @@ class ModelContext:
 
 class ProblemContext:
 	def __init__(self, model, problemNumber, rootDirectory):
-		print(f"initialized problemContext with model {model}")
 		self.__model = model
 		self.__problemNumber = problemNumber
 		self.__rootDirectory = rootDirectory
@@ -128,6 +127,10 @@ class ProblemContext:
 	def generatedSummaryPath(self):
 		return os.path.join(self.generatedPath(), "generated_summary.csv")
 		
+	def failureSummaryPath(self):
+		return os.path.join(self.failurePath(), "failure_types.csv")
+
+		
 	@classmethod
 	def ProblemContextsForDirectory(cls, rootDirectory):
 		problemsData = []
@@ -165,7 +168,6 @@ class ProblemContext:
 
 class RunContext:
 	def __init__(self, model, problemNumber, runNumber, rootDirectory):
-		print(f"initialized problemContext with model {model}")
 		self.__model = model
 		self.__problemNumber = problemNumber
 		self.__runNumber = runNumber
