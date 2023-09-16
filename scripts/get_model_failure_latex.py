@@ -7,6 +7,7 @@ import analysis
 def get_counts_from_summary(folder_path, target_files):
 	# Dictionary to store count data for each technique
 	counts_data = {}
+	counts_data['Total'] = {}
 	
 	# Iterate through each model folder
 	for model in ModelContext.ModelContextsForDirectory(folder_path):                
@@ -29,9 +30,13 @@ def get_counts_from_summary(folder_path, target_files):
 						# Initialize target within technique if not exists
 						if target not in counts_data[technique]:
 							counts_data[technique][target] = {'Failures': 0, 'Successes': 0}
+						if target not in counts_data['Total']:
+							counts_data['Total'][target] = {'Failures': 0, 'Successes': 0}
 						counts_data[technique][target]['Failures'] += row['Failures']
+						counts_data['Total'][target]['Failures'] += row['Failures']
 						if 'Successes' in row:
 							counts_data[technique][target]['Successes'] += row['Successes']
+							counts_data['Total'][target]['Successes'] += row['Successes']
 	return counts_data
 
 def generate_latex_code_from_counts(counts_data, target_files, run_counts_dict):
@@ -73,3 +78,6 @@ if __name__ == "__main__":
 	run_counts_dict = analysis.count_runs_by_technique(folder_path)
 	latex_output = generate_latex_code_from_counts(countsDict, target_files, run_counts_dict)
 	print(latex_output)
+	
+	print("Total statistics:")
+	print(countsDict)

@@ -32,9 +32,14 @@ def get_failure_data(folder_path):
 						failure_type = failure_mapping.get(row['Failure Type'], None)
 						if failure_type:
 							failure_data.setdefault(prefix, {}).setdefault(technique, {}).setdefault(failure_type, 0)
-							failure_data[prefix][technique][failure_type] += row['Count']
+							failure_data[prefix].setdefault('Total', {}).setdefault(failure_type, 0)
+							
+							count = row['Count']							
+							failure_data[prefix][technique][failure_type] += count
+							failure_data[prefix]['Total'][failure_type] += count
 							
 	return failure_data
+
 
 def generate_latex_code(failure_data, run_counts_dict):
 	# Generate LaTeX code based on the failure data
@@ -81,3 +86,6 @@ if __name__ == "__main__":
 	for prefix, latex_output in latex_outputs.items():
 		print(f"\nLaTeX for {prefix}:\n")
 		print(latex_output)
+		
+	print("Total statistics:")
+	print(failure_data)
