@@ -21,10 +21,38 @@ def get_compilation_errors(folder_path):
 							compilationErrors.append(error_message)
 						else:
 							print(f"File {filepath} compiled successfully")
-						# def compile_source(source_file_path, output_path=None, generate_assembly=False, optimization_level=None):
 	
 	return compilationErrors
+
+def get_linking_errors(folder_path, test_driver_path):
+	linkerErrors = []
 	
+	success, errorMessage, driverObjectPath = compilation.compile_source(test_driver_source_path)
+	if not success:
+		print(f"Failed to compile test driver: {errorMessage}")
+		return None
+	
+	for modelContext in ModelContext.ModelContextsForDirectory(folder_path):
+		for problemContext in modelContext.GetProblemContexts():
+			for runContext in problemContext.GetExistingRunContexts():
+				for filename in os.listdir(runContext.failurePath()):
+					if filename.endswith('.asm') and 'LINKER' in filename:
+						filepath = os.path.join(runContext.failurePath(), filename)
+						success, error_message, outputObjectPath = compilation.compile_source(filepath)
+						
+						if not success:
+							print(f"File {filepath} failed to compile: {error_message}")
+							continue
+						
+						success, error_message, outputBinaryPath = compilation.link_binary([driverObjectPath, outputObjectPath])
+
+						if error_message:
+							linkerErrors.append(error_message)
+						else:
+							print(f"File {filepath} linked successfully")
+	
+	return linkerErrors
+
 def extract_errors(data):
 	error_pattern = re.compile(r"error: (.+)$")
 	instruction_pattern = re.compile(r"^(.+?)(?:;|$)")  # Capture up to an optional comment or end of line
@@ -48,7 +76,7 @@ def extract_errors(data):
 	
 	return errors_dict
 	
-def format_errors(error_dict):
+def format_errors_full(error_dict):
 	# Sort the dictionary by count in descending order
 	sorted_errors = sorted(error_dict.items(), key=lambda x: x[1]['count'], reverse=True)
 	
@@ -81,6 +109,29 @@ def format_errors(error_dict):
 		
 	return "\n\n".join(formatted_output)
 	
+def format_errors_summary(error_dict):
+	# Helper function to format and group instruction counts by mnemonic
+	def format_instruction_counts_grouped(instructions):
+		mnemonic_counts = defaultdict(int)
+		for instruction, count in instructions.items():
+			mnemonic = instruction.split()[0]  # Extract mnemonic from the instruction
+			mnemonic_counts[mnemonic] += count
+		
+		# Sort mnemonics by count in descending order
+		sorted_mnemonics = sorted(mnemonic_counts.items(), key=lambda x: x[1], reverse=True)
+		return ", ".join(f"{mnemonic} {count}" for mnemonic, count in sorted_mnemonics)
+
+	# Order the errors by count in descending order
+	sorted_errors = sorted(error_dict.items(), key=lambda x: x[1]['count'], reverse=True)
+	
+	summary = []
+	for error, details in sorted_errors:
+		instruction_summary = format_instruction_counts_grouped(details["instructions"])
+		summary.append(f"Error: {error}\nCount: {details['count']}\nInstructions: {instruction_summary}\n")
+
+	return "\n".join(summary)
+
+	
 if __name__ == "__main__":
 	if len(sys.argv) < 2:
 		print("Usage: python script_name.py <folder_path>")
@@ -88,6 +139,13 @@ if __name__ == "__main__":
 	
 	folder_path = sys.argv[1]
 	
-	all_compilation_errors = get_compilation_errors(folder_path)
-	extracted_errors = extract_errors(all_compilation_errors)
-	print(format_errors(extracted_errors))
+	# print("Compilation:")
+	# all_compilation_errors = get_compilation_errors(folder_path)
+	# extracted_errors = extract_errors(all_compilation_errors)
+	# print(format_errors_full(extracted_errors))
+	# print('\n')
+	# print(format_errors_summary(extracted_errors))
+	
+	print("\n\nLinking:")
+	all_linking_errors = get_linking_errors(folder_path)
+	print(all_linking_errors)
