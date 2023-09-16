@@ -19,7 +19,6 @@ def compile_source(source_file_path, output_path=None, generate_assembly=False, 
 		
 		# Compile using clang
 		compile_command = ["clang", "-c", source_file_path, "-o", output_file]
-		print(compile_command)
 		
 		# If generating assembly, add the '-S' flag
 		if generate_assembly:
@@ -29,7 +28,7 @@ def compile_source(source_file_path, output_path=None, generate_assembly=False, 
 		if optimization_level:
 			compile_command.insert(2, f"-{optimization_level}")
 		
-		print(f"Running {' '.join(compile_command)}")
+		# print(f"Running {' '.join(compile_command)}")
 		compile_process = subprocess.run(compile_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 		
 		if compile_process.returncode == 0:
