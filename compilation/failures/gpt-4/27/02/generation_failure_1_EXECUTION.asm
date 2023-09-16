@@ -177,7 +177,7 @@
 ; frame #2: [33m0x00000001ac0c7f28[0m dyld`start + 2236
 ; 
 ; ; Correctness error: None
-; .global _customFunction
+.global _customFunction
 _customFunction:
 // Prologue
 stp  lr, x30, [sp, #-16]!   // Save link register to stack

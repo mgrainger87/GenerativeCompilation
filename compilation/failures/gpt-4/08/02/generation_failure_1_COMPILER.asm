@@ -9,7 +9,7 @@
 ; ; Linker error: None
 ; ; Execution error: None
 ; ; Correctness error: None
-; .global _customFunction
+.global _customFunction
 _customFunction:
 stp x30, [sp, #-16]!      // Save the link register to the stack
 mul w4, w0, w0            // Multiply int1 with itself and store the result in w4

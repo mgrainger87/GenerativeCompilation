@@ -16,7 +16,7 @@
 ; 	Integer: 10
 ; 	Double: -0.000000
 ; 
-; .global _helperFunction
+.global _helperFunction
 _helperFunction:
 // Saving the link register
 stp x30, x29, [sp, #-16]!

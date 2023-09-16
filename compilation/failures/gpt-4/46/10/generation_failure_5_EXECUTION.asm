@@ -8,7 +8,7 @@
 ; frame #0: [33m0x000000010000395c[0m tmpe9c_3bpm`customFunction + 4
 ; 
 ; ; Correctness error: None
-; .global _helperFunction
+.global _helperFunction
 .align 3
 
 _helperFunction:

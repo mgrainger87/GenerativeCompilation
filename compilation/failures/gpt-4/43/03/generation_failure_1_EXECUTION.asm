@@ -8,7 +8,7 @@
 ; frame #0: [33m0x0000000100003964[0m tmpd0og_kll`customFunction + 8
 ; 
 ; ; Correctness error: None
-; .text
+.text
 .global _helperFunction
 _helperFunction:
 fmul d0, d0, d0

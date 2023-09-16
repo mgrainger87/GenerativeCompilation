@@ -15,7 +15,7 @@
 ; ; Linker error: None
 ; ; Execution error: None
 ; ; Correctness error: None
-; .global _customFunction
+.global _customFunction
 .align  3
 _customFunction:
 // Store the link register (return address) to the stack

@@ -6,7 +6,7 @@
 ; ; Linker error: None
 ; ; Execution error: None
 ; ; Correctness error: None
-; .global _customFunction
+.global _customFunction
 _customFunction:
 // Save link register to the stack to preserve it (required since we're making a function call)
 stp x29, x30, [sp, #-16]!

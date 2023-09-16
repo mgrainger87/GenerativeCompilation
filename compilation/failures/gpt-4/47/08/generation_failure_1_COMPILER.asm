@@ -6,7 +6,7 @@
 ; ; Linker error: None
 ; ; Execution error: None
 ; ; Correctness error: None
-; .global _helperFunction
+.global _helperFunction
 .global _customFunction
 
 .text

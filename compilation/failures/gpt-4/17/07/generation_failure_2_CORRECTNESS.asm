@@ -16,7 +16,7 @@
 ; 	Integer: -5
 ; 	Double: 0.500000
 ; 
-; .globl _customFunction
+.globl _customFunction
 .align 2
 _customFunction:
 // Save the link register

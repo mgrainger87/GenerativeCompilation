@@ -11,7 +11,7 @@
 ; 
 ; ; Execution error: None
 ; ; Correctness error: None
-; _customFunction:
+_customFunction:
 // Store the link register x30 to the stack to save the return address
 // And store x19 which we will use later
 stp     x30, x19, [sp, #-16]!

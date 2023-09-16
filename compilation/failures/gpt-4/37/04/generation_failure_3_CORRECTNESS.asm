@@ -16,7 +16,7 @@
 ; 	Integer: 6
 ; 	Double: 1.500000
 ; 
-; .globl _customFunction
+.globl _customFunction
 .align 2
 _customFunction:
 // Save link register and caller saved registers

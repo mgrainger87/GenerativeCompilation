@@ -6,7 +6,7 @@
 ; ; Linker error: None
 ; ; Execution error: None
 ; ; Correctness error: None
-; .global customFunction
+.global customFunction
 customFunction:
 // Save link register and any callee-saved registers (none in this case)
 stp     lr, x30, [sp, #-16]!  // save lr to stack (for recursive call)

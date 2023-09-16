@@ -12,7 +12,7 @@
 ; ; Linker error: None
 ; ; Execution error: None
 ; ; Correctness error: None
-; .global _customFunction
+.global _customFunction
 _customFunction:
 // Save link register (return address) and allocate space on the stack
 stp x30, xzr, [sp, #-16]!

@@ -9,7 +9,7 @@
 ; ; Linker error: None
 ; ; Execution error: None
 ; ; Correctness error: None
-; _helperFunction:
+_helperFunction:
 // Add 10 to x0 and return the result in x0.
 add x0, x0, #10
 ret

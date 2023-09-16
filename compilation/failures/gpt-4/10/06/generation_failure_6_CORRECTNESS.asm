@@ -16,7 +16,7 @@
 ; 	Integer: 5
 ; 	Double: 0.000000
 ; 
-; .data
+.data
 .align 3
 five_point_zero:
 .double 5.0

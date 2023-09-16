@@ -6,7 +6,7 @@
 ; ; Linker error: None
 ; ; Execution error: None
 ; ; Correctness error: None
-; .global _customFunction
+.global _customFunction
 _customFunction:
 stp x29, x30, [sp, #-16]!  ; Save frame and link registers to the stack
 mov x29, sp                ; Update frame pointer

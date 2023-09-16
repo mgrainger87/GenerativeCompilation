@@ -6,7 +6,7 @@
 ; ; Linker error: None
 ; ; Execution error: None
 ; ; Correctness error: None
-; .global _customFunction
+.global _customFunction
 _customFunction:
 // Save callee-saved registers and link register (lr)
 stp x29, x30, [sp, #-16]!  // Push x29 (frame pointer) and x30 (link register) onto the stack

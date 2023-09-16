@@ -10,7 +10,7 @@
 ; 
 ; ; Execution error: None
 ; ; Correctness error: None
-; ; Function: _helperFunction
+; Function: _helperFunction
 _helperFunction:
 ; Add 10 to the input integer
 add x0, x0, #10

@@ -16,7 +16,7 @@
 ; 	Integer: 10
 ; 	Double: 4.000000
 ; 
-; .global _customFunction
+.global _customFunction
 _customFunction:
 // Save caller-saved registers and link register
 stp x29, x30, [sp, #-16]!

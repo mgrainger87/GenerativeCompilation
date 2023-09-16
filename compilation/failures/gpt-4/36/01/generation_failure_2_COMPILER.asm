@@ -6,7 +6,7 @@
 ; ; Linker error: None
 ; ; Execution error: None
 ; ; Correctness error: None
-; .section .data
+.section .data
 fp_const:
 .double 0.1
 

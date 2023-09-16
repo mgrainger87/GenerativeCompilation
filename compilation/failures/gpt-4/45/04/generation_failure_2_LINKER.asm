@@ -10,7 +10,7 @@
 ; 
 ; ; Execution error: None
 ; ; Correctness error: None
-; .global _helperFunction
+.global _helperFunction
 _helperFunction:
 fdiv    d0, d0, d1      ; d0 = a / b
 ret

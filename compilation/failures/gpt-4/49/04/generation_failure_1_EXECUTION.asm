@@ -8,7 +8,7 @@
 ; frame #0: [33m0x0000000100003964[0m tmpc4ck9w9h`customFunction + 12
 ; 
 ; ; Correctness error: None
-; _helperFunction:
+_helperFunction:
 fadd d0, d0, d1  ; Add the two double values
 ret              ; Return
 .global _customFunction

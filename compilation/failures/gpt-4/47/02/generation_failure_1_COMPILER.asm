@@ -6,7 +6,7 @@
 ; ; Linker error: None
 ; ; Execution error: None
 ; ; Correctness error: None
-; .globl _helperFunction
+.globl _helperFunction
 .align 2
 _helperFunction:
 fneg    d0, d0       ; Negate the input double value

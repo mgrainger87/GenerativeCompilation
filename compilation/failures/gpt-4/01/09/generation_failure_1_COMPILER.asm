@@ -9,7 +9,7 @@
 ; ; Linker error: None
 ; ; Execution error: None
 ; ; Correctness error: None
-; .global customFunction
+.global customFunction
 .align 3
 customFunction:
 // Store lr (link register) to stack since we need to preserve it

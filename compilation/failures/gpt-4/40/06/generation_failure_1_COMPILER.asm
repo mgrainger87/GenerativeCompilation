@@ -12,7 +12,7 @@
 ; ; Linker error: None
 ; ; Execution error: None
 ; ; Correctness error: None
-; .global _customFunction
+.global _customFunction
 _customFunction:
 // Preserve link register (for the return address) and other necessary registers
 stp x29, x30, [sp, #-16]!  // Store FP (x29) and LR (x30) to stack

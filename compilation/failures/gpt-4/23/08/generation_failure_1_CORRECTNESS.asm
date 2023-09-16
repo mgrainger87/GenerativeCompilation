@@ -16,7 +16,7 @@
 ; 	Integer: 2
 ; 	Double: 884343796662848689269093937575758923563024777216.000000
 ; 
-; .global _customFunction
+.global _customFunction
 _customFunction:
 // Store the link register to the stack and set up the frame pointer
 stp x30, x29, [sp, #-16]!

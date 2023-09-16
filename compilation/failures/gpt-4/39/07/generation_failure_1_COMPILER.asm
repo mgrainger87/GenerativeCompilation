@@ -18,7 +18,7 @@
 ; ; Linker error: None
 ; ; Execution error: None
 ; ; Correctness error: None
-; .global _customFunction
+.global _customFunction
 _customFunction:
 // Save lr to stack as we'll be calling another function
 stp lr, [sp, #-16]!  // pre-decrement stack pointer

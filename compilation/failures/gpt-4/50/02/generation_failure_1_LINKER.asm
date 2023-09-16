@@ -10,7 +10,7 @@
 ; 
 ; ; Execution error: None
 ; ; Correctness error: None
-; _helperFunction:
+_helperFunction:
 add x0, x0, #10      ; Add 10 to the input value
 ret                  ; Return
 _customFunction:

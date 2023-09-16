@@ -177,7 +177,7 @@
 ; frame #2: [33m0x00000001ac0c7f28[0m dyld`start + 2236
 ; 
 ; ; Correctness error: None
-; .global _customFunction
+.global _customFunction
 _customFunction:
 // Preserve lr (link register) since we're not making any calls, but it's good practice.
 stp lr, x30, [sp, #-16]!  // Use x30 as temp storage. Push lr and x30 onto the stack.

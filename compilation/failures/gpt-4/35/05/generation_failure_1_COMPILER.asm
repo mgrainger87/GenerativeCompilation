@@ -6,7 +6,7 @@
 ; ; Linker error: None
 ; ; Execution error: None
 ; ; Correctness error: None
-; .global _customFunction
+.global _customFunction
 _customFunction:
 // Save the link register and any other callee-saved registers that will be used.
 stp x29, x30, [sp, #-16]!

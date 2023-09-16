@@ -11,7 +11,7 @@
 ; 
 ; ; Execution error: None
 ; ; Correctness error: None
-; .global _main
+.global _main
 .global _customFunction
 .global _customFunctionDouble
 

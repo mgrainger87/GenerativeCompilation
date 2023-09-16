@@ -177,7 +177,7 @@
 ; frame #2: [33m0x00000001ac0c7f28[0m dyld`start + 2236
 ; 
 ; ; Correctness error: None
-; .align  2  // Align to 4-byte boundary
+.align  2  // Align to 4-byte boundary
 .global _customFunction
 _customFunction:
 // Save link register and any callee-saved registers (none in this case)

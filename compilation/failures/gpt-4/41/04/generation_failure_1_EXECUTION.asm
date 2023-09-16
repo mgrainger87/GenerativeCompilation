@@ -8,7 +8,7 @@
 ; frame #0: [33m0x000000010000395c[0m tmplbqaer4_`customFunction + 4
 ; 
 ; ; Correctness error: None
-; .global _helperFunction
+.global _helperFunction
 _helperFunction:
 add w0, w0, w1
 ret

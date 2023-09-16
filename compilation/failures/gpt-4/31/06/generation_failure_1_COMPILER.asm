@@ -12,7 +12,7 @@
 ; ; Linker error: None
 ; ; Execution error: None
 ; ; Correctness error: None
-; .global _customFunction
+.global _customFunction
 _customFunction:
 // Save the link register to the stack
 stp lr, [sp, #-16]! // pre-decrement the stack pointer by 16 bytes and then store lr at that address

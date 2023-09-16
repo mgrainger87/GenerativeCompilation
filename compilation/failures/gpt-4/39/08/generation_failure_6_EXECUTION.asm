@@ -183,7 +183,7 @@
 ; frame #8: [33m0x00000001ac0c7e18[0m dyld`start + 1964
 ; 
 ; ; Correctness error: None
-; .global _customFunction
+.global _customFunction
 .align 2
 _customFunction:
 stp x29, x30, [sp, #-16]!    ; Save frame pointer and link register to the stack

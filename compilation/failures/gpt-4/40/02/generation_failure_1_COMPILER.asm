@@ -12,7 +12,7 @@
 ; ; Linker error: None
 ; ; Execution error: None
 ; ; Correctness error: None
-; .global _customFunction
+.global _customFunction
 
 _customFunction:
 // Save the link register (return address) and other callee-saved registers we'll use

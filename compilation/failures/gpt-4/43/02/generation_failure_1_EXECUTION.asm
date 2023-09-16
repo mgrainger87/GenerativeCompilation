@@ -8,7 +8,7 @@
 ; frame #0: [33m0x0000000100003964[0m tmp3t6e3822`customFunction + 8
 ; 
 ; ; Correctness error: None
-; .global _helperFunction
+.global _helperFunction
 _helperFunction:
 // Multiply a by itself and return
 fmul d0, d0, d0

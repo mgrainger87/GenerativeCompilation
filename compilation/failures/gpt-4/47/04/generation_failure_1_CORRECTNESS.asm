@@ -16,7 +16,7 @@
 ; 	Integer: 10
 ; 	Double: -0.000000
 ; 
-; .global _helperFunction
+.global _helperFunction
 _helperFunction:
 fneg    d0, d0      ; Negate the floating point value in d0 and store result back in d0
 ret                 ; Return with result in d0

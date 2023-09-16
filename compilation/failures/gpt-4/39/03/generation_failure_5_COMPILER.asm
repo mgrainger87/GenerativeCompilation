@@ -6,7 +6,7 @@
 ; ; Linker error: None
 ; ; Execution error: None
 ; ; Correctness error: None
-; .data
+.data
 .double_const:
 .double 10.0
 .double 1.0

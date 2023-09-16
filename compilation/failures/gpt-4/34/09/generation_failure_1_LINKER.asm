@@ -9,7 +9,7 @@
 ; 
 ; ; Execution error: None
 ; ; Correctness error: None
-; .global customFunction
+.global customFunction
 customFunction:
 // Save link register (to return back to caller)
 stp x30, x29, [sp, -16]! // Push x30 (link register) and x29 (frame pointer) onto the stack

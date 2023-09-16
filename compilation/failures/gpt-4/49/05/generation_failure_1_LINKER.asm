@@ -10,7 +10,7 @@
 ; 
 ; ; Execution error: None
 ; ; Correctness error: None
-; helperFunction:
+helperFunction:
 fadd    d0, d0, d1      // Add the two doubles in d0 and d1 and store the result in d0
 ret                     // Return with the result in d0
 

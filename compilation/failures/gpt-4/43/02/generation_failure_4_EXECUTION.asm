@@ -8,7 +8,7 @@
 ; frame #0: [33m0x0000000100003964[0m tmpzautpvrt`customFunction + 8
 ; 
 ; ; Correctness error: None
-; .global _helperFunction
+.global _helperFunction
 _helperFunction:
 // Save original stack pointer
 mov x28, sp

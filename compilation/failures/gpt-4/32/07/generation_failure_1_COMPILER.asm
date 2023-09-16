@@ -9,7 +9,7 @@
 ; ; Linker error: None
 ; ; Execution error: None
 ; ; Correctness error: None
-; .globl _customFunction
+.globl _customFunction
 _customFunction:
 // Check if int2 (x1) is less than or equal to 0
 cmp x1, #0

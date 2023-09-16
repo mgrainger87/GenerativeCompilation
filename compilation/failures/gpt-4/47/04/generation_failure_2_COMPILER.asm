@@ -6,7 +6,7 @@
 ; ; Linker error: None
 ; ; Execution error: None
 ; ; Correctness error: None
-; .global _helperFunction
+.global _helperFunction
 _helperFunction:
 fneg    d0, d0      ; Negate the floating point value in d0 and store result back in d0
 ret                 ; Return with result in d0

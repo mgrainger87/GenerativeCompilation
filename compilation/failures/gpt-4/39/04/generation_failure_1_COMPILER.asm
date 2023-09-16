@@ -12,7 +12,7 @@
 ; ; Linker error: None
 ; ; Execution error: None
 ; ; Correctness error: None
-; .global _customFunction
+.global _customFunction
 _customFunction:
 // Save link register and callee-saved registers to stack
 stp x29, x30, [sp, #-16]!   // Save frame pointer and link register

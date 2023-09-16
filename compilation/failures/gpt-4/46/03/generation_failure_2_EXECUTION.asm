@@ -177,7 +177,7 @@
 ; frame #2: [33m0x00000001ac0c7f28[0m dyld`start + 2236
 ; 
 ; ; Correctness error: None
-; .section    __TEXT,__text,regular,pure_instructions
+.section    __TEXT,__text,regular,pure_instructions
 
 // Declare helperFunction as a global function so it can be linked externally
 .globl  _helperFunction

@@ -12,7 +12,7 @@
 ; ; Linker error: None
 ; ; Execution error: None
 ; ; Correctness error: None
-; .global _customFunction
+.global _customFunction
 _customFunction:
 // Save necessary registers (only x30 in this case)
 stp x30, xzr, [sp, #-16]!  // We use xzr to save space for another register, but we won't restore it

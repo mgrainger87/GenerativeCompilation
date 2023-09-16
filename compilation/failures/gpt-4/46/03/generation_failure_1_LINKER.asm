@@ -8,7 +8,7 @@
 ; 
 ; ; Execution error: None
 ; ; Correctness error: None
-; .section    __TEXT,__text,regular,pure_instructions
+.section    __TEXT,__text,regular,pure_instructions
 .globl  _customFunction
 .p2align    3
 _customFunction:

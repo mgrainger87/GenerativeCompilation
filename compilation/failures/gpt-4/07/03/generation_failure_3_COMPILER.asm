@@ -15,7 +15,7 @@
 ; ; Linker error: None
 ; ; Execution error: None
 ; ; Correctness error: None
-; .global _customFunction
+.global _customFunction
 _customFunction:
 // Preserve frame and link register
 stp x29, x30, [sp, #-16]!

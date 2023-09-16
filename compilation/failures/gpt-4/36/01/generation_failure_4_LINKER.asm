@@ -8,7 +8,7 @@
 ; 
 ; ; Execution error: None
 ; ; Correctness error: None
-; .data
+.data
 fp_const:
 .double 0.1
 

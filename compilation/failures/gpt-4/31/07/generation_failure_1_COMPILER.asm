@@ -6,7 +6,7 @@
 ; ; Linker error: None
 ; ; Execution error: None
 ; ; Correctness error: None
-; .globl _customFunction
+.globl _customFunction
 _customFunction:
 // Entry sequence
 stp x29, x30, [sp, #-16]!   // Store FP and LR to the stack, and update SP

@@ -16,7 +16,7 @@
 ; 	Integer: 0
 ; 	Double: 0.000000
 ; 
-; .global _customFunction
+.global _customFunction
 _customFunction:
 // Prologue: Save caller-saved registers
 stp     x29, x30, [sp, #-16]!  // Save FP (x29) and LR (x30) to the stack

@@ -10,7 +10,7 @@
 ; 
 ; ; Execution error: None
 ; ; Correctness error: None
-; .global helperFunction
+.global helperFunction
 helperFunction:
 add x0, x0, #10     // a = a + 10
 ret

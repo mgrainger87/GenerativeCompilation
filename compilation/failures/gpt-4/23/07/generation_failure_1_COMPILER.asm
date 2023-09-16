@@ -6,7 +6,7 @@
 ; ; Linker error: None
 ; ; Execution error: None
 ; ; Correctness error: None
-; .global _customFunction
+.global _customFunction
 _customFunction:
 // Save the link register (x30) and x19 which we will use as our loop counter
 stp x30, x19, [sp, #-16]!

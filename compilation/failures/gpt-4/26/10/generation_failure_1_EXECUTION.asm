@@ -178,7 +178,7 @@
 ; frame #3: [33m0x00000001ac0c7f28[0m dyld`start + 2236
 ; 
 ; ; Correctness error: None
-; .global _customFunction
+.global _customFunction
 _customFunction:
 // Function Prologue
 stp x29, x30, [sp, #-16]!    // Save frame pointer and link register

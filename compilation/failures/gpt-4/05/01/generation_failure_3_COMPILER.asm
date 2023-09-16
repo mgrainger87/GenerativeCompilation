@@ -9,7 +9,7 @@
 ; ; Linker error: None
 ; ; Execution error: None
 ; ; Correctness error: None
-; .global _customFunction
+.global _customFunction
 _customFunction:
 // Prologue: Save lr (link register)
 stp     lr, [sp, #-16]!       // Save lr onto the stack

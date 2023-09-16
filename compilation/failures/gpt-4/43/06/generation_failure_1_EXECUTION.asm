@@ -8,7 +8,7 @@
 ; frame #0: [33m0x0000000100003964[0m tmpxbj8qcw0`customFunction + 8
 ; 
 ; ; Correctness error: None
-; .global _customFunction
+.global _customFunction
 
 // Helper function (not global since it's static in C)
 _helperFunction:

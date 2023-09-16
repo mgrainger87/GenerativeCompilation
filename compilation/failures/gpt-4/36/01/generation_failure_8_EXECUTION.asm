@@ -183,7 +183,7 @@
 ; frame #8: [33m0x00000001ac0c7e18[0m dyld`start + 1964
 ; 
 ; ; Correctness error: None
-; .data
+.data
 fp_const:
 .double 0.1
 

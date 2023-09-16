@@ -183,7 +183,7 @@
 ; frame #8: [33m0x00000001ac0c7e18[0m dyld`start + 1964
 ; 
 ; ; Correctness error: None
-; .section __TEXT,__text,regular,pure_instructions
+.section __TEXT,__text,regular,pure_instructions
 .globl _customFunction
 .align 2
 _customFunction:

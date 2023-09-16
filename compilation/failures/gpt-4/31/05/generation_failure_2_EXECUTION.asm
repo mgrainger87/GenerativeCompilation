@@ -177,7 +177,7 @@
 ; frame #2: [33m0x00000001ac0c7f28[0m dyld`start + 2236
 ; 
 ; ; Correctness error: None
-; .global _customFunction
+.global _customFunction
 _customFunction:
 // Save the link register (lr) to the stack as we're making a function call within our function
 stp     lr, x30, [sp, #-16]!      // Save the link register and another general purpose register to keep stack 16-byte aligned

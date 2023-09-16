@@ -6,7 +6,7 @@
 ; ; Linker error: None
 ; ; Execution error: None
 ; ; Correctness error: None
-; // This is a static function, so no need to mark it as global.
+// This is a static function, so no need to mark it as global.
 // However, other functions in the same compilation unit can access it.
 _helperFunction:
 // Add 10 to x0 and return the result in x0.

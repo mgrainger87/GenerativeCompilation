@@ -6,7 +6,7 @@
 ; ; Linker error: None
 ; ; Execution error: None
 ; ; Correctness error: None
-; .global _customFunction
+.global _customFunction
 _customFunction:
 // Save the link register (lr) to the stack as we're making a function call within our function
 stp     lr, x30, [sp, #-16]!      // Save the link register and another general purpose register to keep stack 16-byte aligned

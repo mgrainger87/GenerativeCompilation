@@ -177,7 +177,7 @@
 ; frame #2: [33m0x00000001ac0c7f28[0m dyld`start + 2236
 ; 
 ; ; Correctness error: None
-; .globl _helperFunction
+.globl _helperFunction
 .align 2
 _helperFunction:
 fneg    d0, d0       ; Negate the input double value

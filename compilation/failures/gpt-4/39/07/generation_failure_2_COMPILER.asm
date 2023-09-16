@@ -27,7 +27,7 @@
 ; ; Linker error: None
 ; ; Execution error: None
 ; ; Correctness error: None
-; .global _customFunction
+.global _customFunction
 _customFunction:
 // Save lr and x29 to stack
 stp x29, lr, [sp, #-16]!

@@ -6,7 +6,7 @@
 ; ; Linker error: None
 ; ; Execution error: None
 ; ; Correctness error: None
-; // Name mangling for helperFunction
+// Name mangling for helperFunction
 _helperFunction:
 // Multiply a with itself
 mul x0, x0, x0

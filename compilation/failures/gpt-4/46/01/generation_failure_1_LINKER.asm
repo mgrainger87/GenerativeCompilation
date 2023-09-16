@@ -9,7 +9,7 @@
 ; 
 ; ; Execution error: None
 ; ; Correctness error: None
-; .global _customFunction
+.global _customFunction
 _customFunction:
 ; Save the link register (x30)
 stp x30, xzr, [sp, #-16]!

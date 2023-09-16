@@ -9,7 +9,7 @@
 ; 
 ; ; Execution error: None
 ; ; Correctness error: None
-; .global customFunction
+.global customFunction
 customFunction:
 stp x29, x30, [sp, #-16]!    // Save frame pointer and link register
 mov x29, sp                 // Set frame pointer

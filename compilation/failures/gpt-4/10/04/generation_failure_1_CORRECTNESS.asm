@@ -16,7 +16,7 @@
 ; 	Integer: 5
 ; 	Double: 0.000000
 ; 
-; .global _customFunction
+.global _customFunction
 _customFunction:
 // Save the link register (x30) and FP (x29) to the stack
 stp x29, x30, [sp, #-16]!

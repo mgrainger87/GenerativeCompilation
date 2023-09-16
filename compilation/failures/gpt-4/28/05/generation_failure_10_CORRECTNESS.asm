@@ -16,7 +16,7 @@
 ; 	Integer: 0
 ; 	Double: 0.000000
 ; 
-; .align 2
+.align 2
 .global _customFunction
 _customFunction:
 stp x29, x30, [sp, #-16]!    // Save frame pointer and link register

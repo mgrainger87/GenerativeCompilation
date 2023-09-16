@@ -9,7 +9,7 @@
 ; ; Linker error: None
 ; ; Execution error: None
 ; ; Correctness error: None
-; .globl _customFunction
+.globl _customFunction
 .align 2
 _customFunction:
 // Compare int1 (x0) with int2 (x1)

@@ -10,7 +10,7 @@
 ; 
 ; ; Execution error: None
 ; ; Correctness error: None
-; _helperFunction:                     ; mangled function name
+_helperFunction:                     ; mangled function name
 add w0, w0, w1                   ; w0 = w0 + w1
 ret                              ; return
 _customFunction:

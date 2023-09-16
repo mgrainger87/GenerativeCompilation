@@ -9,7 +9,7 @@
 ; ; Linker error: None
 ; ; Execution error: None
 ; ; Correctness error: None
-; .global _customFunction
+.global _customFunction
 _customFunction:
 stp     lr, [sp, #-16]!      ; Push link register onto the stack
 str     w0, [x2]             ; *outInt = int1

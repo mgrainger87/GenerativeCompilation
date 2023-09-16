@@ -175,7 +175,7 @@
 ; frame #0: [33m0x0000006400000000[0m
 ; 
 ; ; Correctness error: None
-; .global _customFunction
+.global _customFunction
 _customFunction:
 // Save frame pointer and link register.
 stp x29, x30, [sp, #-16]!

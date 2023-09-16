@@ -16,7 +16,7 @@
 ; 	Integer: 10
 ; 	Double: -0.000000
 ; 
-; .global _helperFunction
+.global _helperFunction
 .global _customFunction
 
 .align 2

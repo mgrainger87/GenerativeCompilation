@@ -10,7 +10,7 @@
 ; 
 ; ; Execution error: None
 ; ; Correctness error: None
-; ; Function Name Mangling for C:
+; Function Name Mangling for C:
 _helperFunction:
 ; Multiply x0 with itself and store result in x0
 mul w0, w0, w0

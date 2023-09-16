@@ -11,7 +11,7 @@
 ; 
 ; ; Execution error: None
 ; ; Correctness error: None
-; .global main
+.global main
 main:
 // Prologue
 stp x29, x30, [sp, #-16]!

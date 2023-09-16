@@ -10,7 +10,7 @@
 ; 
 ; ; Execution error: None
 ; ; Correctness error: None
-; .global customFunction
+.global customFunction
 customFunction:
 // Save link register and required callee-saved registers
 stp     x29, x30, [sp, #-16]!

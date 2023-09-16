@@ -12,7 +12,7 @@
 ; ; Linker error: None
 ; ; Execution error: None
 ; ; Correctness error: None
-; .global customFunction
+.global customFunction
 
 customFunction:
 // Save necessary registers: x30 (lr) and x19-x23 (for storing arguments)

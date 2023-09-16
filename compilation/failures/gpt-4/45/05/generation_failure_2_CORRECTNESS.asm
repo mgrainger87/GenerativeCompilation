@@ -16,7 +16,7 @@
 ; 	Integer: 2
 ; 	Double: 0.000000
 ; 
-; .global _helperFunction
+.global _helperFunction
 _helperFunction:
 // Divide the two floating point numbers and store the result in d0
 fdiv d0, d0, d1

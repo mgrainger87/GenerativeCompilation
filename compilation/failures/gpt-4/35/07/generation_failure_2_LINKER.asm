@@ -8,7 +8,7 @@
 ; 
 ; ; Execution error: None
 ; ; Correctness error: None
-; .global customFunction
+.global customFunction
 
 // Align symbols appropriately for arm64
 .align 3

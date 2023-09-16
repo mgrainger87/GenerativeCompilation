@@ -10,7 +10,7 @@
 ; 
 ; ; Execution error: None
 ; ; Correctness error: None
-; helperFunction:
+helperFunction:
 // Multiply the input by itself
 mul w0, w0, w0
 ret

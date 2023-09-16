@@ -9,7 +9,7 @@
 ; ; Linker error: None
 ; ; Execution error: None
 ; ; Correctness error: None
-; .global _customFunction
+.global _customFunction
 _customFunction:
 // Save link register and callee-saved registers (if any are used)
 stp x30, xzr, [sp, #-16]!   // Save LR (x30) and space for an unused register (xzr) to maintain 16-byte alignment

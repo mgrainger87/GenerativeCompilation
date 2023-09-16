@@ -9,7 +9,7 @@
 ; ; Linker error: None
 ; ; Execution error: None
 ; ; Correctness error: None
-; .global _customFunction
+.global _customFunction
 _customFunction:
 // Store the link register to keep the return address
 stp lr, [sp, #-16]!   // Pre-decrement stack by 16 bytes to store the link register

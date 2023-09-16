@@ -6,7 +6,7 @@
 ; ; Linker error: None
 ; ; Execution error: None
 ; ; Correctness error: None
-; .global customFunction
+.global customFunction
 customFunction:
 // Save the link register (return address)
 stp     x30, x29, [sp, #-16]!

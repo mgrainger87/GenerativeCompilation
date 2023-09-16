@@ -175,7 +175,7 @@
 ; frame #0: [33m0x0000000100003928[0m tmp482ndfea`customFunction
 ; 
 ; ; Correctness error: None
-; .global _customFunction
+.global _customFunction
 _customFunction:
 // Allocate space on the stack and save necessary registers
 stp     x29, x30, [sp, #-48]!    // Save frame pointer and link register and allocate extra space

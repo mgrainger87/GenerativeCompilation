@@ -11,7 +11,7 @@
 ; 
 ; ; Execution error: None
 ; ; Correctness error: None
-; .global customFunction
+.global customFunction
 customFunction:
 // Save link register to the stack (for the return address)
 stp x30, x29, [sp, #-16]!  // Pre-decrement the stack pointer by 16 bytes

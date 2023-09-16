@@ -9,7 +9,7 @@
 ; ; Linker error: None
 ; ; Execution error: None
 ; ; Correctness error: None
-; .globl _customFunction
+.globl _customFunction
 .align 2
 _customFunction:
 // Save the link register (lr) to the stack. Also save x19 (to be used as counter)

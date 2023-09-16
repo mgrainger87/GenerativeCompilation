@@ -177,7 +177,7 @@
 ; frame #2: [33m0x00000001ac0c7f28[0m dyld`start + 2236
 ; 
 ; ; Correctness error: None
-; _helperFunction:
+_helperFunction:
 // Add 10 to x0 and return the result in x0.
 add x0, x0, #10
 ret

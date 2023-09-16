@@ -8,7 +8,7 @@
 ; frame #0: [33m0x0000000100003964[0m tmpt6xo3qu1`customFunction + 8
 ; 
 ; ; Correctness error: None
-; .global _helperFunction
+.global _helperFunction
 _helperFunction:
 stp x29, x30, [sp, #-16]!
 mov x29, sp

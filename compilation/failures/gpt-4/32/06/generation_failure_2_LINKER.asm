@@ -10,7 +10,7 @@
 ; 
 ; ; Execution error: None
 ; ; Correctness error: None
-; .global customFunction
+.global customFunction
 
 customFunction:
 // Save the link register (x30) and frame pointer (x29) on the stack

@@ -9,7 +9,7 @@
 ; ; Linker error: None
 ; ; Execution error: None
 ; ; Correctness error: None
-; .global customFunction
+.global customFunction
 customFunction:
 // Save link register (lr) and other callee-saved registers if used
 stp lr, x30, [sp, #-16]! // Store pair of registers and decrement SP

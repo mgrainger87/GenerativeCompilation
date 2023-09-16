@@ -6,7 +6,7 @@
 ; ; Linker error: None
 ; ; Execution error: None
 ; ; Correctness error: None
-; .global _customFunction
+.global _customFunction
 _customFunction:
 // Storing the link register to preserve the return address
 stp x30, x29, [sp, #-16]!     // Push x30 (link register) and x29 (frame pointer) onto the stack

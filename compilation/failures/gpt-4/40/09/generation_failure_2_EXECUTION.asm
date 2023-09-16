@@ -175,7 +175,7 @@
 ; frame #0: [33m0x0000000100003928[0m tmpexj0y5jr`customFunction
 ; 
 ; ; Correctness error: None
-; .global _customFunction
+.global _customFunction
 _customFunction:
 // Save necessary registers
 stp     x29, x30, [sp, #-16]!    // Save frame pointer and link register

@@ -6,7 +6,7 @@
 ; ; Linker error: None
 ; ; Execution error: None
 ; ; Correctness error: None
-; .section __DATA,__data
+.section __DATA,__data
 .Ldouble_0_1:
 .double 0.1
 

@@ -177,7 +177,7 @@
 ; frame #2: [33m0x00000001ac0c7f28[0m dyld`start + 2236
 ; 
 ; ; Correctness error: None
-; .global _customFunction
+.global _customFunction
 _customFunction:
 // Save the link register to preserve the return address
 stp     lr, x30, [sp, #-16]!  // x30 is another name for lr, Push lr to the stack

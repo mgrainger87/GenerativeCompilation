@@ -6,7 +6,7 @@
 ; ; Linker error: None
 ; ; Execution error: None
 ; ; Correctness error: None
-; .global _customFunction
+.global _customFunction
 _customFunction:
 // Save link register and other required registers to the stack
 stp x30, xzr, [sp, #-16]!  // We're using zero register xzr as a placeholder. This is a common idiom to adjust the stack and save LR in a single instruction.

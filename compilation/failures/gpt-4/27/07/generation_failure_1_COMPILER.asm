@@ -6,7 +6,7 @@
 ; ; Linker error: None
 ; ; Execution error: None
 ; ; Correctness error: None
-; .global _customFunction
+.global _customFunction
 _customFunction:
 stp lr, x29, [sp, #-16]!    // save lr and frame pointer
 mov x29, sp                // set frame pointer

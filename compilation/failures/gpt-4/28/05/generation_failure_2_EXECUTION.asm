@@ -177,7 +177,7 @@
 ; frame #2: [33m0x00000001ac0c7f28[0m dyld`start + 2236
 ; 
 ; ; Correctness error: None
-; .align 2
+.align 2
 .global _customFunction
 _customFunction:
 stp x29, x30, [sp, #-16]!    // Save frame pointer and link register

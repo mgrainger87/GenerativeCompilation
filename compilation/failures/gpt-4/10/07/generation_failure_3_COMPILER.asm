@@ -12,7 +12,7 @@
 ; ; Linker error: None
 ; ; Execution error: None
 ; ; Correctness error: None
-; .section __TEXT,__text,regular,pure_instructions
+.section __TEXT,__text,regular,pure_instructions
 .globl _customFunction
 .align 2
 _customFunction:

@@ -176,7 +176,7 @@
 ; frame #1: [33m0x00000001ac0c7f28[0m dyld`start + 2236
 ; 
 ; ; Correctness error: None
-; .global _customFunction
+.global _customFunction
 
 _customFunction:
 // Save the link register (lr) to the stack to preserve the return address

@@ -6,7 +6,7 @@
 ; ; Linker error: None
 ; ; Execution error: None
 ; ; Correctness error: None
-; .globl  _customFunction
+.globl  _customFunction
 .align  2
 _customFunction:
 // Save the link register (x30) and frame pointer (x29)

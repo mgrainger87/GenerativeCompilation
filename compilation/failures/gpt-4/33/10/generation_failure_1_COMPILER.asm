@@ -9,7 +9,7 @@
 ; ; Linker error: None
 ; ; Execution error: None
 ; ; Correctness error: None
-; .globl _customFunction
+.globl _customFunction
 .align 3
 _customFunction:
 // Save link register to preserve return address.

@@ -12,7 +12,7 @@
 ; ; Linker error: None
 ; ; Execution error: None
 ; ; Correctness error: None
-; .data
+.data
 .align 3
 five_point_zero:
 .double 5.0

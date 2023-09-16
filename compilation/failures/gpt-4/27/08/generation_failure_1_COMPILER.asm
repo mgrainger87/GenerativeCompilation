@@ -6,7 +6,7 @@
 ; ; Linker error: None
 ; ; Execution error: None
 ; ; Correctness error: None
-; _customFunction:
+_customFunction:
 stp x29, x30, [sp, #-16]!
 mov x29, sp
 adrp x4, :got:1.0

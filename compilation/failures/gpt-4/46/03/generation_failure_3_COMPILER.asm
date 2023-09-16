@@ -9,7 +9,7 @@
 ; ; Linker error: None
 ; ; Execution error: None
 ; ; Correctness error: None
-; .section    __TEXT,__text,regular,pure_instructions
+.section    __TEXT,__text,regular,pure_instructions
 
 // Declare helperFunction as a global function
 .globl  _helperFunction
