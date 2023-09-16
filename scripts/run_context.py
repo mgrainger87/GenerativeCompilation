@@ -8,6 +8,9 @@ class ModelContext:
 	def __repr__(self):
 		return f"ModelContext(Model: {self.__model})"
 
+	def model(self):
+		return self.__model
+
 	def __get_path(self, sub_directory, *args):
 		path = os.path.join(self.__rootDirectory, sub_directory, *args)
 		if not os.path.exists(path):
@@ -121,6 +124,9 @@ class ProblemContext:
 		
 	def optimizationFailurePath(self):
 		return os.path.join(self.problemPath(), "optimization_failure.asm")
+		
+	def generatedSummaryPath(self):
+		return os.path.join(self.generatedPath(), "generated_summary.csv")
 		
 	@classmethod
 	def ProblemContextsForDirectory(cls, rootDirectory):
