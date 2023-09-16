@@ -2,6 +2,7 @@ import os
 import pandas as pd
 import sys
 from run_context import ModelContext
+import analysis
 
 def get_failure_data(folder_path):
 	# Adjusted mapping for failure types based on the sample CSV
@@ -34,51 +35,36 @@ def get_failure_data(folder_path):
 							failure_data[prefix][technique][failure_type] += row['Count']
 							
 	return failure_data
-	
-def count_runs_by_technique(folder_path):
-	runs_by_technique = {}
-	for modelContext in ModelContext.ModelContextsForDirectory(folder_path):
-		for problemContext in modelContext.GetProblemContexts():
-			
-			technique_file = problemContext.techniquePath()
-			if os.path.exists(technique_file):
-				with open(technique_file, 'r') as f:
-					technique = f.read().strip()
-
-			runs_by_technique.setdefault(technique, 0)
-			runCount = 0
-			for runContext in problemContext.GetExistingRunContexts():
-				runCount += 1
-			runs_by_technique[technique] += runCount
-				
-	return runs_by_technique
-				
 
 def generate_latex_code(failure_data, run_counts_dict):
 	# Generate LaTeX code based on the failure data
 	failure_types_order = ['Assembler', 'Linker', 'Execution', 'Correctness']
 	fill_colors = ['cyan', None, None, 'lightgray']
 	formatted_technique_names = {
-		'simple': 'Simple',
-		'conditionals': 'Conditionals',
-		'loops': 'Loops',
-		'uses a helper function': 'Helper Function',
-		'recursion': 'Recursion',
+		'simple': 'simple',
+		'conditionals': 'conditionals',
+		'loops': 'loops',
+		'uses a helper function': 'helper',
+		'recursion': 'recursion',
 	}
-
+	techniques_order = ['simple', 'conditionals', 'loops', 'uses a helper function', 'recursion']
+	
 	latex_outputs = {}
 	for prefix, data in failure_data.items():
 		latex_code = []
 		for i, failure_type in enumerate(failure_types_order):
 			coordinates = []
-			for technique in data.keys():
-				avg_failures = data[technique].get(failure_type, 0) / run_counts_dict[technique]
-				coordinates.append(f"({formatted_technique_names[technique]},{avg_failures:.2f})")
+			
+			for technique in techniques_order:
+				if technique in data:
+					avg_failures = data[technique].get(failure_type, 0) / run_counts_dict[technique]
+					coordinates.append(f"({formatted_technique_names[technique]},{avg_failures:.2f})")
+					
 			fill_option = f"fill={fill_colors[i]}" if fill_colors[i] else ""
 			latex_code.append(f"\\addplot+[ybar, {fill_option}] plot coordinates {{{' '.join(coordinates)}}};")
 		
 		latex_outputs[prefix] = "\n".join(latex_code) + "\n\\legend{" + ",".join(failure_types_order) + "}"
-
+	
 	return latex_outputs
 
 if __name__ == "__main__":
@@ -89,8 +75,7 @@ if __name__ == "__main__":
 	folder_path = sys.argv[1]
 	
 	failure_data = get_failure_data(folder_path)
-	run_count_dict = count_runs_by_technique(folder_path)
-	
+	run_count_dict = analysis.count_runs_by_technique(folder_path)
 	latex_outputs = generate_latex_code(failure_data, run_count_dict)
 	
 	for prefix, latex_output in latex_outputs.items():

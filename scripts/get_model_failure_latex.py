@@ -2,6 +2,7 @@ import os
 import pandas as pd
 import sys
 from run_context import ModelContext
+import analysis
 
 def get_counts_from_summary(folder_path, target_files):
 	# Dictionary to store count data for each technique
@@ -33,7 +34,7 @@ def get_counts_from_summary(folder_path, target_files):
 							counts_data[technique][target]['Successes'] += row['Successes']
 	return counts_data
 
-def generate_latex_code_from_counts(counts_data, target_files):
+def generate_latex_code_from_counts(counts_data, target_files, run_counts_dict):
 	# Generate LaTeX code based on the count data
 	latex_code = []
 	formatted_model_names = {
@@ -43,16 +44,18 @@ def generate_latex_code_from_counts(counts_data, target_files):
 		'gpt-4': 'GPT-4'
 	}
 	
+	techniques_order = ['simple', 'conditionals', 'loops', 'uses a helper function', 'recursion']
+	
 	for target in target_files:
 		for metric in ['Failures', 'Successes']:
 			latex_code.append(f"{target} {metric}:\n\n")
-			coordinates = []			
-			for technique, counts in counts_data.items():
-				if target in counts.keys():
-					count = counts[target][metric]
+			coordinates = []
+			for technique in techniques_order:
+				if technique in counts_data and target in counts_data[technique]:
+					count = counts_data[technique][target][metric] * 100 / run_counts_dict[technique]
 					coordinates.append(f"({technique},{count})")
 			latex_code.append(f"\\addplot[sharp plot, mark=*] coordinates {{{' '.join(coordinates)}}};\n")
-
+	
 	latex_output = "\n".join(latex_code)
 	return latex_output
 
@@ -67,5 +70,6 @@ if __name__ == "__main__":
 	target_files = ["clang_generated_llm_optimized", "llm_generated", "generation_failure", "optimization_failure"]
 	
 	countsDict = get_counts_from_summary(folder_path, target_files)
-	latex_output = generate_latex_code_from_counts(countsDict, target_files)
+	run_counts_dict = analysis.count_runs_by_technique(folder_path)
+	latex_output = generate_latex_code_from_counts(countsDict, target_files, run_counts_dict)
 	print(latex_output)

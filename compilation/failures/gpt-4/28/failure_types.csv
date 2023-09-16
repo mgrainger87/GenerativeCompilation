@@ -1,0 +1,5 @@
+Failure Type,Prefix,Count
+CORRECTNESS,generation_failure,5
+EXECUTION,generation_failure,4
+LINKER,generation_failure,1
+COMPILER,generation_failure,1
