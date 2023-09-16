@@ -146,9 +146,9 @@ class ProblemContext:
 		
 		# Assuming the structure is: generatedPath/model/problemNumber/runNumber
 		for runNumber in os.listdir(self.generatedPath()):
-			# Construct paths for problem, generated, profiling and visualization
-			run_context = RunContext(self.__model, self.problemNumber(), runNumber, self.__rootDirectory)
-			run_contexts.append(run_context)
+			if os.path.isdir(os.path.join(self.generatedPath(), runNumber)):
+				run_context = RunContext(self.__model, self.problemNumber(), runNumber, self.__rootDirectory)
+				run_contexts.append(run_context)
 				
 		return run_contexts
 		
