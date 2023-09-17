@@ -208,7 +208,14 @@ def prompt_for_assembly(base_prompt, driver_object_path, test_data_path, output_
 			with open(unique_path, 'w') as f:
 				f.write("Manually failed.\n")
 			break
-		
+			
+		if assembly.strip().lower() == "done":
+			unique_path, number_of_solutions = unique_file_path(output_path)
+			with open(unique_path, 'w') as f:
+				f.write("No more optimizations.\n")
+			break
+			
+			
 		if assembly is None or len(assembly) == 0:
 			if found_solution:
 				break

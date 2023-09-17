@@ -94,21 +94,21 @@ def handle_problem_run(run_context, test_driver_source_path, optimizations_per_s
 		if not success:
 			print(f"Failed to compile source from {codePath}: {error}")
 	
-	# Have LLM generate assembly from C compilation unit
-	generatedAssemblyPath = os.path.join(generatedDirectoryPath, "llm_generated.asm")
-	failurePath = os.path.join(run_context.failurePath(), "generation_failure.asm")
-	if has_file_with_prefix(generatedDirectoryPath, "llm_generated"):
-		print(f"Already have generated assembly at {generatedAssemblyPath}.")
-	else:
-		prompting.generate_assembly_from_compilation_unit_source(codePath, driverObjectPath, testDataPath, generatedAssemblyPath, failurePath, optimizations_per_solution)
+	# # Have LLM generate assembly from C compilation unit
+	# generatedAssemblyPath = os.path.join(generatedDirectoryPath, "llm_generated.asm")
+	# failurePath = os.path.join(run_context.failurePath(), "generation_failure.asm")
+	# if has_file_with_prefix(generatedDirectoryPath, "llm_generated"):
+	# 	print(f"Already have generated assembly at {generatedAssemblyPath}.")
+	# else:
+	# 	prompting.generate_assembly_from_compilation_unit_source(codePath, driverObjectPath, testDataPath, generatedAssemblyPath, failurePath, optimizations_per_solution)
 	
 	# Have LLM optimize Clang-generated assembly	
-	# optimizedClangAssemblyPath = os.path.join(generatedDirectoryPath, "clang_generated_llm_optimized.asm")
-	# failurePath = os.path.join(run_context.failurePath(), "optimization_failure.asm")
-	# if has_file_with_prefix(generatedDirectoryPath, "clang_generated_llm_optimized"):
-	# 	print(f"Already have output for {optimizedClangAssemblyPath}.")
-	# else:
-	# 	prompting.optimize_assembly(codePath, unoptimizedClangAssemblyPath, driverObjectPath, testDataPath, optimizedClangAssemblyPath, failurePath, optimizations_per_solution)
+	optimizedClangAssemblyPath = os.path.join(generatedDirectoryPath, "clang_generated_llm_optimized.asm")
+	failurePath = os.path.join(run_context.failurePath(), "optimization_failure.asm")
+	if has_file_with_prefix(generatedDirectoryPath, "clang_generated_llm_optimized"):
+		print(f"Already have output for {optimizedClangAssemblyPath}.")
+	else:
+		prompting.optimize_assembly(codePath, unoptimizedClangAssemblyPath, driverObjectPath, testDataPath, optimizedClangAssemblyPath, failurePath, optimizations_per_solution)
 	
 def handle_problem(problemContext, solutions_per_problem, optimizations_per_solution):
 	for runContext in problemContext.GetRunContexts(solutions_per_problem):
