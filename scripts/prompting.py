@@ -13,7 +13,9 @@ ASSEMBLY_GUIDELINES = """
 - Use appropriate register widths for an LP64 architecture. In particular, integers are 32 bits, so when comparing or modifying integer values, use wX instead of xX registers.
 - The arm64 instruction set doesn't allow for immediate floating point values to be used with the fadd and fsub instructions directly. Instead, load immediate values into a floating-point register first.
 - Always assume that the code calling the function is impemented correctly.
+"""
 
+STEPS_TO_FOLLOW = """
 Steps to follow:
 
 - Write out which registers are used for which parameters before generating the assembly.
@@ -21,6 +23,8 @@ Steps to follow:
 - After generating the assembly, check it again against the guidelines and correct it if needed.
 - Trace the assembly line-by-line with different test values that collectively exercise all of the control paths in the function.
 """
+
+ASSEMBLY_GUIDELINES_AND_STEPS = f"{ASSEMBLY_GUIDELINES}\n{STEPS_TO_FOLLOW}"
 
 CODE_FORMAT_REMINDERS = "" # """Remember to mark the beginning and end of the final generated assembly with lines containing ---ASSEMBLY BEGIN--- and ---ASSEMBLY END--- respectively. Do this when you first print out the assembly -- do not repeat it just to add these markers.
 #"""
@@ -52,7 +56,7 @@ Function:
 def generation_prompt(compilation_unit):
 	return f"""Generate valid arm64 LP64 assembly for macOS that corresponds to the provided C compilation unit. Follow these guidelines:
 
-{ASSEMBLY_GUIDELINES}
+{ASSEMBLY_GUIDELINES_AND_STEPS}
 
 Output the assembly as it would be written in a .s file. Do not generate stubs or placeholders for forward declarations or anything that is not in the compilation unit itself. If there is more than one function in the compilation unit, generate assembly for each function separately.
 
@@ -76,7 +80,7 @@ Assembly:
 
 Guidelines:
 
-{ASSEMBLY_GUIDELINES}
+{ASSEMBLY_GUIDELINES_AND_STEPS}
 
 """
 
@@ -101,7 +105,7 @@ Error:
 
 Guidelines:
 
-{ASSEMBLY_GUIDELINES}
+{ASSEMBLY_GUIDELINES_AND_STEPS}
 
 """
 
@@ -160,14 +164,14 @@ def get_error_instructions_based_on_results(compilerError, linkerError, executio
 		prompt=f"When attempting to test the assembly you provided with the input given below, I got an incorrect result:\n{correctnessError}\nFix the error and print out the full corrected assembly. Trace through the corrected assembly line-by-line with the given input to make sure it now returns the correct answer.\n{CODE_FORMAT_REMINDERS}"
 	return prompt
 
-def prompt_llm_based_on_results(querier, initial_prompt, compilerError, linkerError, executionError, correctnessError, foundSolution=False):
+def prompt_llm_based_on_results(querier, initial_prompt, compilerError, linkerError, executionError, correctnessError, lastSolution=None):
 	prompt = initial_prompt
 	
 	error_prompt = get_error_instructions_based_on_results(compilerError, linkerError, executionError, correctnessError)
 	if error_prompt:
 		prompt = error_prompt
-	elif foundSolution:
-		prompt = f"Try to (further) optimize the solution so that it runs more quickly."
+	elif lastSolution is not None:
+		prompt = f"Try to (further) optimize the solution so that it runs more quickly.\n\nGuidelines:\n{ASSEMBLY_GUIDELINES}\n\nAfter generating assembly, compare it to the previous solution to see if it's actually any different."
 	
 	return querier.generateAssembly(prompt).strip()
 
@@ -190,7 +194,7 @@ def prompt_for_assembly(base_prompt, driver_object_path, test_data_path, output_
 	execution_error = None
 	correctness_error = None
 	assembly = None
-	found_solution = False
+	last_solution = None
 	
 	# Introduce counters for each type of error
 	compiler_error_count = 0
@@ -198,10 +202,12 @@ def prompt_for_assembly(base_prompt, driver_object_path, test_data_path, output_
 	execution_error_count = 0
 	correctness_error_count = 0
 	
+	number_of_solutions = 0
+	
 	querier = HumanQuerier()
 	
 	while True:
-		assembly = prompt_llm_based_on_results(querier, base_prompt, compiler_error, linker_error, execution_error, correctness_error, found_solution)
+		assembly = prompt_llm_based_on_results(querier, base_prompt, compiler_error, linker_error, execution_error, correctness_error, last_solution)
 		
 		if assembly.strip().lower() == "fail":
 			unique_path, number_of_solutions = unique_file_path(output_path)
@@ -217,7 +223,7 @@ def prompt_for_assembly(base_prompt, driver_object_path, test_data_path, output_
 			
 			
 		if assembly is None or len(assembly) == 0:
-			if found_solution:
+			if last_solution is not None:
 				break
 				
 			# Didn't work — restart the conversation
@@ -248,10 +254,10 @@ def prompt_for_assembly(base_prompt, driver_object_path, test_data_path, output_
 	
 		if not success:
 			base, ext = os.path.splitext(failure_path)
-			unique_path = f"{base}_{total_errors}_{filename_string}{ext}"
+			unique_path = f"{base}_{number_of_solutions+1}_{total_errors}_{filename_string}{ext}"
 			
 			with open(unique_path, 'w') as f:
-				f.write(add_semicolon_at_start(f"compiler_errors={compiler_error_count},linker_errors={linker_error_count},execution_errors={execution_error_count},correctness_errors={correctness_error_count}\n"))
+				f.write(add_semicolon_at_start(f"solution_number={number_of_solutions+1},compiler_errors={compiler_error_count},linker_errors={linker_error_count},execution_errors={execution_error_count},correctness_errors={correctness_error_count}\n"))
 				f.write(add_semicolon_at_start(f"Compiler error: {compiler_error}\n"))
 				f.write(add_semicolon_at_start(f"Linker error: {linker_error}\n"))
 				f.write(add_semicolon_at_start(f"Execution error: {execution_error}\n"))
@@ -260,16 +266,25 @@ def prompt_for_assembly(base_prompt, driver_object_path, test_data_path, output_
 				f.write("\n")
 			continue
 		
+		if last_solution is not None and last_solution.strip() == assembly.strip():
+			print(f"Provided solution is the same as the last solution.")
+			break
+		
 		unique_path, number_of_solutions = unique_file_path(output_path)
 		with open(unique_path, 'w') as f:
 			# Write the error counts in a structured format
-			f.write(f"//compiler_errors={compiler_error_count},linker_errors={linker_error_count},execution_errors={execution_error_count},correctness_errors={correctness_error_count}\n")
+			f.write(f"//solution_number={number_of_solutions},compiler_errors={compiler_error_count},linker_errors={linker_error_count},execution_errors={execution_error_count},correctness_errors={correctness_error_count}\n")
 			f.write(assembly)
 			f.write("\n")
 		print(f"Assembly written to {unique_path}")
-		found_solution = True
+		last_solution = assembly
 		if number_of_solutions >= optimizations_per_solution:
 			print(f"Got required {optimizations_per_solution} solutions.")
 			break
 		else:
 			print(f"Got solution {number_of_solutions} of {optimizations_per_solution}.")
+			compiler_error_count = 0
+			linker_error_count = 0
+			execution_error_count = 0
+			correctness_error_count = 0
+
