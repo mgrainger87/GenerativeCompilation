@@ -1,16 +1,10 @@
 
-static int power(int base, int exp) {
-    int result = 1;
-    for(int i = 0; i < exp; i++) {
-        result *= base;
-    }
-    return result;
-}
-
 void customFunction(int int1, int int2, 
                     double double1, double double2, 
                     int *outInt, double *outDouble) {
-    *outInt = power(int1, 1);
-    *outDouble = power(double1, 0);
+    int sum1 = int1 + int2;
+    int sum2 = int1 + int2;
+    *outInt = sum1 - sum2;
+    *outDouble = double1 * double2;
 }
     
