@@ -70,7 +70,7 @@ def link_binary(unit_paths, output_path=None):
 		# Construct the clang command
 		clang_command = ["clang"] + unit_paths + ["-o", binaryPath]
 		
-		print(f"Running {' '.join(clang_command)}")
+		# print(f"Running {' '.join(clang_command)}")
 		
 		# Execute the clang command
 		result = subprocess.run(clang_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)

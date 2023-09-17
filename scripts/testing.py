@@ -3,12 +3,11 @@ import subprocess
 import resource
 import debugging
 
-def run_test_from_csv(csv_path, executable_path, overriddenIterations=None, useDebugger=True):
+def run_test_from_csv(csv_path, executable_path, overriddenIterations=None, useDebugger=True, maxCpuTime=10):
 	failure_text = ""
 	total_cpu_time = 0.0  # Track the total CPU time
 	
 	with open(csv_path, 'r') as csvfile:
-		print(csv_path)
 		reader = csv.DictReader(csvfile)
 		
 		for row in reader:
@@ -28,13 +27,13 @@ def run_test_from_csv(csv_path, executable_path, overriddenIterations=None, useD
 				f"iterations={iterations}"
 			]
 			
-			print(f"Command: {cmd}")
+			# print(f"Command: {cmd}")
 			
 			# Get initial CPU time
 			start_cpu_time = resource.getrusage(resource.RUSAGE_CHILDREN).ru_utime
 			
 			if useDebugger:
-				success, execution_failure, correctness_failure = debugging.launch_process_with_debugging(cmd[0], cmd[1:], 10)
+				success, execution_failure, correctness_failure = debugging.launch_process_with_debugging(cmd[0], cmd[1:], maxCpuTime)
 			else:
 				result = subprocess.run(cmd, capture_output=True, text=True)
 			

@@ -59,13 +59,22 @@ class ModelContext:
 	def GetProblemContexts(self):
 		problem_contexts = []
 		
-		for problemNumber in os.listdir(self.problemPath()):
+		def is_numeric(n):
+			try:
+				int(n)
+				return True
+			except ValueError:
+				return False
+		
+		# Filter and sort the problem numbers in ascending order
+		problemNumbers = sorted(filter(is_numeric, os.listdir(self.problemPath())), key=lambda x: int(x))
+		
+		for problemNumber in problemNumbers:
 			if os.path.isdir(os.path.join(self.problemPath(), problemNumber)):
 				problemContext = ProblemContext(self.__model, problemNumber, self.__rootDirectory)
 				problem_contexts.append(problemContext)
 		
 		return problem_contexts
-
 
 class ProblemContext:
 	def __init__(self, model, problemNumber, rootDirectory):
@@ -145,7 +154,18 @@ class ProblemContext:
 		run_contexts = []
 		
 		# Assuming the structure is: generatedPath/model/problemNumber/runNumber
-		for runNumber in os.listdir(self.generatedPath()):
+		
+		def is_numeric(n):
+			try:
+				int(n)
+				return True
+			except ValueError:
+				return False
+		
+		# Filter and sort the run numbers in ascending order
+		runNumbers = sorted(filter(is_numeric, os.listdir(self.generatedPath())), key=lambda x: int(x))
+		
+		for runNumber in runNumbers:
 			if os.path.isdir(os.path.join(self.generatedPath(), runNumber)):
 				run_context = RunContext(self.__model, self.problemNumber(), runNumber, self.__rootDirectory)
 				run_contexts.append(run_context)
