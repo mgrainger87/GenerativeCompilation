@@ -171,7 +171,7 @@ def prompt_llm_based_on_results(querier, initial_prompt, compilerError, linkerEr
 	if error_prompt:
 		prompt = error_prompt
 	elif lastSolution is not None:
-		prompt = f"Try to (further) optimize the solution so that it runs more quickly.\n\nGuidelines:\n{ASSEMBLY_GUIDELINES}\n\nAfter generating assembly, compare it to the previous solution to see if it's actually any different."
+		prompt = f"Try to (further) optimize the solution so that it runs more quickly.\n\nGuidelines:\n{ASSEMBLY_GUIDELINES}"
 	
 	return querier.generateAssembly(prompt).strip()
 
@@ -265,10 +265,6 @@ def prompt_for_assembly(base_prompt, driver_object_path, test_data_path, output_
 				f.write(assembly)
 				f.write("\n")
 			continue
-		
-		if last_solution is not None and last_solution.strip() == assembly.strip():
-			print(f"Provided solution is the same as the last solution.")
-			break
 		
 		unique_path, number_of_solutions = unique_file_path(output_path)
 		with open(unique_path, 'w') as f:
