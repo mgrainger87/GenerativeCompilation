@@ -37,7 +37,7 @@ Write a Python version of customFunction and use it to determine the expected ou
 Output those test cases in comma-separated value format according to the given format. The number of iterations should always be 100. Do not write the CSV to a file; output it directly. Include a header row in the CSV.
 
 
-If an input or output parameter is not relevant, use 0 for its provided or expected value as appropriate. If the function is recursive, the test cases should not exceed 50 recursive calls.
+If an input or output parameter is not relevant, use 0 for its provided or expected value as appropriate. If the function is recursive, the test cases should not exceed 250 recursive calls.
 
 CSV format (do not add extra spaces):
 
@@ -171,7 +171,7 @@ def prompt_llm_based_on_results(querier, initial_prompt, compilerError, linkerEr
 	if error_prompt:
 		prompt = error_prompt
 	elif lastSolution is not None:
-		prompt = f"Try to (further) optimize the solution so that it runs more quickly.\n\nGuidelines:\n{ASSEMBLY_GUIDELINES}"
+		prompt = f"Try to further optimize the solution so that it runs more quickly. Consider both optimizations that you have not yet considered and those that you previously considered that were not possible with previous versions of the assembly that may be possible with this version.\n\nGuidelines:\n{ASSEMBLY_GUIDELINES}"
 	
 	return querier.generateAssembly(prompt).strip()
 

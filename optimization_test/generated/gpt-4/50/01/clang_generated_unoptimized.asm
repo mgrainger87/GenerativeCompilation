@@ -19,32 +19,45 @@ _customFunction:                        ; @customFunction
 	str	x2, [sp, #16]
 	str	x3, [sp, #8]
 	ldur	w8, [x29, #-4]
-	ldur	w9, [x29, #-8]
-	subs	w8, w8, w9
+	subs	w8, w8, #100
 	cset	w8, ne
 	tbnz	w8, #0, LBB0_2
 	b	LBB0_1
 LBB0_1:
-	ldur	w8, [x29, #-4]
-	add	w0, w8, #2
-	ldur	w1, [x29, #-8]
-	ldur	d0, [x29, #-16]
-	ldr	d1, [sp, #24]
-	ldr	x2, [sp, #16]
-	ldr	x3, [sp, #8]
-	bl	_customFunction
-	b	LBB0_3
-LBB0_2:
-	ldur	w0, [x29, #-4]
 	ldur	w8, [x29, #-8]
-	add	w1, w8, #2
-	ldur	d0, [x29, #-16]
-	ldr	d1, [sp, #24]
-	ldr	x2, [sp, #16]
-	ldr	x3, [sp, #8]
-	bl	_customFunction
+	ldr	x9, [sp, #16]
+	str	w8, [x9]
+	b	LBB0_5
+LBB0_2:
+	ldur	w8, [x29, #-4]
+	ldur	w9, [x29, #-8]
+	subs	w8, w8, w9
+	cset	w8, ge
+	tbnz	w8, #0, LBB0_4
 	b	LBB0_3
 LBB0_3:
+	ldur	w8, [x29, #-4]
+	add	w0, w8, #5
+	ldur	w8, [x29, #-8]
+	subs	w1, w8, #5
+	ldur	d0, [x29, #-16]
+	ldr	d1, [sp, #24]
+	ldr	x2, [sp, #16]
+	ldr	x3, [sp, #8]
+	bl	_customFunction
+	b	LBB0_5
+LBB0_4:
+	ldur	w8, [x29, #-4]
+	subs	w0, w8, #5
+	ldur	w8, [x29, #-8]
+	add	w1, w8, #5
+	ldur	d0, [x29, #-16]
+	ldr	d1, [sp, #24]
+	ldr	x2, [sp, #16]
+	ldr	x3, [sp, #8]
+	bl	_customFunction
+	b	LBB0_5
+LBB0_5:
 	ldp	x29, x30, [sp, #48]             ; 16-byte Folded Reload
 	add	sp, sp, #64
 	ret
