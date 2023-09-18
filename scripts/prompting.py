@@ -171,7 +171,11 @@ def prompt_llm_based_on_results(querier, initial_prompt, compilerError, linkerEr
 	if error_prompt:
 		prompt = error_prompt
 	elif lastSolution is not None:
-		prompt = f"Try to further optimize the solution so that it runs more quickly. Consider both optimizations that you have not yet considered and those that you previously considered that were not possible with previous versions of the assembly that may be possible with this version.\n\nGuidelines:\n{ASSEMBLY_GUIDELINES}"
+		prompt = f"""Examine the assembly you generated to identify further optimizations.
+		
+		- Consider both optimizations that you have not yet considered and those that you previously considered that were not possible with previous versions of the assembly that may be possible with this version.
+		- Only make optimizations that you are confident will provide a performance improvement; do not make speculative optimizations that may hurt performance in some cases or that would require profiling to determine their efficacy.
+		- If you think the function is fully optimized given these criteria, say so. \n\nGuidelines:\n{ASSEMBLY_GUIDELINES}"""
 	
 	return querier.generateAssembly(prompt).strip()
 
