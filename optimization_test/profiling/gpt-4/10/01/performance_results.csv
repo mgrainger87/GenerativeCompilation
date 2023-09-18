@@ -1,0 +1,10 @@
+Filename,CPU Time,Normalized CPU Time,Compiler Errors,Linker Errors,Execution Errors,Correctness Errors
+clang_generated_O2_optimized.asm,2.192578,1.0002709873794702,0,0,0,0
+clang_generated_O1_optimized.asm,2.183999,0.9963571814392808,0,0,0,0
+clang_generated_O3_optimized.asm,2.185378,0.9969862918707437,0,0,0,0
+clang_generated_unoptimized.asm,2.1919839999999997,1.0,0,0,0,0
+clang_generated_llm_optimized_5.asm,2.1821659999999987,0.9955209527076836,0,0,0,0
+clang_generated_llm_optimized_4.asm,2.1825769999999984,0.9957084540763066,0,0,0,0
+clang_generated_llm_optimized_1.asm,2.191758,0.999896897057643,0,0,0,0
+clang_generated_llm_optimized_3.asm,2.1856310000000008,0.997101712421259,0,0,0,0
+clang_generated_llm_optimized_2.asm,2.1852020000000003,0.9969059993138639,0,0,0,1

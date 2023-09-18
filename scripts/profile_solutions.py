@@ -3,14 +3,14 @@ import os
 import compilation
 import testing
 import csv
-from run_context import RunContext, ProblemContext
+from run_context import ModelContext
 import pandas as pd
 
 def test_individual_assembly(driver_object_path, assembly_path, test_data_path, iterations=None):
 	success, compiler_error, compilation_unit_path = compilation.compile_source(assembly_path)
 	if not success:
 		print(f"Compilation failed: {compiler_error}")
-		return False, compiler_error, linker_error, testing_error
+		return False, 0
 	
 	print(f"Compilation successful. Output saved to {compilation_unit_path}.")
 		
@@ -20,7 +20,7 @@ def test_individual_assembly(driver_object_path, assembly_path, test_data_path, 
 	success, linker_error, executable_path = compilation.link_binary([compilation_unit_path, driver_object_path])
 	if not success:
 		print(f"Linking failed: {linker_error}")
-		return False, compiler_error, linker_error, testing_error
+		return False, 0
 	
 	print("Linking succeeded.")
 	
@@ -28,7 +28,7 @@ def test_individual_assembly(driver_object_path, assembly_path, test_data_path, 
 	print("Testing…")
 	
 	# Set executable permissions
-	os.chmod(executable_path, 0o755)
+	os.chmod(executable_path, 0o755)	
 	
 	success, execution_error, correctness_error, total_cpu_time = testing.run_test_from_csv(test_data_path, executable_path, iterations, False)
 	if not success:
@@ -166,15 +166,14 @@ if __name__ == "__main__":
 
 	# Check if the given folder path exists
 	if os.path.exists(folder_path):
-		problem_contexts = ProblemContext.ProblemContextsForDirectory(folder_path)
-		
-		for problemContext in problem_contexts:
-			profilingResultsPaths = []
-
-			for runContext in problemContext.GetExistingRunContexts():
-				profile_run(runContext, "/Users/morgang/code/GenerativeCompilation/test_driver.c")
-				profilingResultsPaths.append(runContext.profilingResultsPath())
-				
-			average_cpu_times(profilingResultsPaths, problemContext.profilingResultsPath())
+		for modelContext in ModelContext.ModelContextsForDirectory(folder_path):
+			for problemContext in modelContext.GetProblemContexts():
+				profilingResultsPaths = []
+	
+				for runContext in problemContext.GetExistingRunContexts():
+					profile_run(runContext, "/Users/morgang/code/GenerativeCompilation/test_driver.c")
+					profilingResultsPaths.append(runContext.profilingResultsPath())
+					
+				average_cpu_times(profilingResultsPaths, problemContext.profilingResultsPath())
 	else:
 		print("The provided folder path does not exist.")
