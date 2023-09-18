@@ -1,0 +1,26 @@
+
+\begin{tikzpicture}
+\begin{axis}[
+    ybar stacked,
+    symbolic x coords={10,20,30,40,50},
+    xtick=data,
+    ylabel={Number of Errors},
+    legend pos=north west,
+    legend cell align={left},
+    legend style={draw=none}
+]
+
+\addplot+[ybar] plot coordinates {(10,0.0)(20,0.0)(30,0.0)(40,0.0)(50,0.0)};
+\addlegendentry{Compilation Errors}
+
+\addplot+[ybar] plot coordinates {(10,0.0)(20,0.0)(30,0.0)(40,0.0)(50,0.0)};
+\addlegendentry{Linking Errors}
+
+\addplot+[ybar] plot coordinates {(10,0.0)(20,0.0)(30,0.0)(40,0.0)(50,0.0)};
+\addlegendentry{Execution Errors}
+
+\addplot+[ybar] plot coordinates {(10,0.0)(20,0.0)(30,0.0)(40,0.0)(50,0.0)};
+\addlegendentry{Correctness Errors}
+
+\end{axis}
+\end{tikzpicture}

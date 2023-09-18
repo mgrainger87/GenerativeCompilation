@@ -17,7 +17,6 @@ filename_renaming = {
 
 def generate_dataframes(modelContext):
     problemContexts = modelContext.GetProblemContexts()
-    print(problemContexts)
     # Lists to store data
     techniques = []
     dataframes = []
@@ -86,6 +85,7 @@ def generate_iterations_csv(modelContext, df):
     Returns:
     - Transformed dataframe with base filename and one column for each suffix.
     """
+    
     # Filter rows that have the expected pattern
     df_filtered = df[df['Filename'].str.contains(r'_[0-9]+\.asm$')]
     
@@ -95,10 +95,10 @@ def generate_iterations_csv(modelContext, df):
     df_filtered['Suffix'] = split_df[1].str.rstrip('.asm')
     
     # Filter only relevant columns
-    df_subset = df_filtered[['Base Filename', 'Suffix', 'Normalized CPU Time']]
-    
+    df_subset = df_filtered[['problem', 'Base Filename', 'Suffix', 'Normalized CPU Time']]
+
     # Pivot the data frame
-    df_pivot = df_subset.pivot(index='Base Filename', columns='Suffix', values='Normalized CPU Time').reset_index()
+    df_pivot = df_subset.pivot(index=['problem', 'Base Filename'], columns='Suffix', values='Normalized CPU Time').reset_index()
     
     # Rename columns
     df_pivot.columns.name = None  # Remove the columns' name
@@ -355,7 +355,7 @@ def generate_iterations_latex(modelContext, df):
         problem_type = renaming_dict.get(original_name, original_name)  # Use renaming dict, or default to original name
         
         coordinates = []
-        for i, value in enumerate(row.iloc[1:]):
+        for i, value in enumerate(row.iloc[2:]):
             coordinates.append(f"({i+1}, {value})")
         
         plots.append(rf"\addplot coordinates {{{' '.join(coordinates)}}};")

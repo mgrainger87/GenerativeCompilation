@@ -1,0 +1,42 @@
+Filename,CPU Time,Normalized CPU Time,Compiler Errors,Linker Errors,Execution Errors,Correctness Errors,problem,technique
+clang_generated_O1_optimized.asm,2.183999,0.9963571814392808,0.0,0.0,0.0,0.0,10,constant folding
+clang_generated_O2_optimized.asm,2.192578,1.0002709873794702,0.0,0.0,0.0,0.0,10,constant folding
+clang_generated_O3_optimized.asm,2.185378,0.9969862918707436,0.0,0.0,0.0,0.0,10,constant folding
+clang_generated_llm_optimized_1.asm,2.191758,0.999896897057643,0.0,0.0,0.0,0.0,10,constant folding
+clang_generated_llm_optimized_2.asm,2.1852020000000003,0.996905999313864,0.0,0.0,0.0,1.0,10,constant folding
+clang_generated_llm_optimized_3.asm,2.1856310000000008,0.997101712421259,0.0,0.0,0.0,0.0,10,constant folding
+clang_generated_llm_optimized_4.asm,2.1825769999999984,0.9957084540763066,0.0,0.0,0.0,0.0,10,constant folding
+clang_generated_llm_optimized_5.asm,2.1821659999999987,0.9955209527076836,0.0,0.0,0.0,0.0,10,constant folding
+clang_generated_unoptimized.asm,2.191984,1.0,0.0,0.0,0.0,0.0,10,constant folding
+clang_generated_O1_optimized.asm,2.187276,0.8662122431392928,0.0,0.0,0.0,0.0,20,dead code elimination
+clang_generated_O2_optimized.asm,2.191618,0.8679317762753538,0.0,0.0,0.0,0.0,20,dead code elimination
+clang_generated_O3_optimized.asm,2.185893,0.8656645429257571,0.0,0.0,0.0,0.0,20,dead code elimination
+clang_generated_llm_optimized_1.asm,2.185163,0.8653754459222275,0.0,0.0,0.0,0.0,20,dead code elimination
+clang_generated_llm_optimized_2.asm,2.184798999999998,0.8652312934437548,0.0,0.0,0.0,0.0,20,dead code elimination
+clang_generated_unoptimized.asm,2.525103999999999,1.0,0.0,0.0,0.0,0.0,20,dead code elimination
+clang_generated_O1_optimized.asm,2.1866730000000025,0.8776292679950946,0.0,0.0,0.0,0.0,30,strength reduction
+clang_generated_O2_optimized.asm,2.187097999999999,0.8777998433115203,0.0,0.0,0.0,0.0,30,strength reduction
+clang_generated_O3_optimized.asm,2.185431000000001,0.8771307867174407,0.0,0.0,0.0,0.0,30,strength reduction
+clang_generated_llm_optimized_1.asm,2.1840740000000025,0.8765861497659312,0.0,0.0,0.0,0.0,30,strength reduction
+clang_generated_llm_optimized_2.asm,2.1837110000000024,0.876440458378018,0.0,0.0,0.0,0.0,30,strength reduction
+clang_generated_llm_optimized_3.asm,2.185972999999997,0.8773483204150946,0.0,0.0,0.0,1.0,30,strength reduction
+clang_generated_llm_optimized_4.asm,2.183248000000006,0.8762546316215353,1.0,0.0,0.0,0.0,30,strength reduction
+clang_generated_llm_optimized_5.asm,2.184852,0.8768984029334133,0.0,0.0,0.0,0.0,30,strength reduction
+clang_generated_unoptimized.asm,2.491568000000001,1.0,0.0,0.0,0.0,0.0,30,strength reduction
+clang_generated_O1_optimized.asm,2.187211000000005,0.6543596883908901,0.0,0.0,0.0,0.0,40,copy propagation
+clang_generated_O2_optimized.asm,2.190946000000004,0.6554771084459918,0.0,0.0,0.0,0.0,40,copy propagation
+clang_generated_O3_optimized.asm,2.1832100000000025,0.6531626876839379,0.0,0.0,0.0,0.0,40,copy propagation
+clang_generated_llm_optimized_1.asm,2.1837969999999984,0.6533383036336944,0.0,0.0,0.0,0.0,40,copy propagation
+clang_generated_llm_optimized_2.asm,2.1843339999999927,0.6534989608143057,1.0,0.0,0.0,0.0,40,copy propagation
+clang_generated_llm_optimized_3.asm,2.1824609999999964,0.6529386053221499,0.0,0.0,0.0,0.0,40,copy propagation
+clang_generated_llm_optimized_4.asm,2.184640999999999,0.6535908076568556,1.0,0.0,0.0,0.0,40,copy propagation
+clang_generated_llm_optimized_5.asm,2.1827260000000024,0.653017886798618,1.0,0.0,0.0,0.0,40,copy propagation
+clang_generated_unoptimized.asm,3.342520999999998,1.0,0.0,0.0,0.0,0.0,40,copy propagation
+clang_generated_O1_optimized.asm,0.8638600000000003,0.8451475872702501,0.0,0.0,0.0,0.0,50,tail recursion optimization
+clang_generated_O2_optimized.asm,0.4233159999999998,0.4141463848921039,0.0,0.0,0.0,0.0,50,tail recursion optimization
+clang_generated_O3_optimized.asm,0.4257699999999995,0.4165472278286456,0.0,0.0,0.0,0.0,50,tail recursion optimization
+clang_generated_llm_optimized_1.asm,0.8266029999999995,0.8086976258657073,0.0,0.0,0.0,0.0,50,tail recursion optimization
+clang_generated_llm_optimized_2.asm,0.8290569999999988,0.8110984688022487,0.0,0.0,0.0,0.0,50,tail recursion optimization
+clang_generated_llm_optimized_3.asm,0.6107519999999997,0.5975222596491091,0.0,0.0,0.0,0.0,50,tail recursion optimization
+clang_generated_llm_optimized_4.asm,0.5122200000000001,0.5011246002263879,0.0,0.0,0.0,0.0,50,tail recursion optimization
+clang_generated_unoptimized.asm,1.0221409999999995,1.0,0.0,0.0,0.0,0.0,50,tail recursion optimization

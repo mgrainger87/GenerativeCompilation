@@ -1,0 +1,6 @@
+Problem,Technique,Compilation Errors,Linking Errors,Execution Errors,Correctness Errors
+10,constant folding,0.0,0.0,0.0,0.0
+20,dead code elimination,0.0,0.0,0.0,0.0
+30,strength reduction,0.0,0.0,0.0,0.0
+40,copy propagation,0.0,0.0,0.0,0.0
+50,tail recursion optimization,0.0,0.0,0.0,0.0
