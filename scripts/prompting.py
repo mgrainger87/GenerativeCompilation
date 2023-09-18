@@ -12,7 +12,7 @@ ASSEMBLY_GUIDELINES = """
 - Use only valid arm64 instructions.
 - Use appropriate register widths for an LP64 architecture. In particular, integers are 32 bits, so when comparing or modifying integer values, use wX instead of xX registers.
 - The arm64 instruction set doesn't allow for immediate floating point values to be used with the fadd and fsub instructions directly. Instead, load immediate values into a floating-point register first.
-- Always assume that the code calling the function is impemented correctly.
+- Always assume that the code calling the function is implemented correctly.
 """
 
 STEPS_TO_FOLLOW = """
