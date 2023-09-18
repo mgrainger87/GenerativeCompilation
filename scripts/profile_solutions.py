@@ -145,14 +145,15 @@ def average_cpu_times(input_files, output_file):
 		df = pd.read_csv(file)
 		dfs.append(df)
 	
-	# Concatenate all dataframes
-	combined_df = pd.concat(dfs)
-	
-	# Group by 'Filename' and calculate the mean for numeric columns
-	averaged_df = combined_df.groupby('Filename').mean().reset_index()
-	
-	# Save the result to the specified output file
-	averaged_df.to_csv(output_file, index=False)
+	if len(dfs) > 0:
+		# Concatenate all dataframes
+		combined_df = pd.concat(dfs)
+		
+		# Group by 'Filename' and calculate the mean for numeric columns
+		averaged_df = combined_df.groupby('Filename').mean().reset_index()
+		
+		# Save the result to the specified output file
+		averaged_df.to_csv(output_file, index=False)
 
 
 
@@ -171,8 +172,9 @@ if __name__ == "__main__":
 				profilingResultsPaths = []
 	
 				for runContext in problemContext.GetExistingRunContexts():
-					profile_run(runContext, "/Users/morgang/code/GenerativeCompilation/test_driver.c")
-					profilingResultsPaths.append(runContext.profilingResultsPath())
+					if not os.path.exists(runContext.profilingPath()):
+						profile_run(runContext, "/Users/morgang/code/GenerativeCompilation/test_driver.c")
+						profilingResultsPaths.append(runContext.profilingResultsPath())
 					
 				average_cpu_times(profilingResultsPaths, problemContext.profilingResultsPath())
 	else:
