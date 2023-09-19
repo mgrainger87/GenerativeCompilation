@@ -1,0 +1,22 @@
+//solution_number=2,compiler_errors=1,linker_errors=0,execution_errors=0,correctness_errors=0
+.section	__TEXT,__text,regular,pure_instructions
+.build_version macos, 13, 0	sdk_version 13, 3
+.globl	_customFunction                 ; -- Begin function customFunction
+.p2align	2
+_customFunction:                        ; @customFunction
+.cfi_startproc
+; %bb.0:
+
+; Calculate (int1 * 6) - (int1 * 2) = int1 * 4
+lsl w0, w0, #2
+str w0, [x2]                      ; Store result to outInt
+
+; Load 4.0 into d2 and multiply d0 by d2
+fmov d2, #4.00000000
+fmul d0, d0, d2
+str d0, [x3]                      ; Store result to outDouble
+
+ret
+.cfi_endproc
+; -- End function
+.subsections_via_symbols

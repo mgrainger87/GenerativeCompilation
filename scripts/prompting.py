@@ -5,10 +5,10 @@ from query_human import HumanQuerier
 import re
 
 ASSEMBLY_GUIDELINES = """
+- Always save the link register (x30) to the stack or another register before making a function call and restore it afterwards. Failing to do so will result in return addresses being lost, causing the function to either run indefinitely or crash.
 - Follow the arm64 calling convention strictly. Preserve the values of caller-saved and/or callee-saved registers where necessary.
 - Mangle function names according to Clang conventions for C (not C++). Mark symbols as global where necessary. Align symbols appropriately for arm64.
 - Follow arm64 convention for local labels starting with a numeric value.
-- Be sure to save all required registers, particularly the link register, before branching for a function call and restore them as needed afterwards.
 - Use only valid arm64 instructions.
 - Use appropriate register widths for an LP64 architecture. In particular, integers are 32 bits, so when comparing or modifying integer values, use wX instead of xX registers.
 - The arm64 instruction set doesn't allow for immediate floating point values to be used with the fadd and fsub instructions directly. Instead, load immediate values into a floating-point register first.
@@ -67,6 +67,25 @@ Compilation unit:
 {compilation_unit}
 """
 
+OPTIMIZATION_GUIDELINES = """Guidelines:
+
+- Always save the link register (x30) to the stack or another register before making a function call and restore it afterwards. Failing to do so will result in return addresses being lost, causing the function to either run indefinitely or crash.
+- Follow the arm64 calling convention strictly. Preserve the values of caller-saved and/or callee-saved registers where necessary.
+- Mark symbols as global where necessary. Align symbols appropriately for arm64.
+- Follow arm64 convention for local labels starting with a numeric value.
+- Use only valid arm64 instructions.
+- Use appropriate register widths for an LP64 architecture. In particular, integers are 32 bits, so when comparing or modifying integer values, use wX instead of xX registers.
+- The arm64 instruction set doesn't allow for immediate floating point values to be used with the fadd and fsub instructions directly. Instead, load immediate values into a floating-point register first.
+- Always assume that the code calling the function is implemented correctly.
+- Only make optimizations that you are confident will provide a performance improvement; do not make speculative optimizations that may hurt performance in some cases or that would require profiling to determine their efficacy.
+
+Steps to follow:
+
+- First, examine the overall structure of the function and the problem it is trying to solve. Identify any possible changes to the structure and control flow of the assembly that could improve performance.
+- If you think the function is fully optimized given these criteria, say so. 
+- Trace the optimized assembly line-by-line with test values to verify correctness. In particular, keep track of the value of the link register to ensure that proper control flow through and returning from the function.
+"""
+
 def optimization_prompt(compilation_unit, unoptimized_assembly):
 	return f"""Optimize the provided arm64 LP64 assembly for macOS that corresponds to the provided C compilation unit.
 
@@ -78,9 +97,7 @@ Compilation unit:
 Assembly:
 {unoptimized_assembly}
 
-Guidelines:
-
-{ASSEMBLY_GUIDELINES_AND_STEPS}
+{OPTIMIZATION_GUIDELINES}
 
 """
 
@@ -171,11 +188,13 @@ def prompt_llm_based_on_results(querier, initial_prompt, compilerError, linkerEr
 	if error_prompt:
 		prompt = error_prompt
 	elif lastSolution is not None:
-		prompt = f"""Examine the assembly you generated to identify further optimizations.
+		prompt = f"""Examine the most recent version of the assembly to identify further optimizations.
 		
-- Consider both optimizations that you have not yet considered and those that you previously considered that were not possible with previous versions of the assembly that may be possible with this version.
-- Only make optimizations that you are confident will provide a performance improvement; do not make speculative optimizations that may hurt performance in some cases or that would require profiling to determine their efficacy.
-- If you think the function is fully optimized given these criteria, say so. \n\nGuidelines:\n{ASSEMBLY_GUIDELINES}"""
+Consider both optimizations that you have not yet considered and those that you previously considered that were not possible with previous versions of the assembly that may be possible with this version.
+
+
+{OPTIMIZATION_GUIDELINES}
+"""
 	
 	return querier.generateAssembly(prompt).strip()
 

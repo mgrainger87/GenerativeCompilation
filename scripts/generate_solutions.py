@@ -71,9 +71,10 @@ def handle_problem_run(run_context, test_driver_source_path, optimizations_per_s
 			assembly = assemblyFile.read()
 		success, compiler_error, linker_error, execution_error, correctness_error = compilation.compile_and_test_assembly(assembly, driverObjectPath, testDataPath, None)
 		if not success:
-			print(f"Testing on Clang-generated assembly failed: {compiler_error} {linker_error} {testing_error}")
-			if testing_error is not None:
+			print(f"Testing on Clang-generated assembly failed: {compiler_error} {linker_error} {execution_error}, {correctness_error}")
+			if correctness_error is not None:
 				os.remove(testDataPath)
+				os.remove(unoptimizedClangAssemblyPath)
 			return
 
 	o1OptimizedClangAssemblyPath = os.path.join(generatedDirectoryPath, "clang_generated_O1_optimized.asm")

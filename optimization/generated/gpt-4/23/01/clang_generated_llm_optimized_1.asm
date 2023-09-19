@@ -1,0 +1,25 @@
+//solution_number=1,compiler_errors=0,linker_errors=0,execution_errors=0,correctness_errors=0
+.section    __TEXT,__text,regular,pure_instructions
+.build_version macos, 13, 0    sdk_version 13, 3
+.globl    _customFunction                 ; -- Begin function customFunction
+.p2align    2
+_customFunction:                        ; @customFunction
+.cfi_startproc
+; %bb.0:
+
+; Calculate int1 * int1 * int1 * int1
+mul    w8, w0, w0    ; w8 = int1 * int1
+mul    w8, w8, w0    ; w8 = w8 * int1
+mul    w8, w8, w0    ; w8 = w8 * int1
+str    w8, [x2]      ; Store result to outInt
+
+; Calculate double1 * double1 * double1 * double1
+fmul   d0, d0, d0    ; d0 = double1 * double1
+fmul   d0, d0, d0    ; d0 = d0 * double1
+fmul   d0, d0, d0    ; d0 = d0 * double1
+str    d0, [x3]      ; Store result to outDouble
+
+ret
+.cfi_endproc
+; -- End function
+.subsections_via_symbols
