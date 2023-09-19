@@ -45,7 +45,7 @@ class LLMQuerier:
 			llm=self.llm, verbose=True, prompt=PROMPT, memory=ConversationBufferMemory()
 		)
 	
-	def generateAssembly(self, input):
+	def performQuery(self, input):
 		return extract_assembly(self.conversation.predict(input=input))
 		
 		

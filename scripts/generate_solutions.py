@@ -16,7 +16,7 @@ def generate_test_data_from_compilation_unit_source(code_path, test_data_path):
 	with open(code_path, "r") as codeFile:
 		code = codeFile.read()
 
-	test_data = query_human.HumanQuerier().generateAssembly(prompting.test_data_prompt(code)).strip().rstrip()
+	test_data = query_human.HumanQuerier().performQuery(prompting.test_data_prompt(code)).strip().rstrip()
 	
 	with open(test_data_path, 'w') as f:
 		f.write(test_data)

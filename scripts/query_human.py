@@ -10,7 +10,7 @@ def copy_to_pasteboard(text: str) -> None:
 	process.wait()
 
 class HumanQuerier:
-	def generateAssembly(self, prompt):
+	def performQuery(self, prompt):
 		print(prompt)
 		copy_to_pasteboard(prompt)
 		lines = []

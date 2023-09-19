@@ -68,14 +68,8 @@ Compilation unit:
 """
 
 def optimization_prompt(compilation_unit, unoptimized_assembly):
-	return f"""Optimize the provided arm64 LP64 assembly for macOS that corresponds to the provided C compilation unit.
+	return f"""Now, optimize the provided arm64 LP64 assembly for macOS that corresponds to the provided C compilation unit using the optimization that you have identified that will improve performance the most.
 
-Compilation unit:
-
-```
-{compilation_unit}
-```
-Assembly:
 {unoptimized_assembly}
 
 Guidelines:
@@ -148,7 +142,20 @@ def optimize_assembly(compilation_unit_path, assembly_path, driver_object_path, 
 	with open(compilation_unit_path, "r") as compilationUnitFile, open(assembly_path, "r") as assemblyFile:
 		compilation_unit = compilationUnitFile.read()
 		unoptimized_assembly = assemblyFile.read()
-		prompt = optimization_prompt(compilation_unit, unoptimized_assembly)
+		
+		initialPrompt = f"""Analyze the C compilation unit below to find ways that it could be optimized when compiled to LP64 assembly for macOS by the Clang compiler.
+		
+		First, examine the overall structure of the function and the problem it is trying to solve. Then, identify general categories of compiler optimizations that apply to this specific function. Consider optimizations that are likely to impact performance significantly before smaller optimizations. Identify specifically how the assembly generated for this function would change as a result of the optimizations. Do not consider optimizations that depend on the way the function is called being called with any particular inputs.
+		
+		Compilation unit:
+		
+		{compilation_unit}
+"""
+		
+		// Perform initial query.
+		query_human.HumanQuerier().performQuery(initialPrompt)
+		
+		prompt = optimization_prompt(compilation_unit=None, unoptimized_assembly)
 	
 	return prompt_for_assembly(prompt, driver_object_path, test_data_path, output_path, failure_path, optimizations_per_solution)
 
@@ -173,11 +180,11 @@ def prompt_llm_based_on_results(querier, initial_prompt, compilerError, linkerEr
 	elif lastSolution is not None:
 		prompt = f"""Examine the assembly you generated to identify further optimizations.
 		
-- Consider both optimizations that you have not yet considered and those that you previously considered that were not possible with previous versions of the assembly that may be possible with this version.
+- Consider both optimizations that you have not yet applied and those that you previously considered that were not possible with previous versions of the assembly that may be possible with this version.
 - Only make optimizations that you are confident will provide a performance improvement; do not make speculative optimizations that may hurt performance in some cases or that would require profiling to determine their efficacy.
 - If you think the function is fully optimized given these criteria, say so. \n\nGuidelines:\n{ASSEMBLY_GUIDELINES}"""
 	
-	return querier.generateAssembly(prompt).strip()
+	return querier.performQuery(prompt).strip()
 
 def add_semicolon_at_start(input_string):
 	lines = input_string.split('\n')
