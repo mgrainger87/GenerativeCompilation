@@ -145,17 +145,18 @@ def optimize_assembly(compilation_unit_path, assembly_path, driver_object_path, 
 		
 		initialPrompt = f"""Analyze the C compilation unit below to find ways that it could be optimized when compiled to LP64 assembly for macOS by the Clang compiler.
 		
-		First, examine the overall structure of the function and the problem it is trying to solve. Then, identify general categories of compiler optimizations that apply to this specific function. Consider optimizations that are likely to impact performance significantly before smaller optimizations. Identify specifically how the assembly generated for this function would change as a result of the optimizations. Do not consider optimizations that depend on the way the function is called being called with any particular inputs.
-		
-		Compilation unit:
-		
-		{compilation_unit}
+First, examine the overall structure of the function and the problem it is trying to solve. Then, identify general categories of compiler optimizations that apply to this specific function. Consider optimizations that are likely to impact performance significantly before smaller optimizations. Identify specifically how the assembly generated for this function would change as a result of the optimizations. Do not consider optimizations that depend on the way the function is called being called with any particular inputs.
+
+Compilation unit:
+
+{compilation_unit}
 """
 		
-		// Perform initial query.
-		query_human.HumanQuerier().performQuery(initialPrompt)
+		# Perform initial prompt to generate optimization ideas. Discard the results.
+		HumanQuerier().performQuery(initialPrompt)
 		
-		prompt = optimization_prompt(compilation_unit=None, unoptimized_assembly)
+		# Now, enter the optimization loop.
+		prompt = optimization_prompt(compilation_unit, unoptimized_assembly)
 	
 	return prompt_for_assembly(prompt, driver_object_path, test_data_path, output_path, failure_path, optimizations_per_solution)
 
@@ -168,7 +169,7 @@ def get_error_instructions_based_on_results(compilerError, linkerError, executio
 	elif executionError is not None:
 		prompt=f"\n{executionError}\n{CODE_FORMAT_REMINDERS}"
 	elif correctnessError is not None:
-		prompt=f"When attempting to test the assembly you provided with the input given below, I got an incorrect result:\n{correctnessError}\nFix the error and print out the full corrected assembly. Trace through the corrected assembly line-by-line with the given input to make sure it now returns the correct answer.\n{CODE_FORMAT_REMINDERS}"
+		prompt=f"When attempting to test the assembly you provided with the input given below, I got an incorrect result:\n{correctnessError}\nIdentify the specific error in the assembly that caused the incorrect output, fix it, and print out the full corrected assembly. Trace through the corrected assembly line-by-line with the given input to make sure it now returns the correct answer.\n{CODE_FORMAT_REMINDERS}"
 	return prompt
 
 def prompt_llm_based_on_results(querier, initial_prompt, compilerError, linkerError, executionError, correctnessError, lastSolution=None):
