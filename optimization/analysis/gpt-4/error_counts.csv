@@ -1,0 +1,49 @@
+Problem,Technique,Compilation Errors,Linking Errors,Execution Errors,Correctness Errors
+01,constant folding,0.0,0.0,0.0,0.0
+02,constant folding,0.0,0.0,0.0,0.0
+03,constant folding,0.0,0.0,0.0,0.0
+04,constant folding,0.0,0.0,0.0,0.0
+05,constant folding,0.0,0.0,0.0,0.0
+06,constant folding,0.0,0.0,0.0,0.0
+07,constant folding,0.0,0.0,0.0,0.0
+08,constant folding,1.0,0.0,0.0,0.0
+09,constant folding,0.0,0.0,0.0,0.0
+10,constant folding,0.0,0.0,0.0,0.0
+11,dead code elimination,0.0,0.0,0.0,0.0
+12,dead code elimination,0.0,0.0,0.0,0.0
+13,dead code elimination,0.0,0.0,0.0,0.0
+14,dead code elimination,0.0,0.0,0.0,0.0
+15,dead code elimination,0.0,0.0,0.0,0.0
+16,dead code elimination,0.0,0.0,0.0,0.0
+17,dead code elimination,0.0,0.0,0.0,0.0
+18,dead code elimination,0.0,0.0,0.0,0.0
+19,dead code elimination,0.0,0.0,0.0,0.0
+20,dead code elimination,0.0,0.0,0.0,0.0
+21,strength reduction,0.0,0.0,0.0,0.0
+22,strength reduction,0.0,0.0,0.0,0.0
+23,strength reduction,0.0,0.0,0.0,0.0
+24,strength reduction,0.0,0.0,0.0,0.0
+25,strength reduction,0.0,0.0,0.0,1.0
+26,strength reduction,0.0,0.0,0.0,0.0
+27,strength reduction,0.0,0.0,0.0,1.0
+28,strength reduction,0.0,0.0,0.0,0.0
+29,strength reduction,0.0,0.0,0.0,0.0
+30,strength reduction,0.0,0.0,0.0,0.0
+31,copy propagation,0.0,0.0,0.0,0.0
+32,copy propagation,0.0,0.0,0.0,0.0
+33,copy propagation,0.0,0.0,0.0,0.0
+34,copy propagation,0.0,0.0,0.0,1.0
+35,copy propagation,0.0,0.0,0.0,0.0
+36,copy propagation,0.0,0.0,0.0,0.0
+37,copy propagation,0.0,0.0,0.0,0.0
+38,copy propagation,0.0,0.0,0.0,0.0
+39,copy propagation,0.0,0.0,0.0,0.0
+40,copy propagation,0.0,0.0,0.0,0.0
+41,tail recursion optimization,0.0,0.0,0.0,0.0
+42,tail recursion optimization,4.0,0.0,1.0,2.0
+43,tail recursion optimization,2.0,0.0,0.0,0.0
+44,tail recursion optimization,1.0,0.0,0.0,1.0
+45,tail recursion optimization,3.0,0.0,0.0,0.0
+46,tail recursion optimization,0.0,0.0,0.0,0.0
+48,tail recursion optimization,0.0,0.0,0.0,0.0
+50,tail recursion optimization,0.0,0.0,0.0,0.0

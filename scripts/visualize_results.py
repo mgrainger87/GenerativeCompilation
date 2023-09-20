@@ -42,7 +42,7 @@ def generate_dataframes(modelContext):
     combined_df['technique'] = techniques
     
     # Save combined dataframe to CSV
-    combined_df.to_csv(os.path.join(modelContext.analysisPath(), 'combined_data.csv'), index=False)
+    combined_df.to_csv(modelContext.combinedAnalysisDataPath(), index=False)
     
     # Renaming 'Filename' values and column name
     combined_df['Generation Method'] = combined_df['Filename'].replace(filename_renaming)

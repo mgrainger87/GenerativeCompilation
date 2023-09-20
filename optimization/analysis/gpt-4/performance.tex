@@ -1,0 +1,20 @@
+
+\begin{tikzpicture}
+\begin{axis}[
+    xbar,
+    bar width=0.5cm,
+    xmin=0,
+    xlabel={Normalized CPU Time},
+    ytick={1,0},
+    yticklabels={{Clang Unoptimized}, {Clang optimized}},
+    nodes near coords,
+    nodes near coords align={horizontal},
+    every axis plot/.append style={
+      bar shift=0pt,
+      fill
+    },
+    ]
+\addplot [fill=lightgray] coordinates {( 0.0058350834343232 , 1 )};
+\addplot [fill=lightgray] coordinates {( 1.0 , 0 )};
+\end{axis}
+\end{tikzpicture}
