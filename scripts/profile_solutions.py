@@ -172,7 +172,7 @@ if __name__ == "__main__":
 				profilingResultsPaths = []
 	
 				for runContext in problemContext.GetExistingRunContexts():
-					if not os.path.exists(runContext.profilingPath()):
+					if not os.path.exists(runContext.profilingResultsPath()):
 						profile_run(runContext, "/Users/morgang/code/GenerativeCompilation/test_driver.c")
 						profilingResultsPaths.append(runContext.profilingResultsPath())
 					
