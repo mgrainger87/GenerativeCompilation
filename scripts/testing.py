@@ -42,7 +42,8 @@ def run_test_from_csv(csv_path, executable_path, overriddenIterations=None, useD
 			total_cpu_time += end_cpu_time - start_cpu_time
 				
 			if useDebugger:
-				return success, execution_failure, correctness_failure, total_cpu_time
+				if not success:
+					return success, execution_failure, correctness_failure, total_cpu_time
 			else:
 				if result.returncode != 0:
 					failure_text += result.stdout  # Append the output for debugging

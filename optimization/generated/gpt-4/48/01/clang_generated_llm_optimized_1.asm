@@ -5,45 +5,41 @@
 .p2align	2
 _customFunction:                        ; @customFunction
 .cfi_startproc
-; %bb.0:
-sub	sp, sp, #64
-.cfi_def_cfa_offset 64
-stp	x29, x30, [sp, #48]             ; 16-byte Folded Spill
-add	x29, sp, #48
+; Pre-amble: Save the necessary registers
+sub	sp, sp, #32                      ; Allocate space on the stack
+stp	x29, x30, [sp, #16]             ; Save frame pointer and return address
+add	x29, sp, #16                    ; Set frame pointer
 .cfi_def_cfa w29, 16
 .cfi_offset w30, -8
 .cfi_offset w29, -16
-str	x2, [sp, #16]                   ; Save outInt pointer
 
-loop_start:
-subs	w8, w1, #0                     ; Check if int2 is negative
-cset	w8, ge
-tbnz	w8, #0, even_check             ; If int2 >= 0, jump to even_check
+; Start the loop
+1:
+subs	w3, w1, #0                     ; Compare int2 with 0
+blt	2f                             ; If int2 is negative, exit the loop
 
-; Base case
-str	w0, [x2]                       ; Store int1 to outInt
-b	exit_function                   ; Exit the function
-
-even_check:
-mov	w10, #2
-sdiv	w9, w1, w10                    ; Calculate int2 % 2
-mul	w9, w9, w10
-subs	w8, w1, w9
-cset	w8, ne
-tbnz	w8, #0, odd_case               ; If int2 is odd, jump to odd_case
+and	w4, w1, #1                     ; Check if int2 is even (strength reduction)
+cbnz	w4, 3f                         ; If int2 is odd, jump to label 3
 
 ; Even case
-add	w0, w0, #3                     ; int1 + 3
-subs	w1, w1, #2                     ; int2 - 2
-b	loop_start                      ; Jump back to the start of the loop
+add	w0, w0, #3                     ; Increment int1 by 3
+subs	w1, w1, #2                     ; Decrement int2 by 2
+b	1b                             ; Jump back to the start of the loop
 
-odd_case:
-add	w0, w0, #4                     ; int1 + 4
-subs	w1, w1, #1                     ; int2 - 1
-b	loop_start                      ; Jump back to the start of the loop
+; Odd case
+3:
+add	w0, w0, #4                     ; Increment int1 by 4
+subs	w1, w1, #1                     ; Decrement int2 by 1
+b	1b                             ; Jump back to the start of the loop
 
-exit_function:
-ldp	x29, x30, [sp, #48]             ; 16-byte Folded Reload
-add	sp, sp, #64
+; Loop exit
+2:
+str	w0, [x2]                       ; Store the result to outInt
+
+; Post-amble: Restore the saved registers and return
+ldp	x29, x30, [sp, #16]            ; Restore frame pointer and return address
+add	sp, sp, #32                    ; Restore stack pointer
 ret
 .cfi_endproc
+
+.subsections_via_symbols
