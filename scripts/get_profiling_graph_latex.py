@@ -5,11 +5,9 @@ import os
 
 def generate_latex_for_technique_averaged_filled(technique_df, technique_name, threshold=0.05):
 	# Initialize LaTeX output
-	latex_output = f"\\begin{{figure}}[h]\n\\caption{{{technique_name}}}\n\\begin{{tikzpicture}}\n"
-	
+	latex_output = f"\\begin{{figure}}[h]\n\\begin{{tikzpicture}}\n"
 	latex_output += "\\begin{axis}[\n"
-	latex_output += "    title={Normalized CPU Time vs Run Number},\n"
-	latex_output += "    xlabel={Run Number},\n"
+	latex_output += "    xlabel={Optimization Passes},\n"
 	latex_output += "    ylabel={Normalized CPU Time},\n"
 	latex_output += "    xmin=0, xmax=5,\n"
 	latex_output += "    ymin=0, ymax=1.01,\n"
@@ -66,8 +64,11 @@ def generate_latex_for_technique_averaged_filled(technique_df, technique_name, t
 			latex_output += f"\\draw [dashed, red] (axis cs: 0,{avg}) -- (axis cs: 5,{avg}) node[anchor=east, pos=1, yshift=-2mm] {{{label}}};\n"
 			drawn_values.append(avg)
 
-	latex_output += "\\end{axis}\n"    
-	latex_output += "\\end{tikzpicture}\n\\end{figure}\n"
+	latex_output += "\\end{axis}\n" 
+	latex_output += "\\end{tikzpicture}\n"
+	latex_output += f"\\caption{{Optimization results for {technique_name}.}}\n"
+	latex_output += f"\\label{{fig:optimization_{technique_name.replace(' ', '')}}}\n"
+	latex_output += "\\end{figure}\n"
 	return latex_output
 
 if __name__ == "__main__":
@@ -81,7 +82,7 @@ if __name__ == "__main__":
 		combinedDataPath = modelContext.combinedAnalysisDataPath()
 		if os.path.exists(combinedDataPath):
 			combined_df = pd.read_csv(combinedDataPath)
+			print(generate_latex_for_technique_averaged_filled(combined_df, "overall"))
 			for technique_name, technique_df in combined_df.groupby('technique'):
 				# print(f"\n\nTechnique: {technique_name}")
 				print(generate_latex_for_technique_averaged_filled(technique_df, technique_name))
-			print(generate_latex_for_technique_averaged_filled(combined_df, "Overall"))
