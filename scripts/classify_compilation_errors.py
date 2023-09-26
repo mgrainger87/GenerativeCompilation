@@ -19,6 +19,7 @@ def get_compilation_errors(folder_path):
 						success, error_message, output_file = compilation.compile_source(filepath)
 						
 						if error_message:
+							print(filepath + "  " + error_message)
 							compilationErrors.append(error_message)
 						else:
 							print(f"File {filepath} compiled successfully")
@@ -266,20 +267,20 @@ if __name__ == "__main__":
 	
 	folder_path = sys.argv[1]
 	
-	# print("Compilation:")
-	# all_compilation_errors = get_compilation_errors(folder_path)
-	# extracted_errors = extract_compilation_errors(all_compilation_errors)
-	# print(format_compilation_errors_full(extracted_errors))
-	# print('\n')
-	# print(format_compilation_errors_summary(extracted_errors))
-	# 
+	print("Compilation:")
+	all_compilation_errors = get_compilation_errors(folder_path)
+	extracted_errors = extract_compilation_errors(all_compilation_errors)
+	print(format_compilation_errors_full(extracted_errors))
+	print('\n')
+	print(format_compilation_errors_summary(extracted_errors))
+	
 	print("\n\nLinking:")
 	all_linking_errors = get_linking_errors(folder_path, "/Users/morgang/code/GenerativeCompilation/test_driver.c")
 	print(extract_linking_errors(all_linking_errors))
 	print(extract_linking_missing_symbols(all_linking_errors))
-	# 
-	# print("\n\nExecution:")
-	# all_execution_errors, all_correctness_errors = get_execution_and_correctness_errors(folder_path, "/Users/morgang/code/GenerativeCompilation/test_driver.c")
-	# # print(all_execution_errors)
-	# print(get_execution_stop_reasons(all_execution_errors))
+	
+	print("\n\nExecution:")
+	all_execution_errors, all_correctness_errors = get_execution_and_correctness_errors(folder_path, "/Users/morgang/code/GenerativeCompilation/test_driver.c")
+	# print(all_execution_errors)
+	print(get_execution_stop_reasons(all_execution_errors))
 	
