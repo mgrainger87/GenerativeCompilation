@@ -11,25 +11,29 @@ def analyze_data(extraction_dir):
 			if file_name.endswith('.asm'):
 				parts = file_name.split('_')
 				error_type = parts[-1].split('.')[0]
+				sequence = int(parts[-3])
 				count = int(parts[-2])
 				file_path = os.path.join(root, file_name)
-				print(file_path)
-				data_list.append({'error_count': count, 'error_type': error_type, 'file_path': file_path})
+				data_list.append({'error_count': count, 'error_sequence': sequence, 'error_type': error_type, 'file_path': file_path})
+
+	for element in data_list:
+		print(element)
 
 	# Convert the data list to a DataFrame
 	data_df = pd.DataFrame(data_list)
-	print(data_df)
 
-	# Calculate metrics
+	# Initialize metrics dictionary
 	metrics = {}
 
 	# 1. Average Consecutive Errors
 	average_consecutive_errors = data_df.groupby('error_type')['error_count'].mean().to_dict()
 	metrics['Average Consecutive Errors'] = average_consecutive_errors
-	print(metrics)
+
 	# 2. Average Errors After First Failure
-	error_groups = data_df.groupby((data_df['error_type'] != data_df['error_type'].shift()).cumsum())
-	average_errors_after_first_failure = error_groups['error_count'].sum().groupby(data_df['error_type']).mean().to_dict()
+	# Group by error type and sequence, then sum the error counts within each group
+	error_groups = data_df.groupby(['error_type', 'error_sequence'])['error_count'].sum().reset_index()
+	# Now calculate the average sum of error counts for each error type
+	average_errors_after_first_failure = error_groups.groupby('error_type')['error_count'].mean().to_dict()
 	metrics['Average Errors After First Failure'] = average_errors_after_first_failure
 
 	# 3. Average Reach Rate to 10 Total Failures or 5 Failures of the Same Type
@@ -72,7 +76,7 @@ def generate_latex_plot(metrics, output_file_path):
 	error_types = ['Assembler', 'Linker', 'Execution', 'Correctness']
 	average_consecutive_errors = [metrics['Average Consecutive Errors'].get(error_types_mapping[et], 0) for et in error_types]
 	difference = [
-		metrics['Average Errors After First Failure'].get(et, 0) - metrics['Average Consecutive Errors'].get(error_types_mapping[et], 0)
+		metrics['Average Errors After First Failure'].get(error_types_mapping[et], 0) - metrics['Average Consecutive Errors'].get(error_types_mapping[et], 0)
 		for et in error_types
 	]
 	average_reach_rate_percent = [
@@ -83,45 +87,67 @@ def generate_latex_plot(metrics, output_file_path):
 	# Create the LaTeX tikzpicture environment for the plot
 	latex_plot = """
 \\begin{{tikzpicture}}
+%%%%% GENERATING CODE FROM SOURCE
+% Primary y-axis (bar chart)
 \\begin{{axis}}[
-	title={{Optimization}},
-	xlabel={{Error Type}},
-	ylabel={{Average Errors}},
-	symbolic x coords={{'Assembler','Linker','Execution','Correctness'}},
-	xtick=data,
 	ybar stacked,
-	bar width=30pt,
-	legend style={{at={{(0.5,-0.15)}},
-	anchor=north,legend columns=-1}},
+	bar width=1cm,
+	width=8cm,
+	height=7cm,
+	enlargelimits=0.15,
+	legend style={{
+		at={{(0.5,-0.2)}},
+		anchor=north,
+		legend columns=2,
+		column sep=0.5cm,
+		legend cell align=left,
+	}},
+	ylabel={{Mistakes per Compilation Attempt}},
+	ylabel near ticks,
+	ymin=0,
+	ymax=5,
 	axis y line*=left,
-]
-\\addplot coordinates {{{{
+	symbolic x coords={{Assembler,Linker,Execution,Correctness}},
+	xtick=data,
+	xticklabels={{Assembler, Linker, Execution, Correctness}},
+	xticklabel style={{rotate=0, anchor=north, align=center, text width=1.5cm,xshift=0pt}},
+	xtick style={{draw=none}},
+	legend entries={{Assembler,Linker,Execution,Correctness}},
+	]
+\\addplot+[ybar, fill=cyan] coordinates {{
 	{0}
-}}}};
-\\addplot coordinates {{{{
+}};
+\\addplot+[ybar] coordinates {{
 	{1}
-}}}};
+}};
 \\legend{{Errors of Same Type, Further Errors}}
 \\end{{axis}}
 
+% Secondary y-axis (line graph)
 \\begin{{axis}}[
-	ylabel={{Reach Rate (\\%)}},
-	symbolic x coords={{'Assembler','Linker','Execution','Correctness'}},
-	xtick=data,
+	width=8cm,
+	height=7cm,
+	enlargelimits=0.15,
 	axis y line*=right,
-	ymin=0, ymax=100,
+	axis x line=none,
+	symbolic x coords={{Assembler,Linker,Execution,Correctness}},
+	xtick=data,
+	ylabel={{Compilation Success Rate (\\%)}},
+	ylabel near ticks,
+	ymin=0,
+	ymax=100,
 	ytick={{0,20,...,100}},
-	hide x axis
-]
-\\addplot[sharp plot, red, mark=*] coordinates {{{{
+	yticklabel=$\\pgfmathprintnumber{{\\tick}}$
+	]
+\\addplot[sharp plot, mark=*] coordinates {{
 	{2}
-}}}};
+}};
 \\end{{axis}}
 \\end{{tikzpicture}}
 """.format(
-		','.join(f'({et},{value})' for et, value in zip(error_types, average_consecutive_errors)),
-		','.join(f'({et},{value})' for et, value in zip(error_types, difference)),
-		','.join(f'({et},{value})' for et, value in zip(error_types, average_reach_rate_percent)),
+		' '.join(f'({et},{value})' for et, value in zip(error_types, average_consecutive_errors)),
+		' '.join(f'({et},{value})' for et, value in zip(error_types, difference)),
+		' '.join(f'({et},{value})' for et, value in zip(error_types, average_reach_rate_percent)),
 	)
 
 	# Write the LaTeX plot to the output file
