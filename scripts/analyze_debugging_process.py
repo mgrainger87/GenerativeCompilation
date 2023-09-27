@@ -2,12 +2,8 @@ import os
 import sys
 import pandas as pd
 from collections import defaultdict
-
-import os
-from collections import defaultdict
-import pandas as pd
+from collections import Counter	
 import re
-
 
 def collect_data(directory):
 	data_list = []
@@ -40,7 +36,7 @@ def collect_data(directory):
 					'file_path': file_path
 				})
 	return pd.DataFrame(data_list)
-
+	
 def calculate_average_consecutive_errors(data_df):
 	total_consecutive_error_counts = defaultdict(int)  # Total count of consecutive errors per failure type
 	occurrence_counts = defaultdict(int)  # Count of occurrences per failure type
@@ -50,12 +46,41 @@ def calculate_average_consecutive_errors(data_df):
 	
 	for pair in unique_pairs:
 		problem_number, run_number, iteration_number = pair
-		consecutive_error_counts = calculate_consecutive_errors(data_df, problem_number, run_number, iteration_number)
 		
-		# Update the total counts and occurrence counts
-		for error_type, count in consecutive_error_counts.items():
-			total_consecutive_error_counts[error_type] += count
-			occurrence_counts[error_type] += 1
+		# Filter the DataFrame based on the current (problem_number, run_number, iteration_number) pair
+		filtered_df = data_df[(data_df['problem_number'] == problem_number) & 
+						  	(data_df['run_number'] == run_number) & 
+						  	(data_df['iteration_number'] == iteration_number)]
+		
+		# Sort the filtered data by failure_number to ensure the failures are processed in order
+		filtered_df = filtered_df.sort_values(by='failure_number').reset_index(drop=True)
+		current_error_type = None
+		consecutive_count = 0
+		previous_failure_number = -1  # Initialize with -1 since failure_number starts from 1
+		
+		for index, row in filtered_df.iterrows():
+			error_type = row['failure_type']
+			failure_number = row['failure_number']
+
+			if error_type != current_error_type or (failure_number != previous_failure_number + 1):
+				# When the error type changes or a new sequence of the same error type starts,
+				# update the total errors and occurrences for the current error type
+				if current_error_type is not None:
+					total_consecutive_error_counts[current_error_type] += consecutive_count
+					occurrence_counts[current_error_type] += 1
+				# Reset the consecutive count and update the current error type
+				consecutive_count = 1
+				current_error_type = error_type
+			else:
+				# If the error type remains the same and the failure number is consecutive,
+				# increment the consecutive count
+				consecutive_count += 1
+			previous_failure_number = failure_number  # Update the previous failure number
+		
+		# Update the total errors and occurrences for the last error type in the filtered DataFrame
+		if current_error_type is not None:
+			total_consecutive_error_counts[current_error_type] += consecutive_count
+			occurrence_counts[current_error_type] += 1
 	
 	# Calculate the average number of consecutive errors for each error type
 	average_consecutive_errors = {
@@ -65,7 +90,7 @@ def calculate_average_consecutive_errors(data_df):
 	
 	return average_consecutive_errors
 
-def calculate_number_of_failures(data_df):
+def calculate_number_of_failure_sequences(data_df):
 	# Initialize variables to keep track of the number of failure sequences for each error type
 	failure_sequence_counts = defaultdict(int)
 	
@@ -138,83 +163,90 @@ def identify_special_cases(data_df):
 	return special_cases_counts
 
 def calculate_average_errors_including_first_failure(data_df):
-		total_errors_including_first_failure = defaultdict(int)  # Total errors including the first failure per error type
-		error_type_occurrences = defaultdict(int)  # Number of occurrences per error type
-	
-		# Get all unique (problem_number, run_number, iteration_number) pairs
-		unique_pairs = data_df[['problem_number', 'run_number', 'iteration_number']].drop_duplicates().values
-		
-		for pair in unique_pairs:
-			problem_number, run_number, iteration_number = pair
-			
-			# Filter the DataFrame based on the current (problem_number, run_number, iteration_number) pair
-			filtered_df = data_df[(data_df['problem_number'] == problem_number) & 
-								  (data_df['run_number'] == run_number) & 
-								  (data_df['iteration_number'] == iteration_number)]
-			
-			# Sort the filtered data by failure_number to ensure the failures are processed in order
-			filtered_df = filtered_df.sort_values(by='failure_number').reset_index(drop=True)
-			
-			current_error_type = None  # The current error type being processed
-			error_sequence_count = 0  # Counter for the number of errors in the current sequence
-			
-			# Iterate through each row in the filtered DataFrame
-			for index, row in filtered_df.iterrows():
-				error_type = row['failure_type']
-				if error_type != current_error_type:
-					# If the error type changes, update the total errors count for the previous error type
-					if current_error_type is not None:
-						total_errors_including_first_failure[current_error_type] += error_sequence_count
-						error_type_occurrences[current_error_type] += 1
-					# Reset the error sequence count and update the current error type
-					error_sequence_count = 1
-					current_error_type = error_type
-				else:
-					# If the error type remains the same, increment the error sequence count
-					error_sequence_count += 1
-			
-			# Update the total errors count for the last error type in the filtered DataFrame
-			if current_error_type is not None:
-				total_errors_including_first_failure[current_error_type] += error_sequence_count
-				error_type_occurrences[current_error_type] += 1
-		
-		# Calculate the average number of errors including the first failure for each error type
-		average_errors_including_first_failure = {
-			error_type: total_errors / max(occurrences, 1)
-			for error_type, total_errors, occurrences in zip(
-				total_errors_including_first_failure.keys(),
-				total_errors_including_first_failure.values(),
-				error_type_occurrences.values())
-		}
-		
-		return average_errors_including_first_failure
-	
-	# Recalculate the average number of errors including the first failure for each error type
-	average_errors_including_first_failure = calculate_errors_including_first_failure(extracted_data_df)
-	average_errors_including_first_failure
+	total_errors_including_first_failure = defaultdict(list)  # List of total errors including the first failure per error type
 
-def calculate_failure_reach(data_df):
-	data_df = data_df.sort_values(by='error_count').reset_index(drop=True)
-	reach_counts = defaultdict(int)
-	error_type_occurrences = defaultdict(int)
-	current_error_type = None
-	current_error_count = 0
-	for index, row in data_df.iterrows():
-		error_type = row['error_type']
-		error_count = row['error_count']
-		if error_type != current_error_type:
-			current_error_type = error_type
-			current_error_count = error_count
-		error_type_occurrences[error_type] += 1
-		if error_count >= 10 or current_error_count >= 5:
-			reach_counts[error_type] += 1
-	average_reach_rate = {error_type: reach_count / occurrences
-						  for error_type, reach_count, occurrences in zip(
-							  reach_counts.keys(),
-							  reach_counts.values(),
-							  error_type_occurrences.values())}
-	return average_reach_rate
+	# Get all unique (problem_number, run_number, iteration_number) pairs
+	unique_pairs = data_df[['problem_number', 'run_number', 'iteration_number']].drop_duplicates().values
+	
+	for pair in unique_pairs:
+		problem_number, run_number, iteration_number = pair
+		
+		# Filter the DataFrame based on the current (problem_number, run_number, iteration_number) pair
+		filtered_df = data_df[(data_df['problem_number'] == problem_number) & 
+							  (data_df['run_number'] == run_number) & 
+							  (data_df['iteration_number'] == iteration_number)]
+		
+		# Sort the filtered data by failure_number to ensure the failures are processed in order
+		filtered_df = filtered_df.sort_values(by='failure_number').reset_index(drop=True)
+		
+		seen_error_type = None
+		# Iterate through each row in the filtered DataFrame
+		for index, row in filtered_df.iterrows():
+			error_type = row['failure_type']
+			
+			if error_type != seen_error_type:
+				seen_error_type = error_type
+				# If a new occurrence of a failure type is found,
+				# count all subsequent failures including the current one
+				total_errors = len(filtered_df) - index
+				# Add the total errors count to the list for the current error type
+				total_errors_including_first_failure[error_type].append(total_errors)
 
+	# Calculate the average number of errors including the first failure for each error type
+	average_errors_including_first_failure = {
+		error_type: sum(counts) / len(counts) if counts else 0
+		for error_type, counts in total_errors_including_first_failure.items()
+	}
+
+	return average_errors_including_first_failure
+
+def calculate_total_terminal_failures(data_df):
+	terminal_failure_counts = defaultdict(int)  # Counts for terminal failures per error type
+
+	# Get all unique (problem_number, run_number, iteration_number) pairs
+	unique_pairs = data_df[['problem_number', 'run_number', 'iteration_number']].drop_duplicates().values
+	
+	for pair in unique_pairs:
+		problem_number, run_number, iteration_number = pair
+		
+		# Filter the DataFrame based on the current (problem_number, run_number, iteration_number) pair
+		filtered_df = data_df[(data_df['problem_number'] == problem_number) & 
+							  (data_df['run_number'] == run_number) & 
+							  (data_df['iteration_number'] == iteration_number)]
+		
+		# Sort the filtered data by failure_number to ensure the failures are processed in order
+		filtered_df = filtered_df.sort_values(by='failure_number').reset_index(drop=True)
+		
+		current_error_type = None  # The current error type being processed
+		consecutive_count = 0  # Counter for consecutive failures of the current error type
+		total_failure_counts = Counter()  # Counter for total failures per error type
+		
+		# Iterate through each row in the filtered DataFrame
+		for index, row in filtered_df.iterrows():
+			error_type = row['failure_type']
+			if error_type != current_error_type:
+				# Check for terminal failure conditions for the previous error type
+				if consecutive_count >= 5:
+					terminal_failure_counts[current_error_type] += 1
+				if total_failure_counts[current_error_type] >= 10:
+					terminal_failure_counts[current_error_type] += 1
+				# Reset the counters and update the current error type
+				consecutive_count = 1
+				current_error_type = error_type
+			else:
+				# If the error type remains the same, increment the consecutive count
+				consecutive_count += 1
+			
+			# Increment the total failure count for the current error type
+			total_failure_counts[error_type] += 1
+		
+		# Check for terminal failure conditions for the last error type in the filtered DataFrame
+		if consecutive_count >= 5:
+			terminal_failure_counts[current_error_type] += 1
+		if total_failure_counts[current_error_type] >= 10:
+			terminal_failure_counts[current_error_type] += 1
+
+	return terminal_failure_counts
 
 
 def count_failures_by_type(data_df):
@@ -222,11 +254,11 @@ def count_failures_by_type(data_df):
 	failure_counts = data_df.groupby('failure_type').size().to_dict()
 	return failure_counts
 
-def verify_calculations(directory, number_of_failures, average_consecutive_errors):
-	failure_counts_by_file_paths = count_failures_by_file_paths(directory)
+def verify_calculations(dataframe, number_of_failures, average_errors_including_first_failure):
+	failure_counts_by_file_paths = count_failures_by_type(dataframe)
 	verification_results = {}
 	for error_type in failure_counts_by_file_paths.keys():
-		expected_total_failures = number_of_failures[error_type] * average_consecutive_errors[error_type]
+		expected_total_failures = number_of_failures[error_type] * average_errors_including_first_failure[error_type]
 		verification_results[error_type] = {
 			'Expected Total Failures': expected_total_failures,
 			'Actual Total Failures': failure_counts_by_file_paths[error_type],
@@ -249,7 +281,7 @@ def generate_latex_plot(metrics):
 		for et in error_types
 	]
 	average_reach_rate_percent = [
-		metrics['Average Reach Rate to 10 Total Failures or 5 Failures of the Same Type'].get(error_types_mapping[et], 0) * 100
+		(1-metrics['Average Reach Rate to 10 Total Failures or 5 Failures of the Same Type'].get(error_types_mapping[et], 0)) * 100
 		for et in error_types
 	]
 
@@ -301,7 +333,7 @@ def generate_latex_plot(metrics):
 	axis x line=none,
 	symbolic x coords={{Assembler,Linker,Execution,Correctness}},
 	xtick=data,
-	ylabel={{Compilation Success Rate (\\%)}},
+	ylabel={{Error Resolution Success Rate (\\%)}},
 	ylabel near ticks,
 	ymin=0,
 	ymax=100,
@@ -330,19 +362,31 @@ def main():
 	directory = sys.argv[1]
 	data_df = collect_data(directory)
 	
-	average_consecutive_errors = calculate_consecutive_errors(data_df)
-	average_errors_after_first_failure = calculate_average_errors_including_first_failure(data_df)
-	average_reach_rate = calculate_failure_reach(data_df)
-	number_of_failures = calculate_number_of_failures(data_df)
-	special_cases = identify_special_cases(data_df)
-	verification_results = verify_calculations(directory, number_of_failures, average_consecutive_errors)
+	# When an error type occurs, how many of them happen in a row?
+	average_consecutive_errors = calculate_average_consecutive_errors(data_df)
+	
+	# When an error type occurs, how many more errors are there for that run?
+	average_total_errors_after_first_failure = calculate_average_errors_including_first_failure(data_df)
+	
+	# How many total failure sequences were there?
+	number_of_failure_sequences = calculate_number_of_failure_sequences(data_df)
+	
+	# Total errors = average consecutive errors * number of failure sequences
+	verification_results = verify_calculations(data_df, number_of_failure_sequences, average_consecutive_errors)
+
+	# How many failure sequences ended the run?
+	total_terminal_failures = calculate_total_terminal_failures(data_df)
+
+	terminal_failure_rates = {
+			error_type: (total_terminal_failures[error_type] / max(number_of_failure_sequences[error_type], 1))
+			for error_type in total_terminal_failures
+		}
 
 	analysis_results = {
 		'Average Consecutive Errors': average_consecutive_errors,
-		'Average Errors After First Failure': average_errors_after_first_failure,
-		'Average Reach Rate to 10 Total Failures or 5 Failures of the Same Type': average_reach_rate,
-		'Total Failure Sequences': number_of_failures,
-		'Special Cases File Paths': special_cases,
+		'Average Errors After First Failure': average_total_errors_after_first_failure,
+		'Average Reach Rate to 10 Total Failures or 5 Failures of the Same Type': terminal_failure_rates,
+		'Total Failure Sequences': number_of_failure_sequences,
 		'Verification Results': verification_results
 	}
 	
@@ -352,5 +396,5 @@ if __name__ == '__main__':
 	results = main()
 	for key, value in results.items():
 		print(f'{key}: {value}')
-		
+	print('\n\nLaTeX:\n')
 	print(generate_latex_plot(results))
