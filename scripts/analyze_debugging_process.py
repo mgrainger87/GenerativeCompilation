@@ -219,7 +219,6 @@ def calculate_total_terminal_failures(data_df):
 		
 		current_error_type = None  # The current error type being processed
 		consecutive_count = 0  # Counter for consecutive failures of the current error type
-		total_failure_counts = Counter()  # Counter for total failures per error type
 		
 		# Iterate through each row in the filtered DataFrame
 		for index, row in filtered_df.iterrows():
@@ -228,22 +227,17 @@ def calculate_total_terminal_failures(data_df):
 				# Check for terminal failure conditions for the previous error type
 				if consecutive_count >= 5:
 					terminal_failure_counts[current_error_type] += 1
-				if total_failure_counts[current_error_type] >= 10:
-					terminal_failure_counts[current_error_type] += 1
 				# Reset the counters and update the current error type
 				consecutive_count = 1
 				current_error_type = error_type
 			else:
 				# If the error type remains the same, increment the consecutive count
 				consecutive_count += 1
-			
-			# Increment the total failure count for the current error type
-			total_failure_counts[error_type] += 1
 		
 		# Check for terminal failure conditions for the last error type in the filtered DataFrame
 		if consecutive_count >= 5:
 			terminal_failure_counts[current_error_type] += 1
-		if total_failure_counts[current_error_type] >= 10:
+		if index >= 9:
 			terminal_failure_counts[current_error_type] += 1
 
 	return terminal_failure_counts
@@ -276,6 +270,7 @@ def generate_latex_plot(metrics):
 	}
 	error_types = ['Assembler', 'Linker', 'Execution', 'Correctness']
 	average_consecutive_errors = [metrics['Average Consecutive Errors'].get(error_types_mapping[et], 0) for et in error_types]
+	average_failures_after_first = [metrics['Average Errors After First Failure'].get(error_types_mapping[et], 0) for et in error_types]
 	difference = [
 		metrics['Average Errors After First Failure'].get(error_types_mapping[et], 0) - metrics['Average Consecutive Errors'].get(error_types_mapping[et], 0)
 		for et in error_types
@@ -297,13 +292,13 @@ def generate_latex_plot(metrics):
 	height=7cm,
 	enlargelimits=0.15,
 	legend style={{
-		at={{(0.5,-0.2)}},
+		at={{(0.5,-0.1)}},
 		anchor=north,
-		legend columns=2,
+		legend columns=1,
 		column sep=0.5cm,
 		legend cell align=left,
 	}},
-	ylabel={{Mistakes per Compilation Attempt}},
+	ylabel={{Average Mistake Count}},
 	ylabel near ticks,
 	ymin=0,
 	ymax=5,
@@ -321,7 +316,8 @@ def generate_latex_plot(metrics):
 \\addplot+[ybar] coordinates {{
 	{1}
 }};
-\\legend{{Errors of Same Type, Further Errors}}
+{2}
+\\legend{{Consecutive mistakes in phase, Further mistakes in compilation attempt}}
 \\end{{axis}}
 
 % Secondary y-axis (line graph)
@@ -338,16 +334,21 @@ def generate_latex_plot(metrics):
 	ymin=0,
 	ymax=100,
 	ytick={{0,20,...,100}},
-	yticklabel=$\\pgfmathprintnumber{{\\tick}}$
+	yticklabel=$\\pgfmathprintnumber{{\\tick}}$,
+	nodes near coords={{
+	\\pgfmathprintnumber[precision=0, fixed zerofill]{{\pgfplotspointmeta}}
+	}},
+	every node near coord/.append style={{font=\\tiny}}
 	]
 \\addplot[sharp plot, mark=*] coordinates {{
-	{2}
+	{3}
 }};
 \\end{{axis}}
 \\end{{tikzpicture}}
 """.format(
 		' '.join(f'({et},{value})' for et, value in zip(error_types, average_consecutive_errors)),
 		' '.join(f'({et},{value})' for et, value in zip(error_types, difference)),
+		'\n'.join(f'\\node at (axis cs:{et},{value}) [above] {{{value:.2f}}};' for et, value in zip(error_types, average_failures_after_first)),
 		' '.join(f'({et},{value})' for et, value in zip(error_types, average_reach_rate_percent)),
 	)
 
@@ -385,6 +386,7 @@ def main():
 	analysis_results = {
 		'Average Consecutive Errors': average_consecutive_errors,
 		'Average Errors After First Failure': average_total_errors_after_first_failure,
+		'Total Terminal Failures': total_terminal_failures,
 		'Average Reach Rate to 10 Total Failures or 5 Failures of the Same Type': terminal_failure_rates,
 		'Total Failure Sequences': number_of_failure_sequences,
 		'Verification Results': verification_results
